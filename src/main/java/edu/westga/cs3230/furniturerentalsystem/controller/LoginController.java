@@ -3,6 +3,9 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Customer;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,9 +38,11 @@ public class LoginController {
 
 	}
 //
-//	private boolean crossreferenceCredentials() throws SQLException {
-//		return LoginManager.authorize(this.user.getText(), this.password.getText());
-//	}
+	private boolean crossreferenceCredentials() throws SQLException {
+		EmployeeDao employeeDao = new EmployeeDao();
+
+		return employeeDao.authorizeEmployee(this.user.getText(), this.password.getText());
+	}
 //
 	@FXML
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {

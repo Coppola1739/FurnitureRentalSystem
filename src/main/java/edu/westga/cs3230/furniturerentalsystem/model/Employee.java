@@ -1,9 +1,6 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,12 +10,17 @@ import java.util.Date;
 @Data
 public class Employee {
 
+    @NonNull
     private String username;
+    @NonNull
     private String password;
+    @NonNull
     private String firstName;
+    @NonNull
     private String lastName;
     private String gender;
     private String phoneNumber;
     private Date birthday;
+    @NonNull
     private Date hireDate;
 }
