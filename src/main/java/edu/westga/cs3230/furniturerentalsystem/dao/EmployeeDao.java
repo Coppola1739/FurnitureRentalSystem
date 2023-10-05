@@ -22,8 +22,6 @@ public class EmployeeDao {
             if (rs.next()) {
                 return true;
             }
-        } catch (SQLException e) {
-            throw e;
         }
         return false;
     }
