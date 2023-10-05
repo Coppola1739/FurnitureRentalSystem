@@ -18,9 +18,9 @@ public class Employee {
     private String firstName;
     @NonNull
     private String lastName;
+    @NonNull
+    private Date hireDate;
     private String gender;
     private String phoneNumber;
     private Date birthday;
-    @NonNull
-    private Date hireDate;
 }

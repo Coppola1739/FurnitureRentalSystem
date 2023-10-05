@@ -16,6 +16,7 @@
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <lombok.maven.plugin.version>3.6.0</lombok.maven.plugin.version>
         <lombok.version>1.16.12</lombok.version>
+        <c3p0.version>0.9.5.5</c3p0.version>
     </properties>
 
 
@@ -35,6 +36,12 @@
             <artifactId>lombok</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>${c3p0.version}</version>
         </dependency>
     </dependencies>
 

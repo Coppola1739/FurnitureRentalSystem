@@ -14,9 +14,9 @@ public class Customer {
     private String firstName;
     @NonNull
     private String lastName;
+    @NonNull
+    private Date registrationDate;
     private String gender;
     private String phoneNumber;
     private Date birthday;
-    @NonNull
-    private Date registrationDate;
 }

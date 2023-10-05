@@ -40,7 +40,6 @@ public class LoginController {
 //
 	private boolean crossreferenceCredentials() throws SQLException {
 		EmployeeDao employeeDao = new EmployeeDao();
-
 		return employeeDao.authorizeEmployee(this.user.getText(), this.password.getText());
 	}
 //
