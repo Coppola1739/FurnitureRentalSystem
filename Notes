@@ -1,0 +1,6 @@
+DBPassword qjvw6rTXAXCmmR7EUBU@
+DBName cs3230f23c
+DBUser cs3230f23c
+
+VMArgs for School computers:
+--module-path "C:\eclipse\javafx-sdk-20.0.1\lib" --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics

@@ -1,5 +1,6 @@
-
 use cs3230f23c;
+
+set FOREIGN_KEY_CHECKS = 0;
 
 drop table if exists `Member`;
 CREATE TABLE `Member` (
@@ -18,17 +19,17 @@ CREATE TABLE `Member` (
 
 drop table if exists `Category`;
 CREATE TABLE `Category` (
-    name VARCHAR(20)
+    name VARCHAR(20) PRIMARY KEY
 );
 
 drop table if exists `Style`;
 CREATE TABLE `Style` (
-    name VARCHAR(20)
+    name VARCHAR(20) PRIMARY KEY
 );
 
 drop table if exists `Furniture`;
 CREATE TABLE `Furniture` (
-    id CHAR(10) NOT NULL PRIMARY KEY,
+    furniture_id CHAR(10) NOT NULL PRIMARY KEY,
     style_name VARCHAR(20),
     category_name VARCHAR(20),
     rental_rate DECIMAL(6 , 2 ) NOT NULL
@@ -36,7 +37,7 @@ CREATE TABLE `Furniture` (
 
 drop table if exists `Return`;
 CREATE TABLE `Return` (
-    id CHAR(10) PRIMARY KEY,
+    return_id CHAR(10) PRIMARY KEY,
     member_id CHAR(10),
     employee_num CHAR(10)
 );
@@ -57,10 +58,11 @@ CREATE TABLE `Rental` (
 
 drop table if exists `Rental_Item`;
 CREATE TABLE `Rental_Item` (
-    rental_id CHAR(10) PRIMARY KEY NOT NULL,
+    rental_id CHAR(10),
     furniture_id CHAR(10),
     quantity INT,
-    cost DECIMAL(6 , 2 )
+    cost DECIMAL(6 , 2),
+    PRIMARY KEY (rental_id,furniture_id)
 );
 
 drop table if exists `Return_Item`;
@@ -69,7 +71,8 @@ CREATE TABLE `Return_Item` (
     furniture_id CHAR(10),
     return_id CHAR(10),
     fine_amount DECIMAL(6 , 2 ),
-    quantity INT
+    quantity INT,
+    PRIMARY KEY (rental_id,furniture_id,return_id)
 );
 
 
@@ -90,34 +93,32 @@ CREATE TABLE `Employee` (
     role varchar(20)
 );
 
+set FOREIGN_KEY_CHECKS = 1;
 
+
+ALTER TABLE `Rental`
+add constraint	fk_rental_member foreign key `Rental`(member_id) references `Member` (member_id);
 
 alter table `Rental`
-add constraint	fk_rental_member foreign key (member_id) references `Member`.member_id;
-
-alter table `Rental`
-add constraint	fk_rental_employee foreign key (employee_num) references `Employee`.employee_num;
+add constraint	fk_rental_employee foreign key `Rental`(employee_num) references `Employee` (employee_num);
 
 alter table `Rental_Item`
-add constraint	fk_rental_item_furniture foreign key (furniture_id) references `Rental`.rental_id;
+add constraint	fk_rental_item_furniture foreign key `Rental_Item` (furniture_id) references `Furniture` (furniture_id);
 
 alter table `Rental_Item`
-add constraint	fk_rental_item_rental foreign key (employee_num) references `Employee`.employee_num;
+add constraint	fk_rental_item_rental foreign key `Rental_Item` (rental_id) references `Rental` (rental_id);
 
 alter table `Employee`
-add constraint fk_employee_role foreign key (role) references `Role`.name;
+add constraint fk_employee_role foreign key `Employee` (role) references `Role` (name);
 
 alter table `Return`
-add constraint fk_return_member foreign key (member_id) references `Member`.member_id;
+add constraint fk_return_member foreign key `Return` (member_id) references `Member` (member_id);
 
 alter table `Return`
-add constraint fk_return_employee foreign key (employee_num) references `Employee`.employee_num;
+add constraint fk_return_employee foreign key `Return` (employee_num) references `Employee` (employee_num);
 
 alter table `Furniture`
-add constraint fk_furniture_category foreign key (category_name) references `Category`.name;
+add constraint fk_furniture_category foreign key `Furniture`(category_name) references `Category`(name);
 
 alter table `Furniture`
-add constraint fk_furniture_style foreign key (style_name) references `Style`.name;
-
-alter table `Return_Item`
-add constraint fk_return_item_return foreign key (return_id) references `Return`.id;
+add constraint fk_furniture_style foreign key `Furniture`(style_name) references `Style` (name);

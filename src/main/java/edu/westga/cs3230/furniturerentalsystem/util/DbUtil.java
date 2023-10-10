@@ -8,8 +8,8 @@ import javax.sql.DataSource;
 
 //TODO: Need to get DB info for this class
 public class DbUtil {
-    private static final String DB_USERNAME = "db.username";
-    private static final String DB_PASSWORD = "db.password";
+    private static final String DB_USERNAME = "cs3230f23c";
+    private static final String DB_PASSWORD = "qjvw6rTXAXCmmR7EUBU@";
     private static final String DB_URL = "db.url";
     private static final String DB_DRIVER_CLASS = "driver.class.name";
 
