@@ -131,3 +131,62 @@ primary key (username),
 constraint fk_login_role foreign key(`role`) references `role`(name) ON DELETE 
 CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE if not exists personal_information (
+	pid int AUTO_INCREMENT NOT NULL Primary key,
+    f_name VARCHAR(50) NOT NULL,
+    l_name VARCHAR(50) NOT NULL,
+    b_date DATE NOT NULL,
+    gender VARCHAR(10),
+    phone_num CHAR(10) NOT NULL,
+    street_add VARCHAR(80),
+    city VARCHAR(50),
+    state VARCHAR(20),
+    zip CHAR(5),
+    register_date DATE
+);
+
+Alter table `employee`
+drop column `password`,
+drop column `f_name`,
+drop column `l_name`,
+drop column `b_date`,
+drop column `gender`,
+drop column `phone_num`,
+drop column `street_add`,
+drop column `city`,
+drop column `state`,
+drop column `zip`,
+drop column `register_date`,
+drop constraint fk_employee_role,
+add column pid int,
+add constraint fk_employee_personal_information FOREIGN KEY (pid) references personal_information(pid) ON DELETE 
+CASCADE ON UPDATE CASCADE,
+drop column `role`;
+
+Alter table `member`
+drop column `f_name`,
+drop column `l_name`,
+drop column `b_date`,
+drop column `gender`,
+drop column `phone_num`,
+drop column `street_add`,
+drop column `city`,
+drop column `state`,
+drop column `zip`,
+drop column `register_date`,
+add column pid int,
+add constraint fk_member_personal_information FOREIGN KEY (pid) references personal_information(pid) ON DELETE 
+CASCADE ON UPDATE CASCADE;
+
+Alter table `member`
+add column username varchar(45) Not NUll,
+add constraint fk_member_user FOREIGN KEY (username) references `user`(username) ON DELETE 
+ CASCADE ON UPDATE CASCADE;
+ 
+ Alter table `employee`
+add column username varchar(45) Not NUll,
+add constraint fk_employee_user FOREIGN KEY (username) references `user`(username) ON DELETE 
+ CASCADE ON UPDATE CASCADE
+
+
