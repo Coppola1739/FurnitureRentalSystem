@@ -122,3 +122,12 @@ add constraint fk_furniture_category foreign key `Furniture`(category_name) refe
 
 alter table `Furniture`
 add constraint fk_furniture_style foreign key `Furniture`(style_name) references `Style` (name);
+
+create table login (
+username varchar(45) NOT NULL,
+`password` varchar(45) NOT NULL,
+`role`  varchar(20) NOT NULL,
+primary key (username),
+constraint fk_login_role foreign key(`role`) references `role`(name) ON DELETE 
+CASCADE ON UPDATE CASCADE
+);
