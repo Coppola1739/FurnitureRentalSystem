@@ -3,13 +3,21 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
-import edu.westga.cs3230.furniturerentalsystem.model.Customer;
-import edu.westga.cs3230.furniturerentalsystem.model.Employee;
+import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * Controller for the login page.
@@ -29,22 +37,41 @@ public class LoginController {
 	@FXML
 	private void validCredentials(ActionEvent event) throws IOException, SQLException {
 
-//		if (this.crossreferenceCredentials()) {
-//			this.changeScene(this.user, Utilities.AppConstants.MAIN_GUI_FXML);
-//		} else {
-//			this.alertError(this.user);
-//			this.alertError(this.password);
-//		}
+		if (this.crossreferenceCredentials()) {
+			Alert alert = new Alert(AlertType.INFORMATION, "Valid username and password");
+			alert.showAndWait();
+		} else {
+			Alert alert = new Alert(AlertType.ERROR, "Invalid username and password");
+			alert.showAndWait();
+		}
 
 	}
-//
+
 	private boolean crossreferenceCredentials() throws SQLException {
-		EmployeeDao employeeDao = new EmployeeDao();
-		return employeeDao.authorizeEmployee(this.user.getText(), this.password.getText());
+		UserDao loginDao = new UserDao();
+		return loginDao.authorizeUser(this.user.getText(), this.password.getText());
 	}
-//
+
 	@FXML
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {
-//		this.changeScene(this.user, Utilities.AppConstants.CREATE_ACCOUNT_FXML);
+		this.changeScene(event, "view/Register.fxml");
 	}
+	
+	private void changeScene(ActionEvent event, String fxmlPath) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(fxmlPath));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage createAccountStage = new Stage();
+		createAccountStage.setTitle("Register");
+		createAccountStage.setScene(scene);
+		createAccountStage.initModality(Modality.APPLICATION_MODAL);
+		
+		createAccountStage.show();
+		
+		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
+		
+		stage.close();
+    }
 }
