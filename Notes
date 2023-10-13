@@ -1,6 +1,6 @@
 DBPassword qjvw6rTXAXCmmR7EUBU@
 DBName cs3230f23c
 DBUser cs3230f23c
-
+IP		160.10.217.6
 VMArgs for School computers:
---module-path "C:\eclipse\javafx-sdk-20.0.1\lib" --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics
+--module-path "C:\eclipse\javafx-sdk-20.0.2\lib" --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics
