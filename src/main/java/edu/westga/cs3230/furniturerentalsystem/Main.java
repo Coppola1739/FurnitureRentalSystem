@@ -17,12 +17,13 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private static final String WINDOW_TITLE = "Furniture Rental System";
-    private static final String GUI_FXML = "view/Login.fxml";
+    private static final String GUI_FXML = "/view/Login.fxml";
 
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(GUI_FXML));
+            System.out.println(getClass().getResource(GUI_FXML));
+			Parent root = FXMLLoader.load(getClass().getResource(GUI_FXML));
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle(WINDOW_TITLE);

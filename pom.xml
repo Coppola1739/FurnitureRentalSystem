@@ -15,7 +15,7 @@
         <javafx.version>19.0.2.1</javafx.version>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <lombok.maven.plugin.version>3.6.0</lombok.maven.plugin.version>
-        <lombok.version>1.16.12</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <c3p0.version>0.9.5.5</c3p0.version>
     </properties>
 
@@ -31,10 +31,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
+            <version>1.18.30</version>
             <scope>compile</scope>
         </dependency>
 
@@ -43,6 +44,7 @@
             <artifactId>c3p0</artifactId>
             <version>${c3p0.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
