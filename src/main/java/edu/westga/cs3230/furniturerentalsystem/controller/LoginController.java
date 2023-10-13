@@ -29,8 +29,16 @@ public class LoginController {
 
 	@FXML
 	private Button createAccountButton;
+	
+	@FXML
+	private Button submitButton;
+	
+	@FXML
+	private Button alterUserButton;
+	
 	@FXML
 	private TextField user;
+	
 	@FXML
 	private TextField password;
 
@@ -54,6 +62,11 @@ public class LoginController {
 
 	@FXML
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {
+		this.changeScene(event, "view/Register.fxml");
+	}
+	
+	@FXML
+	void navigateToAlterUserPage(ActionEvent event) throws IOException {
 		this.changeScene(event, "view/Register.fxml");
 	}
 	
