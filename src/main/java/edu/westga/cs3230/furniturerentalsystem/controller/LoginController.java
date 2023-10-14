@@ -60,14 +60,14 @@ public class LoginController {
 
 	@FXML
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {
-		this.changeScene(event, "/view/Register.fxml");
+		this.changeScene(event, "/Register.fxml");
 	}
 
 	@FXML
 	void navigateToAlterUserPage(ActionEvent event) throws IOException {
 		try {
 			if (this.crossreferenceCredentials()) {
-				this.changeScene(event, "view/AlterUser.fxml");
+				this.changeScene(event, "/AlterUser.fxml");
 			}
 		} catch (SQLException e) {
 		System.err.println(e.getMessage());
@@ -81,7 +81,7 @@ public class LoginController {
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
 		Stage createAccountStage = new Stage();
-		if (fxmlPath.equals("view/AlterUser.fxml")) {
+		if (fxmlPath.equals("/AlterUser.fxml")) {
 			createAccountStage.setTitle("Alter User");
 		} else {
 			createAccountStage.setTitle("Register");

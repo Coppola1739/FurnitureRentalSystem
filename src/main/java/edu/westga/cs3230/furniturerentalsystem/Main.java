@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private static final String WINDOW_TITLE = "Furniture Rental System";
-    private static final String GUI_FXML = "/view/Login.fxml";
+    private static final String GUI_FXML = "/Login.fxml";
 
     @Override
     public void start(Stage primaryStage) {

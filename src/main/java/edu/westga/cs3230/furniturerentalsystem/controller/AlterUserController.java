@@ -80,11 +80,18 @@ public class AlterUserController {
 		}
 
 		// Creating PersonalInformation object
-		PersonalInformation pInfo = new PersonalInformation(firstNameTextField.getText().trim(),
-				lastNameTextField.getText().trim(), new Date(), genderTextField.getText().trim(),
-				phoneTextField.getText().trim(), java.sql.Date.valueOf(birthdatePicker.getValue()),
-				streetAddressTextField.getText().trim(), cityTextField.getText().trim(),
-				stateTextField.getText().trim(), zipTextField.getText().trim());
+		PersonalInformation pInfo = PersonalInformation.builder()
+				.firstName(firstNameTextField.getText().trim())
+				.lastName(lastNameTextField.getText().trim())
+				.registrationDate(new Date())
+				.gender(genderTextField.getText().trim())
+				.phoneNumber(phoneTextField.getText().trim())
+				.birthday(java.sql.Date.valueOf(birthdatePicker.getValue()))
+				.address(streetAddressTextField.getText().trim())
+				.city(cityTextField.getText().trim())
+				.state(stateTextField.getText().trim())
+				.zip(zipTextField.getText().trim())
+				.build();
 
 		try {
 
