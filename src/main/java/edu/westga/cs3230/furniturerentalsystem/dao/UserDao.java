@@ -104,14 +104,22 @@ public class UserDao {
 		}
 	}
 
+	
+	/**
+	 * Alters a user by updating personal information fields concurrently.
+	 * @param username the registered username
+	 * @param password the password associated with that username
+	 * @param role employee, member, or manager
+	 * @param pinfo A personalInformation item with NO EMPTY STRINGS
+	 * @return true if rows affected, false otherwise
+	 * @throws SQLException shouldn't be thrown unless bad information is entered in pInfo
+	 */
 	public boolean alterUser(String username, String password, String role, PersonalInformation pinfo) throws SQLException {
-		//this.getUserData(username, password);
 		 String alterInfoQuery = "UPDATE personal_information JOIN member ON personal_information.pid = member.pid AND member.username = ? SET f_name = ?, l_name = ?, b_date = ?, gender = ?, phone_num = ?, street_add = ?, city = ?, state = ?, zip = ?";
 					try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 						PreparedStatement insertStmt = connection.prepareStatement(alterInfoQuery)) {
 
 							java.sql.Date sqlBirthDate = new java.sql.Date(pinfo.getBirthday().getTime());
-							java.sql.Date sqlRegDate = new java.sql.Date(pinfo.getRegistrationDate().getTime());
 							insertStmt.setString(1, username);
 							insertStmt.setString(2, pinfo.getFirstName());
 							insertStmt.setString(3, pinfo.getLastName());
@@ -128,25 +136,5 @@ public class UserDao {
 							} 
 	}
 
-
-//	public boolean getUserData(String username, String password) {
-//	        String query = "select 1 from personal_information JOIN member where personal_information.pid = member.pid AND member.username = ?";
-//			try (
-//					Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-//					PreparedStatement stmt = connection.prepareStatement(query)) 
-//			{
-//	            stmt.setString(1, username);
-//
-//	            ResultSet rs = stmt.executeQuery();
-//	            System.out.println(rs);
-//		}catch (SQLException ex) {
-//			System.out.println("SQLException: " + ex.getMessage());
-//			System.out.println("SQLState: " + ex.getSQLState());
-//			System.out.println("VendorError: " + ex.getErrorCode());
-//		} catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//			return true;
-//	}
 }
 

@@ -62,18 +62,14 @@ public class AlterUserController {
 	@FXML
 	private DatePicker birthdatePicker;
 
-//	    private boolean crossreferenceCredentials() throws SQLException {
-//			UserDao loginDao = new UserDao();
-//			return loginDao.authorizeUser(this.user.getText(), this.password.getText());
-//		}
-
 	@FXML
 	void alterUser(ActionEvent event) {
 		// Clearing the error text
 		errorText.setText("");
 
 		// Validating the inputs
-		if (firstNameTextField.getText().trim().isEmpty() || lastNameTextField.getText().trim().isEmpty()
+		if (userTextField.getText().trim().isEmpty() || passwordTextField.getText().trim().isEmpty()
+				|| firstNameTextField.getText().trim().isEmpty() || lastNameTextField.getText().trim().isEmpty()
 				|| genderTextField.getText().trim().isEmpty() || phoneTextField.getText().trim().isEmpty()
 				|| streetAddressTextField.getText().trim().isEmpty() || cityTextField.getText().trim().isEmpty()
 				|| stateTextField.getText().trim().isEmpty() || zipTextField.getText().trim().isEmpty()
@@ -93,8 +89,8 @@ public class AlterUserController {
 		try {
 
 			UserDao alterUser = new UserDao();
-			alterUser.alterUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), "customer",
-					pInfo);
+			alterUser.alterUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(),
+					"customer", pInfo);
 
 			errorText.setText("Account updated successfully!");
 

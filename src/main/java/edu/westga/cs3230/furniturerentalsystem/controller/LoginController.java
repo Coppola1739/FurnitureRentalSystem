@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -69,8 +67,6 @@ public class LoginController {
 	void navigateToAlterUserPage(ActionEvent event) throws IOException {
 		try {
 			if (this.crossreferenceCredentials()) {
-				UserDao alterUserDao = new UserDao();
-				//alterUserDao.(this.user.getText(), this.password.getText());
 				this.changeScene(event, "view/AlterUser.fxml");
 			}
 		} catch (SQLException e) {
@@ -85,7 +81,11 @@ public class LoginController {
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
 		Stage createAccountStage = new Stage();
-		createAccountStage.setTitle("Register");
+		if (fxmlPath.equals("view/AlterUser.fxml")) {
+			createAccountStage.setTitle("Alter User");
+		} else {
+			createAccountStage.setTitle("Register");
+		}
 		createAccountStage.setScene(scene);
 		createAccountStage.initModality(Modality.APPLICATION_MODAL);
 
