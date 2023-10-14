@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,8 +27,16 @@ public class LoginController {
 
 	@FXML
 	private Button createAccountButton;
+
+	@FXML
+	private Button submitButton;
+
+	@FXML
+	private Button alterUserButton;
+
 	@FXML
 	private TextField user;
+
 	@FXML
 	private TextField password;
 
@@ -56,7 +62,18 @@ public class LoginController {
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {
 		this.changeScene(event, "/view/Register.fxml");
 	}
-	
+
+	@FXML
+	void navigateToAlterUserPage(ActionEvent event) throws IOException {
+		try {
+			if (this.crossreferenceCredentials()) {
+				this.changeScene(event, "view/AlterUser.fxml");
+			}
+		} catch (SQLException e) {
+		System.err.println(e.getMessage());
+		}
+	}
+
 	private void changeScene(ActionEvent event, String fxmlPath) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(Main.class.getResource(fxmlPath));
@@ -64,14 +81,18 @@ public class LoginController {
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
 		Stage createAccountStage = new Stage();
-		createAccountStage.setTitle("Register");
+		if (fxmlPath.equals("view/AlterUser.fxml")) {
+			createAccountStage.setTitle("Alter User");
+		} else {
+			createAccountStage.setTitle("Register");
+		}
 		createAccountStage.setScene(scene);
 		createAccountStage.initModality(Modality.APPLICATION_MODAL);
-		
+
 		createAccountStage.show();
-		
+
 		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
-		
+
 		stage.close();
-    }
+	}
 }
