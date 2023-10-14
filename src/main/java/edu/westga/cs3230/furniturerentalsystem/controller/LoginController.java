@@ -70,8 +70,8 @@ public class LoginController {
 		try {
 			if (this.crossreferenceCredentials()) {
 				UserDao alterUserDao = new UserDao();
-				alterUserDao.alterUser(this.user.getText(), this.password.getText());
-				this.changeScene(event, "view/Register.fxml");
+				//alterUserDao.(this.user.getText(), this.password.getText());
+				this.changeScene(event, "view/AlterUser.fxml");
 			}
 		} catch (SQLException e) {
 		System.err.println(e.getMessage());
