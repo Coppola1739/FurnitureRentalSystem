@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDao {
 
+
 	private static final String CONNECTION_STRING = "jdbc:mysql://160.10.217.6:3306/cs3230f23c?user=cs3230f23c&password=qjvw6rTXAXCmmR7EUBU@";
 
 	public boolean authorizeUser(String username, String password) {
@@ -135,6 +136,7 @@ public class UserDao {
 							return affectedRows > 0;
 							} 
 	}
+
 
 }
 

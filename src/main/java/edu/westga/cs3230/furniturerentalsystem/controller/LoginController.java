@@ -60,7 +60,7 @@ public class LoginController {
 
 	@FXML
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {
-		this.changeScene(event, "view/Register.fxml");
+		this.changeScene(event, "/view/Register.fxml");
 	}
 
 	@FXML
