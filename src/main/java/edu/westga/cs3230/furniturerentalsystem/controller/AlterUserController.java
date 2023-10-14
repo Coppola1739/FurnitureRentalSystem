@@ -1,8 +1,10 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -57,6 +59,9 @@ public class AlterUserController {
 	    @FXML
 	    private DatePicker birthdatePicker;
 	    
-	    
+//	    private boolean crossreferenceCredentials() throws SQLException {
+//			UserDao loginDao = new UserDao();
+//			return loginDao.authorizeUser(this.user.getText(), this.password.getText());
+//		}
 
 }

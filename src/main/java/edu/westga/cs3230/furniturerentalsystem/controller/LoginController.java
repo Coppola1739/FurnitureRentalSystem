@@ -29,16 +29,16 @@ public class LoginController {
 
 	@FXML
 	private Button createAccountButton;
-	
+
 	@FXML
 	private Button submitButton;
-	
+
 	@FXML
 	private Button alterUserButton;
-	
+
 	@FXML
 	private TextField user;
-	
+
 	@FXML
 	private TextField password;
 
@@ -64,12 +64,20 @@ public class LoginController {
 	void navigateToCreateAccountPage(ActionEvent event) throws IOException {
 		this.changeScene(event, "view/Register.fxml");
 	}
-	
+
 	@FXML
 	void navigateToAlterUserPage(ActionEvent event) throws IOException {
-		this.changeScene(event, "view/Register.fxml");
+		try {
+			if (this.crossreferenceCredentials()) {
+				UserDao alterUserDao = new UserDao();
+				alterUserDao.alterUser(this.user.getText(), this.password.getText());
+				this.changeScene(event, "view/Register.fxml");
+			}
+		} catch (SQLException e) {
+		System.err.println(e.getMessage());
+		}
 	}
-	
+
 	private void changeScene(ActionEvent event, String fxmlPath) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(Main.class.getResource(fxmlPath));
@@ -80,11 +88,11 @@ public class LoginController {
 		createAccountStage.setTitle("Register");
 		createAccountStage.setScene(scene);
 		createAccountStage.initModality(Modality.APPLICATION_MODAL);
-		
+
 		createAccountStage.show();
-		
+
 		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
-		
+
 		stage.close();
-    }
+	}
 }
