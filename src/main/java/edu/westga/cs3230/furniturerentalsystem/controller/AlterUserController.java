@@ -1,15 +1,16 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -21,10 +22,22 @@ public class AlterUserController {
 	private ResourceBundle resources;
 
 	@FXML
+	private Text invalidZipText;
+	
+	@FXML
 	private URL location;
 
 	@FXML
+	private ComboBox<String> stateComboBox;
+	
+	@FXML
+	private ComboBox<String> genderComboBox;
+	
+	@FXML
 	private TextField userTextField;
+	
+	@FXML
+	private Text invalidPhoneNumText;
 
 	@FXML
 	private PasswordField passwordTextField;
@@ -84,12 +97,11 @@ public class AlterUserController {
 				.firstName(firstNameTextField.getText().trim())
 				.lastName(lastNameTextField.getText().trim())
 				.registrationDate(new Date())
-				.gender(genderTextField.getText().trim())
-				.phoneNumber(phoneTextField.getText().trim())
-				.birthday(java.sql.Date.valueOf(birthdatePicker.getValue()))
+				.gender(genderComboBox.getValue().trim())
+				.phoneNumber(phoneTextField.getText().replaceAll("[^0-9]", "").trim())				.birthday(java.sql.Date.valueOf(birthdatePicker.getValue()))
 				.address(streetAddressTextField.getText().trim())
 				.city(cityTextField.getText().trim())
-				.state(stateTextField.getText().trim())
+				.state(stateComboBox.getValue().trim())
 				.zip(zipTextField.getText().trim())
 				.build();
 
@@ -132,6 +144,56 @@ public class AlterUserController {
 		assert errorText != null : "fx:id=\"errorText\" was not injected: check your FXML file 'Register.fxml'.";
 		assert birthdatePicker != null
 				: "fx:id=\"birthdatePicker\" was not injected: check your FXML file 'Register.fxml'.";
-
+		this.setListenersForFields();
+        genderComboBox.getItems().addAll("Male", "Female");
+        this.populateStateComboBox();
 	}
+	
+	private void setListenersForFields() {
+    	phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isValidPhoneNum(newValue)) {
+                this.phoneTextField.setStyle("-fx-border-color: red;");
+                this.invalidPhoneNumText.setVisible(true);
+                this.alterUserButton.setDisable(true);
+            } else {
+                this.phoneTextField.setStyle("");
+                this.invalidPhoneNumText.setVisible(false);
+                this.alterUserButton.setDisable(false);
+            }
+    	});
+    	
+    	zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isValidZipCode(newValue)) {
+                this.invalidZipText.setVisible(true);
+                this.zipTextField.setText(oldValue);
+            }else {
+                this.invalidZipText.setVisible(false);
+                this.alterUserButton.setDisable(false);
+            }
+        });
+
+    }
+	
+	private boolean isValidZipCode(String zipCode) {
+        return zipCode.matches("\\d{5}");
+    }
+	
+	private void populateStateComboBox() {
+    	this.stateComboBox.setItems(FXCollections.observableArrayList(
+                "AL", "AK", "AZ", "AR", "CA",
+                "CO", "CT", "DE", "FL", "GA",
+                "HI", "ID", "IL", "IN", "IA",
+                "KS", "KY", "LA", "ME", "MD",
+                "MA", "MI", "MN", "MS", "MO",
+                "MT", "NE", "NV", "NH", "NJ",
+                "NM", "NY", "NC", "ND", "OH",
+                "OK", "OR", "PA", "RI", "SC",
+                "SD", "TN", "TX", "UT", "VT",
+                "VA", "WA", "WV", "WI", "WY"));
+    }
+	
+	private boolean isValidPhoneNum(String phoneNum) {
+    	String phoneRegex = "\\d{3}-\\d{3}-\\d{4}";
+        return phoneNum.matches(phoneRegex);
+    }
 }
