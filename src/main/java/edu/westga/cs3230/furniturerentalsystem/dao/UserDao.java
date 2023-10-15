@@ -31,10 +31,13 @@ public class UserDao {
 
 				return true;
 			}
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
 		} catch (Exception e) {
-			System.out.println("Failed to connect");
-			return false;
-		}
+            System.out.println(e.toString());
+        }
 		System.out.println("Unsuccessfull login");
 		return false;
 	}
