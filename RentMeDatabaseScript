@@ -189,4 +189,5 @@ add column username varchar(45) Not NUll,
 add constraint fk_employee_user FOREIGN KEY (username) references `user`(username) ON DELETE 
  CASCADE ON UPDATE CASCADE
 
-
+ALTER TABLE `cs3230f23c`.`personal_information` 
+CHANGE COLUMN `phone_num` `phone_num` CHAR(13) NOT NULL ;
