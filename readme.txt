@@ -1,4 +1,11 @@
-Sample username and password: Nick, Password
+Sample username and password: 
+Nick , Password
+Larry ,	12345
+Requis ,	12313
+
+Current issues
+When a user is created they are assigned as a customer but they are not added to the member table.
+
 Project is a Java Maven project.
 To get dependency working in eclipse, run this in the terminal:
 "java -jar lib/lombok-1.18.30.jar"
