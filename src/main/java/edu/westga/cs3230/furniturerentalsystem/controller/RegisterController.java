@@ -1,195 +1,224 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class RegisterController {
 
 	@FXML
 	private ComboBox<String> genderComboBox;
+
+	@FXML
+	private ResourceBundle resources;
+
+	@FXML
+	private URL location;
+
+	@FXML
+	private Text invalidZipText;
+
+	@FXML
+	private TextField userTextField;
+
+	@FXML
+	private PasswordField passwordTextField;
+
+	@FXML
+	private Button createAccountButton;
+
+	@FXML
+	private TextField firstNameTextField;
+
+	@FXML
+	private TextField genderTextField;
+
+	@FXML
+	private ComboBox<String> stateComboBox;
+
+	@FXML
+	private TextField phoneTextField;
+
+	@FXML
+	private TextField lastNameTextField;
+
+	@FXML
+	private TextField streetAddressTextField;
+
+	@FXML
+	private TextField cityTextField;
+
+	@FXML
+	private TextField stateTextField;
+
+	@FXML
+	private TextField zipTextField;
+
+	@FXML
+	private Text errorText;
+
+	@FXML
+	private Text invalidPhoneNumText;
+
+	@FXML
+	private DatePicker birthdatePicker;
+
+	@FXML
+	private Button backButton;
+
+	@FXML
+	void createAccount(ActionEvent event) {
+		// Clearing the error text
+		this.errorText.setText("");
+
+		if (this.userTextField.getText().trim().isEmpty() || this.passwordTextField.getText().trim().isEmpty()
+				|| this.firstNameTextField.getText().trim().isEmpty()
+				|| this.lastNameTextField.getText().trim().isEmpty() || this.genderComboBox.getValue().trim().isEmpty()
+				|| this.phoneTextField.getText().trim().isEmpty()
+				|| this.streetAddressTextField.getText().trim().isEmpty()
+				|| this.cityTextField.getText().trim().isEmpty() || this.stateComboBox.getValue().trim().isEmpty()
+				|| this.zipTextField.getText().trim().isEmpty() || this.birthdatePicker.getValue() == null || !this.isValidZipCode(this.zipTextField.getText())) {
+
+			this.errorText.setText("All fields are required!");
+			return;
+		}
+
+		// Creating PersonalInformation object
+		PersonalInformation pInfo = this.createPersonalInformation();
+
+		try {
+
+			UserDao login = new UserDao();
+			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), "customer",
+					pInfo);
+
+			this.errorText.setText("Account created successfully!");
+			Alert alert = new Alert(AlertType.INFORMATION, "Account Created");
+			alert.showAndWait();
+			this.navigateToLogin();
+		} catch (IllegalArgumentException ex) {
+			this.errorText.setText(ex.getMessage());
+		} catch (IOException e) {
+			this.errorText.setText("Failed to add account.");
+		}
+	}
+
+	private PersonalInformation createPersonalInformation() {
+		PersonalInformation pInfo = PersonalInformation.builder().firstName(this.firstNameTextField.getText().trim())
+				.lastName(this.lastNameTextField.getText().trim()).registrationDate(new Date())
+				.gender(this.genderComboBox.getValue())
+				.phoneNumber(this.phoneTextField.getText().replaceAll("[^0-9]", "").trim())
+				.birthday(java.sql.Date.valueOf(this.birthdatePicker.getValue()))
+				.address(this.streetAddressTextField.getText().trim()).city(this.cityTextField.getText().trim())
+				.state(this.stateComboBox.getValue()).zip(this.zipTextField.getText().trim()).build();
+		return pInfo;
+	}
+
+	@FXML
+	void goBack(ActionEvent event) {
+		try {
+			this.navigateToLogin();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-    @FXML
-    private ResourceBundle resources;
+	private void navigateToLogin() throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource("/Login.fxml"));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
+		newStage.setTitle("Login");
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
+		newStage.show();
+		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
+		stage.close();
+	}
 
-    @FXML
-    private URL location;
+	@FXML
+	void initialize() {
+		assert this.userTextField != null
+				: "fx:id=\"userTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.passwordTextField != null
+				: "fx:id=\"passwordTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.createAccountButton != null
+				: "fx:id=\"createAccountButton\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.firstNameTextField != null
+				: "fx:id=\"firstNameTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.genderTextField != null
+				: "fx:id=\"genderTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.phoneTextField != null
+				: "fx:id=\"phoneTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.lastNameTextField != null
+				: "fx:id=\"lastNameTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.streetAddressTextField != null
+				: "fx:id=\"streetAddressTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.cityTextField != null
+				: "fx:id=\"cityTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.stateTextField != null
+				: "fx:id=\"stateTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.zipTextField != null
+				: "fx:id=\"zipTextField\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.errorText != null : "fx:id=\"errorText\" was not injected: check your FXML file 'Register.fxml'.";
+		assert this.birthdatePicker != null
+				: "fx:id=\"birthdatePicker\" was not injected: check your FXML file 'Register.fxml'.";
+		this.setListenersForFields();
+		this.genderComboBox.getItems().addAll("Male", "Female");
+		this.populateStateComboBox();
+	}
 
-    @FXML
-    private Text invalidZipText;
-    
-    @FXML
-    private TextField userTextField;
+	private void setListenersForFields() {
+		this.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!this.isValidPhoneNum(newValue)) {
+				this.phoneTextField.setStyle("-fx-border-color: red;");
+				this.invalidPhoneNumText.setVisible(true);
+				this.createAccountButton.setDisable(true);
+			} else {
+				this.phoneTextField.setStyle("");
+				this.invalidPhoneNumText.setVisible(false);
+				this.createAccountButton.setDisable(false);
+			}
+		});
+	}
 
-    @FXML
-    private PasswordField passwordTextField;
+	private boolean isValidZipCode(String zipCode) {
+		return zipCode.matches("\\d{5}");
+	}
 
-    @FXML
-    private Button createAccountButton;
+	private boolean isValidPhoneNum(String phoneNum) {
+		String phoneRegex = "\\d{3}-\\d{3}-\\d{4}";
+		return phoneNum.matches(phoneRegex);
+	}
 
-    @FXML
-    private TextField firstNameTextField;
+	private void populateStateComboBox() {
+		this.stateComboBox.setItems(FXCollections.observableArrayList("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE",
+				"FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO",
+				"MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN",
+				"TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"));
+	}
 
-    @FXML
-    private TextField genderTextField;
-    
-    @FXML
-    private ComboBox<String> stateComboBox;
-
-    @FXML
-    private TextField phoneTextField;
-
-    @FXML
-    private TextField lastNameTextField;
-
-    @FXML
-    private TextField streetAddressTextField;
-
-    @FXML
-    private TextField cityTextField;
-
-    @FXML
-    private TextField stateTextField;
-
-    @FXML
-    private TextField zipTextField;
-
-    @FXML
-    private Text errorText;
-
-    @FXML
-    private Text invalidPhoneNumText;
-    
-    @FXML
-    private DatePicker birthdatePicker;
-
-    @FXML
-    void createAccount(ActionEvent event) {
-    	  // Clearing the error text
-        errorText.setText("");
-
-        // Validating the inputs
-        if (userTextField.getText().trim().isEmpty() ||
-            passwordTextField.getText().trim().isEmpty() ||
-            firstNameTextField.getText().trim().isEmpty() ||
-            lastNameTextField.getText().trim().isEmpty() ||
-            genderTextField.getText().trim().isEmpty() ||
-            phoneTextField.getText().trim().isEmpty() ||
-            streetAddressTextField.getText().trim().isEmpty() ||
-            cityTextField.getText().trim().isEmpty() ||
-            stateTextField.getText().trim().isEmpty() ||
-            zipTextField.getText().trim().isEmpty() ||
-            birthdatePicker.getValue() == null) {
-            
-            errorText.setText("All fields are required!");
-            return;
-        }
-
-     
-        // Creating PersonalInformation object
-        PersonalInformation pInfo = PersonalInformation.builder()
-                .firstName(firstNameTextField.getText().trim())
-                .lastName(lastNameTextField.getText().trim())
-                .registrationDate(new Date())
-                .gender(genderComboBox.getValue())
-                .phoneNumber(phoneTextField.getText().replaceAll("[^0-9]", "").trim())
-                .birthday(java.sql.Date.valueOf(birthdatePicker.getValue()))
-                .address(streetAddressTextField.getText().trim())
-                .city(cityTextField.getText().trim())
-                .state(stateComboBox.getValue())
-                .zip(zipTextField.getText().trim())
-                .build();
-
-        
-        try {
-            
-            UserDao login = new UserDao();
-            login.registerUser(this.userTextField.getText().trim(),this.passwordTextField.getText().trim(),"customer", pInfo);
-
-            errorText.setText("Account created successfully!");
-
-        } catch (IllegalArgumentException ex) {
-            errorText.setText(ex.getMessage());
-        }
-    }
-
-    @FXML
-    void initialize() {
-        assert userTextField != null : "fx:id=\"userTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert passwordTextField != null : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert createAccountButton != null : "fx:id=\"createAccountButton\" was not injected: check your FXML file 'Register.fxml'.";
-        assert firstNameTextField != null : "fx:id=\"firstNameTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert genderTextField != null : "fx:id=\"genderTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert phoneTextField != null : "fx:id=\"phoneTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert lastNameTextField != null : "fx:id=\"lastNameTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert streetAddressTextField != null : "fx:id=\"streetAddressTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert cityTextField != null : "fx:id=\"cityTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert stateTextField != null : "fx:id=\"stateTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert zipTextField != null : "fx:id=\"zipTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert errorText != null : "fx:id=\"errorText\" was not injected: check your FXML file 'Register.fxml'.";
-        assert birthdatePicker != null : "fx:id=\"birthdatePicker\" was not injected: check your FXML file 'Register.fxml'.";
-        this.setListenersForFields();
-        genderComboBox.getItems().addAll("Male", "Female");
-        this.populateStateComboBox();
-    }
-    
-    private void setListenersForFields() {
-    	phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!isValidPhoneNum(newValue)) {
-                this.phoneTextField.setStyle("-fx-border-color: red;");
-                this.invalidPhoneNumText.setVisible(true);
-                this.createAccountButton.setDisable(true);
-            } else {
-                this.phoneTextField.setStyle("");
-                this.invalidPhoneNumText.setVisible(false);
-                this.createAccountButton.setDisable(false);
-            }
-    	});
-    	
-    	zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!isValidZipCode(newValue)) {
-                this.invalidZipText.setVisible(true);
-                this.zipTextField.setText(oldValue);
-            }else {
-                this.invalidZipText.setVisible(false);
-                this.createAccountButton.setDisable(false);
-            }
-        });
-    }
-    	
-    private boolean isValidZipCode(String zipCode) {
-        return zipCode.matches("\\d{5}");
-    }
-    
-    private boolean isValidPhoneNum(String phoneNum) {
-    	String phoneRegex = "\\d{3}-\\d{3}-\\d{4}";
-        return phoneNum.matches(phoneRegex);
-    }
-    
-    private void populateStateComboBox() {
-    	this.stateComboBox.setItems(FXCollections.observableArrayList(
-                "AL", "AK", "AZ", "AR", "CA",
-                "CO", "CT", "DE", "FL", "GA",
-                "HI", "ID", "IL", "IN", "IA",
-                "KS", "KY", "LA", "ME", "MD",
-                "MA", "MI", "MN", "MS", "MO",
-                "MT", "NE", "NV", "NH", "NJ",
-                "NM", "NY", "NC", "ND", "OH",
-                "OK", "OR", "PA", "RI", "SC",
-                "SD", "TN", "TX", "UT", "VT",
-                "VA", "WA", "WV", "WI", "WY"));
-    }
-    
 }
