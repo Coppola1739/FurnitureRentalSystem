@@ -70,7 +70,7 @@ public class LoginController {
 				this.changeScene(event, "/AlterUser.fxml");
 			}
 		} catch (SQLException e) {
-		System.err.println(e.getMessage());
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -80,16 +80,18 @@ public class LoginController {
 		loader.load();
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
-		Stage createAccountStage = new Stage();
+		Stage newStage = new Stage();
 		if (fxmlPath.equals("/AlterUser.fxml")) {
-			createAccountStage.setTitle("Alter User");
+			newStage.setTitle("Alter User");
+			AlterUserController controller = loader.getController();
+			controller.bind(this.user.getText(), this.password.getText());
 		} else {
-			createAccountStage.setTitle("Register");
+			newStage.setTitle("Register");
 		}
-		createAccountStage.setScene(scene);
-		createAccountStage.initModality(Modality.APPLICATION_MODAL);
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
 
-		createAccountStage.show();
+		newStage.show();
 
 		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
 
