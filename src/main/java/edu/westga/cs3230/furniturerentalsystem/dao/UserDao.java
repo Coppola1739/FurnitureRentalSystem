@@ -7,12 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
-import edu.westga.cs3230.furniturerentalsystem.util.DbUtil;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class UserDao {
-
 
 	private static final String CONNECTION_STRING = "jdbc:mysql://160.10.217.6:3306/cs3230f23c?user=cs3230f23c&password=qjvw6rTXAXCmmR7EUBU@";
 
@@ -36,18 +34,16 @@ public class UserDao {
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("VendorError: " + ex.getErrorCode());
 		} catch (Exception e) {
-            System.out.println(e.toString());
-        }
+			System.out.println(e.toString());
+		}
 		System.out.println("Unsuccessfull login");
 		return false;
 	}
 
-	//TODO if this user is a "member" (or any role for that matter), that should auto-populate the member table. Currently it does not.
 	public boolean registerUser(String username, String password, String role, PersonalInformation pinfo) {
 		try {
 			return this.setupUser(username, password, role, pinfo);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -59,6 +55,16 @@ public class UserDao {
 			return false;
 		}
 
+		if (this.checkExists(username)) {
+
+			return (this.insertUserInfo(pinfo) && this.insertUserCreds(username, password, role));
+		} else {
+			return false;
+		}
+
+	}
+
+	private boolean checkExists(String username) throws SQLException {
 		String checkQuery = "SELECT * FROM user WHERE username = ?";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING)) {
 			PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
@@ -66,12 +72,13 @@ public class UserDao {
 			checkStmt.setString(1, username);
 			ResultSet rs = checkStmt.executeQuery();
 
-			if (rs.next()) {
-
-				return false;
-			}
+			return !rs.next();
+		} catch (Exception e) {
+			return false;
 		}
+	}
 
+	private boolean insertUserCreds(String username, String password, String role) throws SQLException {
 		String insertUserQuery = "INSERT INTO user (username, password, role) VALUES (?, ?, ?)";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement insertStmt = connection.prepareStatement(insertUserQuery)) {
@@ -81,11 +88,13 @@ public class UserDao {
 			insertStmt.setString(3, role);
 
 			int affectedRows = insertStmt.executeUpdate();
-			if (affectedRows == 0) {
-				return false;
-			}
+			return !(affectedRows == 0);
+		} catch (Exception e) {
+			return false;
 		}
+	}
 
+	private boolean insertUserInfo(PersonalInformation pinfo) throws SQLException {
 		String insertInfoQuery = "INSERT INTO personal_information (f_name, l_name, b_date, gender, phone_num, street_add, city, state, zip, register_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement insertStmt = connection.prepareStatement(insertInfoQuery)) {
@@ -108,38 +117,71 @@ public class UserDao {
 		}
 	}
 
-	
-	/**
-	 * Alters a user by updating personal information fields concurrently.
-	 * @param username the registered username
-	 * @param password the password associated with that username
-	 * @param role employee, member, or manager
-	 * @param pinfo A personalInformation item with NO EMPTY STRINGS
-	 * @return true if rows affected, false otherwise
-	 * @throws SQLException shouldn't be thrown unless bad information is entered in pInfo
-	 */
-	public boolean alterUser(String username, String password, String role, PersonalInformation pinfo) throws SQLException {
-		 String alterInfoQuery = "UPDATE personal_information JOIN member ON personal_information.pid = member.pid AND member.username = ? SET f_name = ?, l_name = ?, b_date = ?, gender = ?, phone_num = ?, street_add = ?, city = ?, state = ?, zip = ?";
-					try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-						PreparedStatement insertStmt = connection.prepareStatement(alterInfoQuery)) {
+	public PersonalInformation selectUserInformation(String username) {
+	    String selectUser = "SELECT pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `member` m JOIN personal_information pi ON pi.pid = m.pid where m.username = ?;";
+	    PersonalInformation pInfo = null;
+	    
+	    try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+	         PreparedStatement checkStmt = connection.prepareStatement(selectUser)) {
 
-							java.sql.Date sqlBirthDate = new java.sql.Date(pinfo.getBirthday().getTime());
-							insertStmt.setString(1, username);
-							insertStmt.setString(2, pinfo.getFirstName());
-							insertStmt.setString(3, pinfo.getLastName());
-							insertStmt.setString(4, sqlBirthDate.toString());
-							insertStmt.setString(5, pinfo.getGender());
-							insertStmt.setString(6, pinfo.getPhoneNumber());
-							insertStmt.setString(7, pinfo.getAddress());
-							insertStmt.setString(8, pinfo.getCity());
-							insertStmt.setString(9, pinfo.getState());
-							insertStmt.setString(10, pinfo.getZip());
-							
-							int affectedRows = insertStmt.executeUpdate();
-							return affectedRows > 0;
-							} 
+	        checkStmt.setString(1, username);
+	        try (ResultSet rs = checkStmt.executeQuery()) {
+	            if (rs.next()) {
+	                pInfo = PersonalInformation.builder()
+	                        .firstName(rs.getString("f_name"))
+	                        .lastName(rs.getString("l_name"))
+	                        .registrationDate(rs.getDate("register_date"))
+	                        .gender(rs.getString("gender"))
+	                        .phoneNumber(rs.getString("phone_num"))
+	                        .birthday(rs.getDate("b_date"))
+	                        .address(rs.getString("street_add"))
+	                        .city(rs.getString("city"))
+	                        .state(rs.getString("state"))
+	                        .zip(rs.getString("zip"))
+	                        .build();
+	            }
+	        }
+	        
+	    } catch (SQLException e) {
+	        System.out.println(e.getMessage());
+	    }
+	    
+	    return pInfo;
 	}
 
 
-}
+	/**
+	 * Alters a user by updating personal information fields concurrently.
+	 * 
+	 * @param username the registered username
+	 * @param password the password associated with that username
+	 * @param role     employee, member, or manager
+	 * @param pinfo    A personalInformation item with NO EMPTY STRINGS
+	 * @return true if rows affected, false otherwise
+	 * @throws SQLException shouldn't be thrown unless bad information is entered in
+	 *                      pInfo
+	 */
+	public boolean alterUser(String username, String password, String role, PersonalInformation pinfo)
+			throws SQLException {
+		String alterInfoQuery = "UPDATE personal_information JOIN member ON personal_information.pid = member.pid AND member.username = ? SET f_name = ?, l_name = ?, b_date = ?, gender = ?, phone_num = ?, street_add = ?, city = ?, state = ?, zip = ?";
+		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+				PreparedStatement insertStmt = connection.prepareStatement(alterInfoQuery)) {
 
+			java.sql.Date sqlBirthDate = new java.sql.Date(pinfo.getBirthday().getTime());
+			insertStmt.setString(1, username);
+			insertStmt.setString(2, pinfo.getFirstName());
+			insertStmt.setString(3, pinfo.getLastName());
+			insertStmt.setString(4, sqlBirthDate.toString());
+			insertStmt.setString(5, pinfo.getGender());
+			insertStmt.setString(6, pinfo.getPhoneNumber());
+			insertStmt.setString(7, pinfo.getAddress());
+			insertStmt.setString(8, pinfo.getCity());
+			insertStmt.setString(9, pinfo.getState());
+			insertStmt.setString(10, pinfo.getZip());
+
+			int affectedRows = insertStmt.executeUpdate();
+			return affectedRows > 0;
+		}
+	}
+
+}
