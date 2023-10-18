@@ -41,7 +41,7 @@ public class LoginController {
 	private TextField password;
 
 	@FXML
-	private void validCredentials(ActionEvent event) throws IOException, SQLException {
+	private void validateCredentials(ActionEvent event) throws IOException, SQLException {
 
 		if (this.crossreferenceCredentials()) {
 			Alert alert = new Alert(AlertType.INFORMATION, "Valid username and password");
@@ -81,6 +81,8 @@ public class LoginController {
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
 		Stage newStage = new Stage();
+		//Todo: this code should not be here especially as we add more fxmls.
+		// Should be generalized to change scene based on path alone
 		if (fxmlPath.equals("/AlterUser.fxml")) {
 			newStage.setTitle("Alter User");
 			AlterUserController controller = loader.getController();
