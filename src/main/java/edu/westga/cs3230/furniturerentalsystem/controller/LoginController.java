@@ -45,7 +45,7 @@ public class LoginController {
 
 		if (this.crossreferenceCredentials()) {
 			Alert alert = new Alert(AlertType.INFORMATION, "Valid username and password");
-			alert.showAndWait();
+			this.changeScene(event, "/MembersPage.fxml");
 		} else {
 			Alert alert = new Alert(AlertType.ERROR, "Invalid username and password");
 			alert.showAndWait();
@@ -73,6 +73,7 @@ public class LoginController {
 			System.err.println(e.getMessage());
 		}
 	}
+
 
 	private void changeScene(ActionEvent event, String fxmlPath) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
