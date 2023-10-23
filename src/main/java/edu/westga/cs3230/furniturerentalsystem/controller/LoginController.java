@@ -45,7 +45,7 @@ public class LoginController {
     private void validateCredentials(ActionEvent event) throws IOException, SQLException {
 
         if (this.crossreferenceCredentials()) {
-            this.navigateTo(event, Constants.MEMBERS_PAGE_FXML);
+            this.navigateTo(event, Constants.HOME_PAGE_FXML);
         } else {
             Alert alert = new Alert(AlertType.ERROR, "Invalid username and password");
             alert.showAndWait();
