@@ -17,6 +17,7 @@
             <Label fx:id="MembersListLabel" layoutX="202.0" layoutY="36.0" prefHeight="17.0" prefWidth="191.0" text="Members:" />
             <Button fx:id="RegisterMemberButton" layoutX="197.0" layoutY="520.0" mnemonicParsing="false" onAction="#registerMember" text="Register Member" />
             <Button fx:id="EditMemberButton" layoutX="197.0" layoutY="480.0" mnemonicParsing="false" onAction="#editMember" prefHeight="26.0" prefWidth="111.0" text="Edit Member" />
+            <Button fx:id="LogOutButton" layoutX="338.0" layoutY="2.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
          </children>
       </AnchorPane>
    </children>
