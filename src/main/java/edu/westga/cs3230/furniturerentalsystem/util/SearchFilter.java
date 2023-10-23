@@ -1,5 +1,8 @@
 package edu.westga.cs3230.furniturerentalsystem.util;
 
+import lombok.Getter;
+
+@Getter
 public enum SearchFilter {
     PHONE_NUMBER("Phone Number"),
     MEMBER_ID("Member ID"),
@@ -9,10 +12,6 @@ public enum SearchFilter {
 
     SearchFilter(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return this.displayName;
     }
 
     @Override

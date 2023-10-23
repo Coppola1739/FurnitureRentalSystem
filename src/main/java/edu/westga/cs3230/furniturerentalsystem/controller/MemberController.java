@@ -13,7 +13,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
@@ -33,9 +32,6 @@ public class MemberController extends SystemController {
 
     @FXML
     private Button RegisterMemberButton;
-
-    @FXML
-    private ScrollPane MemberScrollPane;
 
     @FXML
     private TextField MemberSearchTextField;
@@ -98,4 +94,5 @@ public class MemberController extends SystemController {
         stage.close();
     }
 
+    //Todo: create a pop out window to display a members full information when clicked in listview
 }

@@ -46,4 +46,8 @@ public class MemberDao {
         }
         return members;
     }
+
+
+    //Todo: Create select statement for member search filters (Phone number, name, member_id)
+    // Move some alter user dao functionality to this class
 }
