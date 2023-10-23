@@ -63,15 +63,6 @@ public class MemberController extends SystemController {
         this.MemberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
 
-    private void loadSearchFilterOptions() {
-        this.SearchFilterComboBox.getItems().addAll(SearchFilter.values());
-    }
-
-    private void loadMemberListView(ArrayList<Member> members) {
-        this.MembersListView.setItems(FXCollections.observableArrayList(members));
-    }
-
-
     @FXML
     void editMember(ActionEvent event) {
 
@@ -106,7 +97,7 @@ public class MemberController extends SystemController {
                 break;
         }
     }
-
+    //Todo: these navigate methods and others through out the code can be refactored
     @FXML
     void logOut(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -180,5 +171,13 @@ public class MemberController extends SystemController {
         alert.getDialogPane().setContent(textArea);
 
         alert.showAndWait();
+    }
+
+    private void loadSearchFilterOptions() {
+        this.SearchFilterComboBox.getItems().addAll(SearchFilter.values());
+    }
+
+    private void loadMemberListView(ArrayList<Member> members) {
+        this.MembersListView.setItems(FXCollections.observableArrayList(members));
     }
 }
