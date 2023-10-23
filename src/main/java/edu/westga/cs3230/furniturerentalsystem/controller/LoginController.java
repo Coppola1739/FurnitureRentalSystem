@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,7 +45,7 @@ public class LoginController {
     private void validateCredentials(ActionEvent event) throws IOException, SQLException {
 
         if (this.crossreferenceCredentials()) {
-            this.navigateTo(event, "/MembersPage.fxml");
+            this.navigateTo(event, Constants.MEMBERS_PAGE_FXML);
         } else {
             Alert alert = new Alert(AlertType.ERROR, "Invalid username and password");
             alert.showAndWait();
@@ -59,14 +60,14 @@ public class LoginController {
 
     @FXML
     void navigateToCreateAccountPage(ActionEvent event) throws IOException {
-        this.changeScene(event, "/Register.fxml");
+        this.changeScene(event, Constants.REGISTER_FXML);
     }
 
     @FXML
     void navigateToAlterUserPage(ActionEvent event) throws IOException {
         try {
             if (this.crossreferenceCredentials()) {
-                this.changeScene(event, "/AlterUser.fxml");
+                this.changeScene(event, Constants.ALTER_USER_FXML);
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -84,8 +85,7 @@ public class LoginController {
         //Todo: this code should not be here especially as we add more fxmls.
         // Should be generalized to change scene based on path alone
         // Extend SystemController in whatever controller you create and then you can use the navigateTo method
-
-        if (fxmlPath.equals("/AlterUser.fxml")) {
+        if (fxmlPath.equals(Constants.ALTER_USER_FXML)) {
             newStage.setTitle("Alter User");
             AlterUserController controller = loader.getController();
             controller.bind(this.user.getText(), this.password.getText());

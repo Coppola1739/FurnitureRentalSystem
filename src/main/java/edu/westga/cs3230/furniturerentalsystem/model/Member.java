@@ -8,7 +8,7 @@ import lombok.*;
 @Data
 public class Member {
     @NonNull
-    private String member_id;
+    private String memberId;
     @NonNull
     private String pId;
     @NonNull
@@ -17,7 +17,7 @@ public class Member {
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
-        output.append("Member ID: ").append(this.member_id).append(" ");
+        output.append("Member ID: ").append(this.memberId).append(" ");
         output.append("Name: ").append(pInfo.getFirstName()).append(" ").append(pInfo.getLastName());
         return output.toString();
     }
