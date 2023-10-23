@@ -34,7 +34,7 @@ public class MemberDao {
                             .zip(rs.getString("zip"))
                             .build();
                     Member member = Member.builder()
-                            .member_id(rs.getString("member_id"))
+                            .memberId(rs.getString("member_id"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
                             .build();
@@ -69,7 +69,7 @@ public class MemberDao {
                             .zip(rs.getString("zip"))
                             .build();
                     Member member = Member.builder()
-                            .member_id(rs.getString("member_id"))
+                            .memberId(rs.getString("member_id"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
                             .build();
@@ -104,7 +104,7 @@ public class MemberDao {
                             .zip(rs.getString("zip"))
                             .build();
                     Member member = Member.builder()
-                            .member_id(rs.getString("member_id"))
+                            .memberId(rs.getString("member_id"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
                             .build();
@@ -140,7 +140,7 @@ public class MemberDao {
                             .zip(rs.getString("zip"))
                             .build();
                     Member member = Member.builder()
-                            .member_id(rs.getString("member_id"))
+                            .memberId(rs.getString("member_id"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
                             .build();

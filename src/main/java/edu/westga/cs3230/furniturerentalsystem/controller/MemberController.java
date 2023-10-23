@@ -4,19 +4,18 @@ import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+import edu.westga.cs3230.furniturerentalsystem.util.MemberStringFormatter;
 import edu.westga.cs3230.furniturerentalsystem.util.SearchFilter;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -52,6 +51,7 @@ public class MemberController extends SystemController {
         this.memberDao = new MemberDao();
         this.loadMemberListView(this.memberDao.getAllMembers());
         this.loadSearchFilterOptions();
+        this.setListViewDoubleClickHandler();
     }
 
     @FXML
@@ -127,5 +127,34 @@ public class MemberController extends SystemController {
         this.MemberSearchTextField.setText("");
         this.loadMemberListView(this.memberDao.getAllMembers());
     }
-    //Todo: create a pop out window to display a members full information when clicked in listview
+
+    private void setListViewDoubleClickHandler() {
+        this.MembersListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    Member selectedMember = MembersListView.getSelectionModel().getSelectedItem();
+                    if (selectedMember != null) {
+                        showMemberDetailsPopup(selectedMember);
+                    }
+                }
+            }
+        });
+    }
+
+    private void showMemberDetailsPopup(Member member) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Member Details");
+        alert.setHeaderText("Member ID: " + member.getMemberId());
+
+        TextArea textArea = new TextArea();
+        MemberStringFormatter memberStringFormatter = new MemberStringFormatter();
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setText(memberStringFormatter.formatMemberString(member));
+
+        alert.getDialogPane().setContent(textArea);
+
+        alert.showAndWait();
+    }
 }
