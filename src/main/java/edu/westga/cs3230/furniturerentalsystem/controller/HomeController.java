@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HomeController extends SystemController{
+public class HomeController extends SystemController {
 
     @FXML
     private Button FurnitureNavigationButton;
@@ -30,14 +30,11 @@ public class HomeController extends SystemController{
     private Button TransactionsNavigationButton;
 
     @FXML
-    void navigateToFurniturePage(ActionEvent event) {
-
-    }
-    @FXML
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
         this.HomeUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
+
     @FXML
     void navigateToMembersPage(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -57,6 +54,12 @@ public class HomeController extends SystemController{
         Stage stage = (Stage) this.MembersNavigationButton.getScene().getWindow();
         stage.close();
     }
+
+    @FXML
+    void navigateToFurniturePage(ActionEvent event) {
+
+    }
+
 
     @FXML
     void navigateToTransactionsPage(ActionEvent event) {
