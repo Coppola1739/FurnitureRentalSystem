@@ -18,7 +18,11 @@
             <Label fx:id="MembersListLabel" layoutX="202.0" layoutY="36.0" prefHeight="17.0" prefWidth="191.0" text="Members:" />
             <Button fx:id="RegisterMemberButton" layoutX="197.0" layoutY="520.0" mnemonicParsing="false" onAction="#registerMember" text="Register Member" />
             <Button fx:id="EditMemberButton" layoutX="197.0" layoutY="480.0" mnemonicParsing="false" onAction="#editMember" prefHeight="26.0" prefWidth="111.0" text="Edit Member" />
-            <ComboBox fx:id="SearchFilterComboBox" layoutX="19.0" layoutY="57.0" prefHeight="26.0" prefWidth="160.0" promptText="Search Filter" />
+            <ComboBox fx:id="SearchFilterComboBox" layoutX="19.0" layoutY="57.0" prefHeight="26.0" prefWidth="160.0" />
+            <Button fx:id="SearchButton" layoutX="43.0" layoutY="116.0" mnemonicParsing="false" onAction="#SearchForMembers" text="Search" />
+            <Button fx:id="LogOutButton" layoutX="344.0" layoutY="1.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+            <Button fx:id="ClearSearchButton" layoutX="99.0" layoutY="116.0" mnemonicParsing="false" onAction="#clearMemberSearch" text="Clear" />
+            <Label fx:id="SearchFilterLabel" layoutX="19.0" layoutY="36.0" prefHeight="17.0" prefWidth="160.0" text="Search Filter:" />
          </children>
       </AnchorPane>
    </children>
