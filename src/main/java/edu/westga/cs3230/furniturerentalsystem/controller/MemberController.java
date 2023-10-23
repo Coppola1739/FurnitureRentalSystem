@@ -32,6 +32,9 @@ public class MemberController extends SystemController {
     private Button LogOutButton;
 
     @FXML
+    private Button HomeButton;
+
+    @FXML
     private Button RegisterMemberButton;
 
     @FXML
@@ -56,7 +59,8 @@ public class MemberController extends SystemController {
 
     @FXML
     public void setLoggedInLabel(String username) {
-        this.MemberUserNameLabel.textProperty().set("Logged In: " + username);
+        super.loggedInUser = username;
+        this.MemberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
 
     private void loadSearchFilterOptions() {
@@ -118,6 +122,26 @@ public class MemberController extends SystemController {
         newStage.show();
         Stage stage = (Stage) this.LogOutButton.getScene().getWindow();
 
+        stage.close();
+    }
+
+    @FXML
+    void navigateToHomePage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.HOME_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.HomeButton.getScene().getWindow();
         stage.close();
     }
 
