@@ -3,6 +3,8 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
+import edu.westga.cs3230.furniturerentalsystem.util.SearchFilter;
+
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
@@ -41,6 +44,9 @@ public class MemberController extends SystemController {
     private Label MemberUserNameLabel;
 
     @FXML
+    private ComboBox<SearchFilter> SearchFilterComboBox;
+
+    @FXML
     private ListView<Member> MembersListView;
 
     @FXML
@@ -52,6 +58,11 @@ public class MemberController extends SystemController {
     public void setLoggedInLabel(String username) {
         this.MemberUserNameLabel.textProperty().set("Logged In: " + username);
         this.loadMemberScrollPane();
+        this.loadSearchFilterOptions();
+    }
+
+    private void loadSearchFilterOptions() {
+        this.SearchFilterComboBox.getItems().addAll(SearchFilter.values());
     }
 
     private void loadMemberScrollPane() {
