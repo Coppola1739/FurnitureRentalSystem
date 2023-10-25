@@ -1,0 +1,83 @@
+-- Wipe tables except for role
+SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_SAFE_UPDATES=0;
+
+DELETE FROM `return_item`;
+DELETE FROM `rental_item`;
+DELETE FROM `return`;
+DELETE FROM `rental`;
+DELETE FROM `employee`;
+DELETE FROM `member`;
+DELETE FROM `furniture`;
+DELETE FROM `style`;
+DELETE FROM `category`;
+DELETE FROM `user`;
+DELETE FROM `personal_information`;
+
+SET SQL_SAFE_UPDATES=1;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- add users
+
+INSERT INTO `user` (username, password, role)
+VALUES 
+('johndoe', 'password1', 'member'),
+('janesmith', 'password2', 'member'),
+('alicejohnson', 'password3', 'member'),
+('bobmiller', 'password4', 'employee'),
+('charliebrown', 'password5', 'manager');
+
+-- Personal Info
+INSERT INTO personal_information (f_name, l_name, b_date, gender, phone_num, street_add, city, state, zip, register_date)
+VALUES 
+('John', 'Doe', '1990-05-10', 'Male', '1234567890', '123 Elm St', 'Anytown', 'CA', '12345', '2022-01-10'),
+('Jane', 'Smith', '1985-08-15', 'Female', '0987654321', '456 Oak St', 'Bigcity', 'TX', '67890', '2022-02-20'),
+('Alice', 'Johnson', '1995-01-05', 'Female', '1112223333', '789 Pine St', 'Smallville', 'NY', '11223', '2022-03-30'),
+('Bob', 'Miller', '1980-03-20', 'Male', '4445556666', '159 Maple St', 'Mediumtown', 'FL', '33445', '2022-04-10'),
+('Charlie', 'Brown', '1975-06-15', 'Male', '7778889999', '753 Cedar St', 'Largetown', 'OH', '77889', '2022-05-20');
+
+-- gets the last id generated when adding pid
+SET @current_max_pid = (SELECT IFNULL(MAX(pid), 0) FROM personal_information);
+
+-- Members
+INSERT INTO Member (member_id, pid, username)
+VALUES
+('0000000001', @current_max_pid, 'johndoe'),
+('0000000002', @current_max_pid - 1, 'janesmith'),
+('0000000003', @current_max_pid - 2, 'alicejohnson');
+
+-- Employees
+INSERT INTO Employee (employee_num, pid, username)
+VALUES
+('0000001001', @current_max_pid - 3, 'bobmiller'),
+('0000001002', @current_max_pid - 4, 'charliebrown');
+
+-- Styles
+INSERT INTO Style (name)
+VALUES
+('Modern'),
+('Traditional'),
+('Scandinavian'),
+('Rustic');
+
+-- Categories
+INSERT INTO Category (name)
+VALUES
+('Sofa'),
+('Chair'),
+('Table'),
+('Cabinet');
+
+-- Furniture
+INSERT INTO Furniture (furniture_id, style_name, category_name, rental_rate)
+VALUES
+('1000000001', 'Modern', 'Sofa', 29.99),
+('1000000002', 'Modern', 'Chair', 19.99),
+('1000000003', 'Traditional', 'Table', 15.99),
+('1000000004', 'Scandinavian', 'Sofa', 34.99),
+('1000000005', 'Scandinavian', 'Chair', 22.99),
+('1000000006', 'Rustic', 'Table', 17.99),
+('1000000007', 'Traditional', 'Cabinet', 25.99),
+('1000000008', 'Modern', 'Cabinet', 27.99);
+
+
