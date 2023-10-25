@@ -191,3 +191,11 @@ add constraint fk_employee_user FOREIGN KEY (username) references `user`(usernam
 
 ALTER TABLE `cs3230f23c`.`personal_information` 
 CHANGE COLUMN `phone_num` `phone_num` CHAR(13) NOT NULL ;
+
+-- default values for Role table
+
+INSERT INTO Role (name) 
+VALUES 
+('member'),
+('employee'),
+('manager');
