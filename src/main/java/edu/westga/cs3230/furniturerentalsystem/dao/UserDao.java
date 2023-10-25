@@ -5,8 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Random;
 
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -15,13 +18,13 @@ public class UserDao {
 	private static final String CONNECTION_STRING = "jdbc:mysql://160.10.217.6:3306/cs3230f23c?user=cs3230f23c&password=qjvw6rTXAXCmmR7EUBU@";
 
 	public boolean authorizeUser(String username, String password) {
-		// Todo: write sql statement to check if this username and password exists.
-		String query = "select * from user where username = ? and password = ?";
+		String query = "select * from user where username = ? and password = ? and role != ?";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement stmt = connection.prepareStatement(query)) {
 
 			stmt.setString(1, username);
 			stmt.setString(2, password);
+			stmt.setString(3, "member");
 
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
@@ -41,47 +44,52 @@ public class UserDao {
 	}
 
 	public boolean registerUser(String username, String password, String role, PersonalInformation pinfo) {
-		try {
-			return this.setupUser(username, password, role, pinfo);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
+		return this.setupUser(username, password, role, pinfo);
 	}
 
-	private boolean setupUser(String username, String password, String role, PersonalInformation pinfo)
-			throws SQLException {
+	private boolean setupUser(String username, String password, String role, PersonalInformation pinfo) throws IllegalArgumentException {
 		if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
 			return false;
 		}
 
-		if (this.checkExists(username)) {
-
-			return (this.insertUserInfo(pinfo) && this.insertUserCreds(username, password, role));
-		} else {
-			return false;
-		}
-
-	}
-
-	private boolean checkExists(String username) throws SQLException {
-		String checkQuery = "SELECT * FROM user WHERE username = ?";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING)) {
-			PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
+			connection.setAutoCommit(false);
+			boolean insertUser = false;
+			boolean insertMember = false;
+			if (this.checkExists(connection, username)) {
+				long pinfoID = this.insertUserInfo(connection, pinfo);
+				insertUser = this.insertUserCreds(connection, username, password, role);
+				insertMember = this.addMember(connection, pinfoID, username);
+			} else {
+				throw new IllegalArgumentException(Constants.USERNAME_INUSE);
+			}
+			connection.setAutoCommit(true);
+			connection.close();
+			return insertUser && insertMember;
+		} catch (SQLException e) {
+			throw new IllegalArgumentException(Constants.FAILED_SQL);
+		}
+	}
+	
+	private boolean checkExists(Connection conn, String username) throws IllegalArgumentException {
+		String checkQuery = "SELECT * FROM user WHERE username = ?;";
 
+		try {
+			PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
 			checkStmt.setString(1, username);
 			ResultSet rs = checkStmt.executeQuery();
 
 			return !rs.next();
-		} catch (Exception e) {
-			return false;
+		} catch (SQLException e) {
+			throw new IllegalArgumentException(Constants.FAILED_SQL);
 		}
-	}
 
-	private boolean insertUserCreds(String username, String password, String role) throws SQLException {
-		String insertUserQuery = "INSERT INTO user (username, password, role) VALUES (?, ?, ?)";
-		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-				PreparedStatement insertStmt = connection.prepareStatement(insertUserQuery)) {
+	}
+	
+	private boolean insertUserCreds(Connection conn, String username, String password, String role)
+			throws IllegalArgumentException {
+		String insertUserQuery = "INSERT INTO user (username, password, role) VALUES (?, ?, ?);";
+		try (PreparedStatement insertStmt = conn.prepareStatement(insertUserQuery)) {
 
 			insertStmt.setString(1, username);
 			insertStmt.setString(2, password);
@@ -89,15 +97,14 @@ public class UserDao {
 
 			int affectedRows = insertStmt.executeUpdate();
 			return !(affectedRows == 0);
-		} catch (Exception e) {
-			return false;
+		} catch (SQLException e) {
+			throw new IllegalArgumentException(Constants.FAILED_SQL);
 		}
 	}
 
-	private boolean insertUserInfo(PersonalInformation pinfo) throws SQLException {
-		String insertInfoQuery = "INSERT INTO personal_information (f_name, l_name, b_date, gender, phone_num, street_add, city, state, zip, register_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-				PreparedStatement insertStmt = connection.prepareStatement(insertInfoQuery)) {
+	private long insertUserInfo(Connection conn, PersonalInformation pinfo) throws SQLException {
+		String insertInfoQuery = "INSERT INTO personal_information (f_name, l_name, b_date, gender, phone_num, street_add, city, state, zip, register_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		try (PreparedStatement insertStmt = conn.prepareStatement(insertInfoQuery, Statement.RETURN_GENERATED_KEYS)) {
 
 			java.sql.Date sqlBirthDate = new java.sql.Date(pinfo.getBirthday().getTime());
 			java.sql.Date sqlRegDate = new java.sql.Date(pinfo.getRegistrationDate().getTime());
@@ -113,42 +120,60 @@ public class UserDao {
 			insertStmt.setString(10, sqlRegDate.toString());
 
 			int affectedRows = insertStmt.executeUpdate();
-			return affectedRows > 0;
+			if (affectedRows > 0) {
+				try (ResultSet generatedKeys = insertStmt.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						long id = generatedKeys.getLong(1);
+						return id;
+					} else {
+						throw new SQLException("Creating user failed, no ID obtained.");
+					}
+				}
+			}
+
+			return 0;
+		}
+	}
+	
+	
+	private boolean addMember(Connection conn, long pid, String username) throws SQLException {
+		String uid = this.generateTenDigitID();
+		String insertMember = "INSERT INTO member (member_id,pid,username) VALUES (?,?,?);";
+		try (PreparedStatement checkStmt = conn.prepareStatement(insertMember)) {
+			checkStmt.setString(1, uid);
+			checkStmt.setInt(2, (int) pid);
+			checkStmt.setString(3, username);
+
+			int result = checkStmt.executeUpdate();
+			
+			return result > 0;
 		}
 	}
 
 	public PersonalInformation selectUserInformation(String username) {
-	    String selectUser = "SELECT pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `member` m JOIN personal_information pi ON pi.pid = m.pid where m.username = ?;";
-	    PersonalInformation pInfo = null;
-	    
-	    try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-	         PreparedStatement checkStmt = connection.prepareStatement(selectUser)) {
+		String selectUser = "SELECT pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `member` m JOIN personal_information pi ON pi.pid = m.pid where m.username = ?;";
+		PersonalInformation pInfo = null;
 
-	        checkStmt.setString(1, username);
-	        try (ResultSet rs = checkStmt.executeQuery()) {
-	            if (rs.next()) {
-	                pInfo = PersonalInformation.builder()
-	                        .firstName(rs.getString("f_name"))
-	                        .lastName(rs.getString("l_name"))
-	                        .registrationDate(rs.getDate("register_date"))
-	                        .gender(rs.getString("gender"))
-	                        .phoneNumber(rs.getString("phone_num"))
-	                        .birthday(rs.getDate("b_date"))
-	                        .address(rs.getString("street_add"))
-	                        .city(rs.getString("city"))
-	                        .state(rs.getString("state"))
-	                        .zip(rs.getString("zip"))
-	                        .build();
-	            }
-	        }
-	        
-	    } catch (SQLException e) {
-	        System.out.println(e.getMessage());
-	    }
-	    
-	    return pInfo;
+		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+				PreparedStatement checkStmt = connection.prepareStatement(selectUser)) {
+
+			checkStmt.setString(1, username);
+			try (ResultSet rs = checkStmt.executeQuery()) {
+				if (rs.next()) {
+					pInfo = PersonalInformation.builder().firstName(rs.getString("f_name"))
+							.lastName(rs.getString("l_name")).registrationDate(rs.getDate("register_date"))
+							.gender(rs.getString("gender")).phoneNumber(rs.getString("phone_num"))
+							.birthday(rs.getDate("b_date")).address(rs.getString("street_add"))
+							.city(rs.getString("city")).state(rs.getString("state")).zip(rs.getString("zip")).build();
+				}
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return pInfo;
 	}
-
 
 	/**
 	 * Alters a user by updating personal information fields concurrently.
@@ -182,6 +207,14 @@ public class UserDao {
 			int affectedRows = insertStmt.executeUpdate();
 			return affectedRows > 0;
 		}
+	}
+
+	private String generateTenDigitID() {
+		Random random = new Random();
+		int firstDigit = 1 + random.nextInt(9);
+		int remainingDigits = random.nextInt(1_000_000_000);
+
+		return String.valueOf(firstDigit) + String.format("%09d", remainingDigits);
 	}
 
 }

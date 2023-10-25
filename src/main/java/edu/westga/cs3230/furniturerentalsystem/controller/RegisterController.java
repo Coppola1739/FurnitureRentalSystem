@@ -5,9 +5,11 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -25,7 +28,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class RegisterController {
+public class RegisterController extends SystemController {
 
 	@FXML
 	private ComboBox<String> genderComboBox;
@@ -86,10 +89,12 @@ public class RegisterController {
 
 	@FXML
 	private Button backButton;
+	
+	@FXML
+	private Label memberUserNameLabel;
 
 	@FXML
 	void createAccount(ActionEvent event) {
-		// Clearing the error text
 		this.errorText.setText("");
 
 		if (this.userTextField.getText().trim().isEmpty() || this.passwordTextField.getText().trim().isEmpty()
@@ -98,30 +103,53 @@ public class RegisterController {
 				|| this.phoneTextField.getText().trim().isEmpty()
 				|| this.streetAddressTextField.getText().trim().isEmpty()
 				|| this.cityTextField.getText().trim().isEmpty() || this.stateComboBox.getValue().trim().isEmpty()
-				|| this.zipTextField.getText().trim().isEmpty() || this.birthdatePicker.getValue() == null || !this.isValidZipCode(this.zipTextField.getText())) {
+				|| this.zipTextField.getText().trim().isEmpty() || this.birthdatePicker.getValue() == null
+				|| !this.isValidZipCode(this.zipTextField.getText())) {
 
 			this.errorText.setText("All fields are required!");
 			return;
 		}
-
-		// Creating PersonalInformation object
 		PersonalInformation pInfo = this.createPersonalInformation();
-
 		try {
 
 			UserDao login = new UserDao();
-			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), "customer",
+			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), "member",
 					pInfo);
 
 			this.errorText.setText("Account created successfully!");
 			Alert alert = new Alert(AlertType.INFORMATION, "Account Created");
 			alert.showAndWait();
-			this.navigateToLogin();
+			this.navigateTo(event, Constants.MEMBERS_PAGE_FXML);
 		} catch (IllegalArgumentException ex) {
 			this.errorText.setText(ex.getMessage());
 		} catch (IOException e) {
 			this.errorText.setText("Failed to add account.");
 		}
+	}
+	private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(fxmlPath));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+
+        Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
+
+        stage.close();
+    }
+	
+	public void setLoggedInLabel(String username) {
+		super.loggedInUser = username;
+		this.memberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
 	}
 
 	private PersonalInformation createPersonalInformation() {
@@ -138,25 +166,10 @@ public class RegisterController {
 	@FXML
 	void goBack(ActionEvent event) {
 		try {
-			this.navigateToLogin();
+			this.navigateTo(event, Constants.MEMBERS_PAGE_FXML);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void navigateToLogin() throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource("/Login.fxml"));
-		loader.load();
-		Parent parent = loader.getRoot();
-		Scene scene = new Scene(parent);
-		Stage newStage = new Stage();
-		newStage.setTitle("Login");
-		newStage.setScene(scene);
-		newStage.initModality(Modality.APPLICATION_MODAL);
-		newStage.show();
-		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
-		stage.close();
 	}
 
 	@FXML
