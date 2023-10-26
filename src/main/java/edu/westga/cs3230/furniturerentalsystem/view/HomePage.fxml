@@ -10,10 +10,10 @@
    <children>
       <AnchorPane prefHeight="406.0" prefWidth="600.0">
          <children>
-            <Label fx:id="HomeUserNameLabel" layoutY="6.0" prefHeight="17.0" prefWidth="184.0" />
-            <Button fx:id="MembersNavigationButton" layoutX="14.0" layoutY="104.0" mnemonicParsing="false" onAction="#navigateToMembersPage" text="Members" />
-            <Button fx:id="FurnitureNavigationButton" layoutX="92.0" layoutY="104.0" mnemonicParsing="false" onAction="#navigateToFurniturePage" text="Furniture" />
-            <Button fx:id="TransactionsNavigationButton" layoutX="170.0" layoutY="104.0" mnemonicParsing="false" onAction="#navigateToTransactionsPage" text="Transactions" />
+            <Label fx:id="homeUserNameLabel" layoutY="6.0" prefHeight="17.0" prefWidth="184.0" />
+            <Button fx:id="membersNavigationButton" layoutX="14.0" layoutY="104.0" mnemonicParsing="false" onAction="#navigateToMembersPage" text="Members" />
+            <Button fx:id="furnitureNavigationButton" layoutX="92.0" layoutY="104.0" mnemonicParsing="false" onAction="#navigateToFurniturePage" text="Furniture" />
+            <Button fx:id="transactionsNavigationButton" layoutX="170.0" layoutY="104.0" mnemonicParsing="false" onAction="#navigateToTransactionsPage" text="Transactions" />
          </children>
       </AnchorPane>
    </children>

@@ -26,63 +26,63 @@ import javafx.stage.Stage;
  */
 public class LoginController {
 
-	@FXML
-	private Button submitButton;
+    @FXML
+    private Button submitButton;
 
-	@FXML
-	private Button alterUserButton;
+    @FXML
+    private Button alterUserButton;
 
-	@FXML
-	private TextField user;
+    @FXML
+    private TextField user;
 
-	@FXML
-	private TextField password;
+    @FXML
+    private TextField password;
 
-	@FXML
-	private void validateCredentials(ActionEvent event) throws IOException, SQLException {
+    @FXML
+    private void validateCredentials(ActionEvent event) throws IOException, SQLException {
 
-		try {
-			if (this.crossreferenceCredentials()) {
-				this.navigateTo(event, Constants.HOME_PAGE_FXML);
-			} else {
-				Alert alert = new Alert(AlertType.ERROR, "Invalid username and password");
-				alert.showAndWait();
-			}
-		} catch (IllegalArgumentException e) {
-			Alert alert = new Alert(AlertType.ERROR, e.getMessage());
-			alert.showAndWait();
-		}
+        try {
+            if (this.crossreferenceCredentials()) {
+                this.navigateTo(event, Constants.HOME_PAGE_FXML);
+            } else {
+                Alert alert = new Alert(AlertType.ERROR, "Invalid username and password");
+                alert.showAndWait();
+            }
+        } catch (IllegalArgumentException exception) {
+            Alert alert = new Alert(AlertType.ERROR, exception.getMessage());
+            alert.showAndWait();
+        }
 
-	}
+    }
 
-	private boolean crossreferenceCredentials() throws SQLException {
-		UserDao loginDao = new UserDao();
-		return loginDao.authorizeUser(this.user.getText(), this.password.getText());
-	}
+    private boolean crossreferenceCredentials() throws SQLException {
+        UserDao loginDao = new UserDao();
+        return loginDao.authorizeUser(this.user.getText(), this.password.getText());
+    }
 
-	@FXML
-	void navigateToAlterUserPage(ActionEvent event) throws IOException {
-		throw new IllegalArgumentException("Move page");
-	}
+    @FXML
+    void navigateToAlterUserPage(ActionEvent event) throws IOException {
+        throw new IllegalArgumentException("Move page");
+    }
 
-	private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource(fxmlPath));
-		loader.load();
-		Parent parent = loader.getRoot();
-		Scene scene = new Scene(parent);
-		Stage newStage = new Stage();
+    private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(fxmlPath));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
-		SystemController controller = loader.getController();
-		controller.setLoggedInLabel(this.user.getText());
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(this.user.getText());
 
-		newStage.setScene(scene);
-		newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
 
-		newStage.show();
+        newStage.show();
 
-		Stage stage = (Stage) this.submitButton.getScene().getWindow();
+        Stage stage = (Stage) this.submitButton.getScene().getWindow();
 
-		stage.close();
-	}
+        stage.close();
+    }
 }

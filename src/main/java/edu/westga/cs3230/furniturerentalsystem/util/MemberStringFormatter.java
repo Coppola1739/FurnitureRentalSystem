@@ -3,9 +3,20 @@ package edu.westga.cs3230.furniturerentalsystem.util;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import lombok.NoArgsConstructor;
 
+/**
+ * Formatter for member string
+ *
+ * @author Gavin Coppola
+ * @version Fall 2023
+ */
 @NoArgsConstructor
 public class MemberStringFormatter {
-
+    /**
+     * Creates an output string for a member
+     *
+     * @param member the member to format
+     * @return String the output
+     */
     public String formatMemberString(Member member) {
         StringBuilder output = new StringBuilder();
         output.append("Member ID: ").append(member.getMemberId()).append("\n");

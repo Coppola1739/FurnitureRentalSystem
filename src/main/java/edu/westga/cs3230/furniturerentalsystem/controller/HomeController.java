@@ -1,6 +1,5 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.event.ActionEvent;
@@ -15,24 +14,35 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controller for home page
+ *
+ * @author Gavin Coppola
+ * @version Fall 2023
+ */
 public class HomeController extends SystemController {
 
     @FXML
-    private Button FurnitureNavigationButton;
+    private Button furnitureNavigationButton;
 
     @FXML
-    private Label HomeUserNameLabel;
+    private Label homeUserNameLabel;
 
     @FXML
-    private Button MembersNavigationButton;
+    private Button membersNavigationButton;
 
     @FXML
-    private Button TransactionsNavigationButton;
+    private Button transactionsNavigationButton;
 
+    /**
+     * Sets the logged in label of the view
+     *
+     * @param username the username to set
+     */
     @FXML
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
-        this.HomeUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+        this.homeUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
 
     @FXML
@@ -51,7 +61,7 @@ public class HomeController extends SystemController {
         newStage.initModality(Modality.APPLICATION_MODAL);
 
         newStage.show();
-        Stage stage = (Stage) this.MembersNavigationButton.getScene().getWindow();
+        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
         stage.close();
     }
 
@@ -59,8 +69,7 @@ public class HomeController extends SystemController {
     void navigateToFurniturePage(ActionEvent event) {
 
     }
-
-
+    
     @FXML
     void navigateToTransactionsPage(ActionEvent event) {
 

@@ -1,7 +1,17 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+/**
+ * Furniture model class
+ *
+ * @author Gavin Coppola
+ * @version Fall 2023
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

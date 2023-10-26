@@ -2,6 +2,12 @@ package edu.westga.cs3230.furniturerentalsystem.util;
 
 import lombok.Getter;
 
+/**
+ * Search filter enum
+ *
+ * @author Gavin Coppola
+ * @version Fall 2023
+ */
 @Getter
 public enum SearchFilter {
     PHONE_NUMBER("Phone Number"),

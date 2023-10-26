@@ -14,7 +14,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,188 +28,200 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Member Controller for member page
+ *
+ * @author Gavin Coppola
+ * @version Fall 2023
+ */
 public class MemberController extends SystemController {
-	private MemberDao memberDao;
+    private MemberDao memberDao;
 
-	@FXML
-	private Button EditMemberButton;
+    @FXML
+    private Button editMemberButton;
 
-	@FXML
-	private Button LogOutButton;
+    @FXML
+    private Button logOutButton;
 
-	@FXML
-	private Button HomeButton;
+    @FXML
+    private Button homeButton;
 
-	@FXML
-	private Button RegisterMemberButton;
+    @FXML
+    private Button registerMemberButton;
 
-	@FXML
-	private TextField MemberSearchTextField;
+    @FXML
+    private TextField memberSearchTextField;
 
-	@FXML
-	private Label MemberUserNameLabel;
+    @FXML
+    private Label memberUserNameLabel;
 
-	@FXML
-	private ComboBox<SearchFilter> SearchFilterComboBox;
+    @FXML
+    private ComboBox<SearchFilter> searchFilterComboBox;
 
-	@FXML
-	private ListView<Member> MembersListView;
+    @FXML
+    private ListView<Member> memberListView;
 
-	@FXML
-	void initialize() {
-		this.memberDao = new MemberDao();
-		this.loadMemberListView(this.memberDao.getAllMembers());
-		this.loadSearchFilterOptions();
-		this.setListViewDoubleClickHandler();
-	}
+    @FXML
+    void initialize() {
+        this.memberDao = new MemberDao();
+        this.loadMemberListView(this.memberDao.getAllMembers());
+        this.loadSearchFilterOptions();
+        this.setListViewDoubleClickHandler();
+    }
 
-	public void setLoggedInLabel(String username) {
-		super.loggedInUser = username;
-		this.MemberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
-	}
+    /**
+     * Sets the logged in label on the view
+     *
+     * @param username the username to set
+     */
+    public void setLoggedInLabel(String username) {
+        super.loggedInUser = username;
+        this.memberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+    }
 
-	@FXML
-	void editMember(ActionEvent event) {
+    @FXML
+    void editMember(ActionEvent event) {
 
-	}
+    }
 
-	@FXML
-	void registerMember(ActionEvent event) {
-		try {
-			this.navigateTo(event, Constants.REGISTER_FXML);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @FXML
+    void registerMember(ActionEvent event) {
+        try {
+            this.navigateTo(event, Constants.REGISTER_FXML);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 
-	@FXML
-	void SearchForMembers(ActionEvent event) {
-		SearchFilter selectedFilter = this.SearchFilterComboBox.getValue();
-		String searchText = this.MemberSearchTextField.getText();
+    @FXML
+    void searchForMembers(ActionEvent event) {
+        SearchFilter selectedFilter = this.searchFilterComboBox.getValue();
+        String searchText = this.memberSearchTextField.getText();
 
-		if (selectedFilter == null || searchText.isEmpty()) {
-			return;
-		}
+        if (selectedFilter == null || searchText.isEmpty()) {
+            return;
+        }
 
-		switch (selectedFilter) {
-		case MEMBER_ID:
-			ArrayList<Member> membersByMemberId = this.memberDao.getMembersByMemberId(searchText);
-			this.MembersListView.setItems(FXCollections.observableArrayList(membersByMemberId));
-			break;
-		case PHONE_NUMBER:
-			ArrayList<Member> membersByPhoneNumber = this.memberDao.getMembersByPhoneNumber(searchText);
-			this.MembersListView.setItems(FXCollections.observableArrayList(membersByPhoneNumber));
-			break;
-		case NAME:
-			ArrayList<Member> membersByName = this.memberDao.getMembersByName(searchText);
-			this.MembersListView.setItems(FXCollections.observableArrayList(membersByName));
-			break;
-		}
-	}
+        switch (selectedFilter) {
+            case MEMBER_ID:
+                ArrayList<Member> membersByMemberId = this.memberDao.getMembersByMemberId(searchText);
+                this.memberListView.setItems(FXCollections.observableArrayList(membersByMemberId));
+                break;
+            case PHONE_NUMBER:
+                ArrayList<Member> membersByPhoneNumber = this.memberDao.getMembersByPhoneNumber(searchText);
+                this.memberListView.setItems(FXCollections.observableArrayList(membersByPhoneNumber));
+                break;
+            case NAME:
+                ArrayList<Member> membersByName = this.memberDao.getMembersByName(searchText);
+                this.memberListView.setItems(FXCollections.observableArrayList(membersByName));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + selectedFilter);
+        }
+    }
 
-	// Todo: these navigate methods and others through out the code can be
-	// refactored
-	@FXML
-	void logOut(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource(Constants.LOGIN_FXML));
-		loader.load();
-		Parent parent = loader.getRoot();
-		Scene scene = new Scene(parent);
-		Stage newStage = new Stage();
+    // Todo: these navigate methods and others through out the code can be refactored
+    @FXML
+    void logOut(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.LOGIN_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
-		newStage.setScene(scene);
-		newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
 
-		newStage.show();
-		Stage stage = (Stage) this.LogOutButton.getScene().getWindow();
+        newStage.show();
+        Stage stage = (Stage) this.logOutButton.getScene().getWindow();
 
-		stage.close();
-	}
+        stage.close();
+    }
 
-	private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource(fxmlPath));
-		loader.load();
-		Parent parent = loader.getRoot();
-		Scene scene = new Scene(parent);
-		Stage newStage = new Stage();
+    private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(fxmlPath));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
-		SystemController controller = loader.getController();
-		controller.setLoggedInLabel(super.loggedInUser);
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
 
-		newStage.setScene(scene);
-		newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
 
-		newStage.show();
+        newStage.show();
 
-		Stage stage = (Stage) this.EditMemberButton.getScene().getWindow();
+        Stage stage = (Stage) this.editMemberButton.getScene().getWindow();
 
-		stage.close();
-	}
+        stage.close();
+    }
 
-	@FXML
-	void navigateToHomePage(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource(Constants.HOME_PAGE_FXML));
-		loader.load();
-		Parent parent = loader.getRoot();
-		Scene scene = new Scene(parent);
-		Stage newStage = new Stage();
+    @FXML
+    void navigateToHomePage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.HOME_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
-		SystemController controller = loader.getController();
-		controller.setLoggedInLabel(super.loggedInUser);
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
 
-		newStage.setScene(scene);
-		newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
 
-		newStage.show();
-		Stage stage = (Stage) this.HomeButton.getScene().getWindow();
-		stage.close();
-	}
+        newStage.show();
+        Stage stage = (Stage) this.homeButton.getScene().getWindow();
+        stage.close();
+    }
 
-	@FXML
-	void clearMemberSearch(ActionEvent event) {
-		this.SearchFilterComboBox.getSelectionModel().clearSelection();
-		this.MemberSearchTextField.setText("");
-		this.loadMemberListView(this.memberDao.getAllMembers());
-	}
+    @FXML
+    void clearMemberSearch(ActionEvent event) {
+        this.searchFilterComboBox.getSelectionModel().clearSelection();
+        this.memberSearchTextField.setText("");
+        this.loadMemberListView(this.memberDao.getAllMembers());
+    }
 
-	private void setListViewDoubleClickHandler() {
-		this.MembersListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				if (event.getClickCount() == 2) {
-					Member selectedMember = MembersListView.getSelectionModel().getSelectedItem();
-					if (selectedMember != null) {
-						showMemberDetailsPopup(selectedMember);
-					}
-				}
-			}
-		});
-	}
+    private void setListViewDoubleClickHandler() {
+        this.memberListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    Member selectedMember = MemberController.this.memberListView.getSelectionModel().getSelectedItem();
+                    if (selectedMember != null) {
+                        MemberController.this.showMemberDetailsPopup(selectedMember);
+                    }
+                }
+            }
+        });
+    }
 
-	private void showMemberDetailsPopup(Member member) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Member Details");
-		alert.setHeaderText("Member ID: " + member.getMemberId());
+    private void showMemberDetailsPopup(Member member) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Member Details");
+        alert.setHeaderText("Member ID: " + member.getMemberId());
 
-		TextArea textArea = new TextArea();
-		MemberStringFormatter memberStringFormatter = new MemberStringFormatter();
-		textArea.setEditable(false);
-		textArea.setWrapText(true);
-		textArea.setText(memberStringFormatter.formatMemberString(member));
+        TextArea textArea = new TextArea();
+        MemberStringFormatter memberStringFormatter = new MemberStringFormatter();
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setText(memberStringFormatter.formatMemberString(member));
 
-		alert.getDialogPane().setContent(textArea);
+        alert.getDialogPane().setContent(textArea);
 
-		alert.showAndWait();
-	}
+        alert.showAndWait();
+    }
 
-	private void loadSearchFilterOptions() {
-		this.SearchFilterComboBox.getItems().addAll(SearchFilter.values());
-	}
+    private void loadSearchFilterOptions() {
+        this.searchFilterComboBox.getItems().addAll(SearchFilter.values());
+    }
 
-	private void loadMemberListView(ArrayList<Member> members) {
-		this.MembersListView.setItems(FXCollections.observableArrayList(members));
-	}
+    private void loadMemberListView(ArrayList<Member> members) {
+        this.memberListView.setItems(FXCollections.observableArrayList(members));
+    }
 }
