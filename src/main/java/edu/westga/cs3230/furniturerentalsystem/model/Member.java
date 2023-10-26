@@ -37,4 +37,42 @@ public class Member {
         return output.toString();
     }
 
+    public String getMemberId() {
+    	return this.memberId;
+    }
+    
+    public PersonalInformation getPInfo() {
+    	return this.pInfo;
+    }
+    
+    public static Builder builder() {
+    	return new Builder();
+    }
+    
+    public static class Builder{
+    	private PersonalInformation pInfo;
+    	private Member member;
+    	public Builder() {
+    		
+    	}
+    	
+    	public Builder pInfo(PersonalInformation pInfo) {
+    		this.pInfo = pInfo;
+    		return this;
+    	}
+    	
+    	public Builder memberId(String memberId) {
+    		member.memberId = memberId;
+    		return this;
+    	}
+    	
+    	public Builder pId(String pId) {
+    		member.pId = pId;
+    		return this;
+    	}
+    	
+    	public Member build() {
+    		return member;
+    	}
+    }
 }
