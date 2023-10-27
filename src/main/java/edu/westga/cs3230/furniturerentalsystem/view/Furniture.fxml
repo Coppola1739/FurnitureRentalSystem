@@ -11,8 +11,8 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3230.furniturerentalsystem.controller.FurnitureController">
    <children>
       <TextField fx:id="furnitureIDSearchBox" layoutX="14.0" layoutY="54.0" />
-      <ComboBox fx:id="furnitureStyleDropdownBox" layoutX="14.0" layoutY="140.0" prefWidth="150.0" promptText="No filter" />
-      <ComboBox fx:id="furnitureTypeDropdownBox" layoutX="14.0" layoutY="241.0" prefWidth="150.0" promptText="No filter" />
+      <ComboBox fx:id="furnitureStyleComboBox" layoutX="14.0" layoutY="140.0" prefWidth="150.0" promptText="No filter" />
+      <ComboBox fx:id="furnitureTypeComboBox" layoutX="14.0" layoutY="241.0" prefWidth="150.0" promptText="No filter" />
       <Text layoutX="49.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Filter by type-" />
       <Text layoutX="49.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="-Filter by style-" />
       <Text layoutX="31.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search by furniture ID" />

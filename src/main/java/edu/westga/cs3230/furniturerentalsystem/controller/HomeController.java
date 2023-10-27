@@ -81,6 +81,8 @@ public class HomeController extends SystemController {
         newStage.initModality(Modality.APPLICATION_MODAL);
 
         newStage.show();
+        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+        stage.close();
     }
     
     @FXML

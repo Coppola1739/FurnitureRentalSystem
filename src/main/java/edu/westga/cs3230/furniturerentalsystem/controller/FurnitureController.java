@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,17 +33,28 @@ public class FurnitureController extends SystemController{
     private ListView<String> furnitureListView;
 
     @FXML
-    private ComboBox<String> furnitureStyleDropdownBox;
+    private ComboBox<String> furnitureStyleComboBox;
 
     @FXML
-    private ComboBox<String> furnitureTypeDropdownBox;
+    private ComboBox<String> furnitureTypeComboBox;
 
     @FXML
     private Button searchButton;
 
     
-    
-    public void setLoggedInLabel(String username) {
+    @FXML
+    void initialize() {
+    	this.populateStyleComboBox();
+    	this.populateTypeComboBox();
+    }
+    private void populateTypeComboBox() {
+		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table"));
+		
+	}
+	private void populateStyleComboBox() {
+		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern","Traditional","Rustic","Scandinavian"));
+	}
+	public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
         this.furnitureUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
@@ -63,11 +75,13 @@ public class FurnitureController extends SystemController{
         newStage.initModality(Modality.APPLICATION_MODAL);
 
         newStage.show();
+        Stage thisStage = (Stage) this.backButton.getScene().getWindow();
+        thisStage.close();
     }
 
     @FXML
     void searchFurniture(ActionEvent event) {
-
+    	
     }
 
 }
