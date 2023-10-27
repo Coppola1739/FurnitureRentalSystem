@@ -26,4 +26,10 @@ public class Furniture {
     private String categoryName;
     @NonNull
     private String rentalRate;
+    
+//    @Override
+//    public String toString() {
+//    	StringBuilder output = new Stringbuilder();
+//    	output.append(false)
+//    }
 }

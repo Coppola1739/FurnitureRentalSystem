@@ -1,9 +1,11 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.FurnitureDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Furniture;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -33,7 +35,7 @@ public class FurnitureController extends SystemController{
     private TextField furnitureIDSearchBox;
 
     @FXML
-    private ListView<String> furnitureListView;
+    private ListView<Furniture> furnitureListView;
 
     @FXML
     private ComboBox<String> furnitureStyleComboBox;
@@ -50,6 +52,7 @@ public class FurnitureController extends SystemController{
     	this.populateStyleComboBox();
     	this.populateTypeComboBox();
     	this.furnitureDao = new FurnitureDao();
+    	this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
     }
     private void populateTypeComboBox() {
 		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table"));
@@ -85,6 +88,10 @@ public class FurnitureController extends SystemController{
     @FXML
     void searchFurniture(ActionEvent event) {
     	
+    }
+    
+    private void loadFurnitureListView(ArrayList<Furniture> allFurniture) {
+    	this.furnitureListView.setItems(FXCollections.observableArrayList(allFurniture));
     }
 
 }
