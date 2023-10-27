@@ -7,7 +7,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
-public class FurnitureController {
+public class FurnitureController extends SystemController{
 
     @FXML
     private Button backButton;

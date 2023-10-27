@@ -14,6 +14,7 @@ public class Constants {
     public static final String ALTER_USER_FXML = "/AlterUser.fxml";
     public static final String LOGIN_FXML = "/Login.fxml";
     public static final String MEMBERS_PAGE_FXML = "/MembersPage.fxml";
+    public static final String FURNITURE_PAGE_FXML = "/Furniture.fxml";
     public static final String REGISTER_FXML = "/Register.fxml";
     public static final String HOME_PAGE_FXML = "/HomePage.fxml";
     public static final String FAILED_SQL = "Try againg later.";
