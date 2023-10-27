@@ -49,7 +49,6 @@ public class FurnitureController extends SystemController{
     }
     private void populateTypeComboBox() {
 		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table"));
-		
 	}
 	private void populateStyleComboBox() {
 		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern","Traditional","Rustic","Scandinavian"));
