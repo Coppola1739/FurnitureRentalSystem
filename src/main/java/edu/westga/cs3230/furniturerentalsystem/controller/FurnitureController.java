@@ -21,7 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class FurnitureController extends SystemController{
+public class FurnitureController extends SystemController {
 	
 	private FurnitureDao furnitureDao;
 	
@@ -57,10 +57,10 @@ public class FurnitureController extends SystemController{
     	this.addListenerForCategoryComboBox();
     }
     private void populateTypeComboBox() {
-		this.furnitureCategoryComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table", ""));
+		this.furnitureCategoryComboBox.setItems(FXCollections.observableArrayList("Cabinet", "Sofa", "Chair", "Table", ""));
 	}
 	private void populateStyleComboBox() {
-		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern","Traditional","Rustic","Scandinavian",""));
+		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern", "Traditional", "Rustic", "Scandinavian", ""));
 	}
 	public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
@@ -98,17 +98,17 @@ public class FurnitureController extends SystemController{
     
     
     private void addListenerForStyleComboBox() {
-    furnitureStyleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-        if (newValue == null || newValue.isEmpty()) {
-            this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
-        } else {
-            this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyle(newValue));
-        }
-    });
+    	this.furnitureStyleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue == null || newValue.isEmpty()) {
+	            this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
+	        } else {
+	            this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyle(newValue));
+	        }
+    	});
     }
     
     private void addListenerForCategoryComboBox() {
-        furnitureCategoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+        this.furnitureCategoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
                 this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
             } else {
