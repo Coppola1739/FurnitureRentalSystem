@@ -55,6 +55,8 @@ public class FurnitureController extends SystemController {
     	this.populateTypeComboBox();
     	this.furnitureDao = new FurnitureDao();
     	this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
+    	this.furnitureStyleComboBox.setValue(NO_SELECTION);
+    	this.furnitureCategoryComboBox.setValue(NO_SELECTION);
     	this.addListenerForStyleComboBox();
     	this.addListenerForCategoryComboBox();
     }
@@ -101,9 +103,16 @@ public class FurnitureController extends SystemController {
     
     private void addListenerForStyleComboBox() {
     	this.furnitureStyleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-	        if (newValue == null || newValue.isEmpty() || newValue.equals(NO_SELECTION)) {
+    		String furnitureCategory = this.furnitureCategoryComboBox.getValue();
+    		if (newValue.equals(NO_SELECTION) && (furnitureCategory.equals(NO_SELECTION))) {
 	            this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
-	        } else {
+	        } else if (newValue.equals(NO_SELECTION) && (!furnitureCategory.equals(NO_SELECTION))) {
+	        	this.loadFurnitureListView(this.furnitureDao.getFurnitureByCategory(furnitureCategory));
+	        	
+	        } else if (!newValue.equals(NO_SELECTION) && (!furnitureCategory.equals(NO_SELECTION))) {
+	        	this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyleAndCategory(newValue, this.furnitureCategoryComboBox.getValue()));
+
+    		}    		else {
 	            this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyle(newValue));
 	        }
     	});
@@ -111,11 +120,16 @@ public class FurnitureController extends SystemController {
     
     private void addListenerForCategoryComboBox() {
         this.furnitureCategoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty() || newValue.equals(NO_SELECTION)) {
+        	String furnitureStyle = this.furnitureStyleComboBox.getValue();
+            if (newValue.equals(NO_SELECTION) && (furnitureStyle.equals(NO_SELECTION))) {
                 this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
-            } else {
-                this.loadFurnitureListView(this.furnitureDao.getFurnitureByCategory(newValue));
-            }
+            } else if (newValue.equals(NO_SELECTION) && (!furnitureStyle.equals(NO_SELECTION))) {
+	        	this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyle(furnitureStyle));
+	        } else if (!newValue.equals(NO_SELECTION) && (!furnitureStyle.equals(NO_SELECTION))) {
+	        	this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyleAndCategory(furnitureStyle, newValue));
+    		} else {
+	            this.loadFurnitureListView(this.furnitureDao.getFurnitureByCategory(newValue));
+	        }
         });
     }
 }

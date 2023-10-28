@@ -20,40 +20,53 @@ public class FurnitureDao {
 	private static final String CLOSING_QUOTATION = "'";
 
 	
+	
 	/**
 	 * Returns all furniture in the database
 	 * @return an Arraylist with all furniture in the database
 	 */
+	
 	public ArrayList<Furniture> getAllFurniture() {
 		String selectFurniture = "SELECT * FROM `furniture`";
 		return this.searchQuery(selectFurniture);
 	}
 
+	
 	/**
 	 * Returns all furniture of the selected style 
 	 * @param style a string representing the style (e.g., Rustic, Scandinavian, etc.)
 	 * @return an ArrayList of furniture of the selected style
 	 */
+	
 	public ArrayList<Furniture> getFurnitureByStyle(String style) {
 		String selectFurniture = "SELECT * FROM `furniture` WHERE style_name like '" + style + CLOSING_QUOTATION;
 		return this.searchQuery(selectFurniture);
 	}
 
+	
 	/**
 	 * Returns all furniture of the selected category 
 	 * @param category a string representing the category(e.g., chair, table, etc)
 	 * @return an ArrayList of furniture of the selected category
 	 */
+	
 	public ArrayList<Furniture> getFurnitureByCategory(String category) {
 		String selectFurniture = "SELECT * FROM `furniture` WHERE category_name like '" + category + CLOSING_QUOTATION;
 		return this.searchQuery(selectFurniture);
 	}
+	
+	public ArrayList<Furniture> getFurnitureByStyleAndCategory(String style, String category) {
+		String selectFurniture = "SELECT * FROM `furniture` WHERE category_name LIKE '" + category + CLOSING_QUOTATION + " AND style_name LIKE '" + style + CLOSING_QUOTATION;
+		return this.searchQuery(selectFurniture);
+	}
 
+	
 	/**
 	 * Returns all furniture that have the entered string in their furniture ID
 	 * @param id the string to be searched for
 	 * @return an arrayList containing all furniture with @param id in their furniture ID
 	 */
+	
 	public ArrayList<Furniture> getFurnitureById(String id) {
 		String selectFurniture = "SELECT * FROM `furniture` WHERE furniture_id like '%" + id + "%'";
 		return this.searchQuery(selectFurniture);
