@@ -14,12 +14,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 public class AlterUserController extends SystemController{
 
+	@FXML
+	private Label alterUserNameLabel;
+	
     @FXML
     private ResourceBundle resources;
 
@@ -76,6 +80,40 @@ public class AlterUserController extends SystemController{
 
     @FXML
     private DatePicker birthdatePicker;
+    
+    @FXML
+    private Button updateBirthdayButton;
+
+    @FXML
+    private Button updateCityButton;
+
+    @FXML
+    private Button updateFirstNameButton;
+
+    @FXML
+    private Button updateGenderButton;
+
+    @FXML
+    private Button updateLastNameButton;
+
+    @FXML
+    private Button updatePasswordButton;
+
+    @FXML
+    private Button updatePhoneNumberButton;
+
+    @FXML
+    private Button updateStateButton;
+
+    @FXML
+    private Button updateStreetAddressButton;
+
+    @FXML
+    private Button updateUsernameButton;
+
+    @FXML
+    private Button updateZipButton;
+
 
     @FXML
     void alterUser(ActionEvent event) {
@@ -213,5 +251,60 @@ public class AlterUserController extends SystemController{
     private boolean isValidPhoneNum(String phoneNum) {
         String phoneRegex = "\\d{3}-\\d{3}-\\d{4}";
         return phoneNum.matches(phoneRegex);
+    }
+    
+    public void setLoggedInLabel(String username) {
+        super.loggedInUser = username;
+        this.alterUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+    }
+    
+    @FXML
+    void updateBirthday(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateCity(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateFirstName(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateGender(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateLastName(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updatePassword(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updatePhoneNumber(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateState(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateStreetAddress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void updateUsername(ActionEvent event) {
+
     }
 }

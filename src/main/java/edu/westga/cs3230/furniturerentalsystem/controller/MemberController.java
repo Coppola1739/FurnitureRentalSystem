@@ -80,12 +80,23 @@ public class MemberController extends SystemController {
     }
 
     @FXML
-    void editMember(ActionEvent event) {
-    	try {
-            this.navigateTo(event, Constants.ALTER_USER_FXML);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+    void editMember(ActionEvent event)  throws IOException {
+    	FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.ALTER_USER_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+        
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.registerMemberButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
