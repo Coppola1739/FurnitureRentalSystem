@@ -57,10 +57,10 @@ public class FurnitureController extends SystemController{
     	this.addListenerForCategoryComboBox();
     }
     private void populateTypeComboBox() {
-		this.furnitureCategoryComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table"));
+		this.furnitureCategoryComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table", ""));
 	}
 	private void populateStyleComboBox() {
-		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern","Traditional","Rustic","Scandinavian"));
+		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern","Traditional","Rustic","Scandinavian",""));
 	}
 	public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
@@ -89,8 +89,7 @@ public class FurnitureController extends SystemController{
 
     @FXML
     void searchFurniture(ActionEvent event) {
-    	this.furnitureStyleComboBox.getValue();
-    	this.furnitureCategoryComboBox.getValue();
+    	this.loadFurnitureListView(this.furnitureDao.getFurnitureById(this.furnitureIDSearchBox.getText()));
     }
     
     private void loadFurnitureListView(ArrayList<Furniture> allFurniture) {
@@ -113,7 +112,6 @@ public class FurnitureController extends SystemController{
             if (newValue == null || newValue.isEmpty()) {
                 this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
             } else {
-                // Filter the ListView items to only contain strings containing the ComboBox value
                 this.loadFurnitureListView(this.furnitureDao.getFurnitureByCategory(newValue));
             }
         });
