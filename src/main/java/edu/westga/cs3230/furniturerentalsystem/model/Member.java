@@ -37,4 +37,11 @@ public class Member {
         return output.toString();
     }
 
+    public String getMemberId() {
+    	return this.memberId;
+    }
+    
+    public PersonalInformation getPInfo() {
+    	return this.pInfo;
+    }    
 }
