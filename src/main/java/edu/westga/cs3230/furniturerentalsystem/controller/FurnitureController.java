@@ -41,7 +41,7 @@ public class FurnitureController extends SystemController{
     private ComboBox<String> furnitureStyleComboBox;
 
     @FXML
-    private ComboBox<String> furnitureTypeComboBox;
+    private ComboBox<String> furnitureCategoryComboBox;
 
     @FXML
     private Button searchButton;
@@ -53,10 +53,11 @@ public class FurnitureController extends SystemController{
     	this.populateTypeComboBox();
     	this.furnitureDao = new FurnitureDao();
     	this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
-    	this.addListenerForStyleBox();
+    	this.addListenerForStyleComboBox();
+    	this.addListenerForCategoryComboBox();
     }
     private void populateTypeComboBox() {
-		this.furnitureTypeComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table"));
+		this.furnitureCategoryComboBox.setItems(FXCollections.observableArrayList("Cabinet","Sofa","Chair","Table"));
 	}
 	private void populateStyleComboBox() {
 		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern","Traditional","Rustic","Scandinavian"));
@@ -89,7 +90,7 @@ public class FurnitureController extends SystemController{
     @FXML
     void searchFurniture(ActionEvent event) {
     	this.furnitureStyleComboBox.getValue();
-    	this.furnitureTypeComboBox.getValue();
+    	this.furnitureCategoryComboBox.getValue();
     }
     
     private void loadFurnitureListView(ArrayList<Furniture> allFurniture) {
@@ -97,14 +98,24 @@ public class FurnitureController extends SystemController{
     }
     
     
-    private void addListenerForStyleBox() {
+    private void addListenerForStyleComboBox() {
     furnitureStyleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
         if (newValue == null || newValue.isEmpty()) {
             this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
         } else {
-            // Filter the ListView items to only contain strings containing the ComboBox value
             this.loadFurnitureListView(this.furnitureDao.getFurnitureByStyle(newValue));
         }
     });
+    }
+    
+    private void addListenerForCategoryComboBox() {
+        furnitureCategoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                this.loadFurnitureListView(this.furnitureDao.getAllFurniture());
+            } else {
+                // Filter the ListView items to only contain strings containing the ComboBox value
+                this.loadFurnitureListView(this.furnitureDao.getFurnitureByCategory(newValue));
+            }
+        });
     }
 }
