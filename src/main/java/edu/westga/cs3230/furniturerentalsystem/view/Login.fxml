@@ -27,7 +27,6 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="alterUserButton" layoutX="105.0" layoutY="217.0" mnemonicParsing="false" onAction="#navigateToAlterUserPage" prefHeight="26.0" prefWidth="110.0" text="Alter User" />
       </children>
     </AnchorPane>
   </children>

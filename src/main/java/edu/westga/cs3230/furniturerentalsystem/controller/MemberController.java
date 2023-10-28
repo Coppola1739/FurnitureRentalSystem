@@ -81,7 +81,11 @@ public class MemberController extends SystemController {
 
     @FXML
     void editMember(ActionEvent event) {
-
+    	try {
+            this.navigateTo(event, Constants.ALTER_USER_FXML);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @FXML

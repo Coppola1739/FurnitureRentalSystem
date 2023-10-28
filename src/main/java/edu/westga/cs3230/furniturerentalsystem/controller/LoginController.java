@@ -30,9 +30,6 @@ public class LoginController {
     private Button submitButton;
 
     @FXML
-    private Button alterUserButton;
-
-    @FXML
     private TextField user;
 
     @FXML
@@ -58,11 +55,6 @@ public class LoginController {
     private boolean crossreferenceCredentials() throws SQLException {
         UserDao loginDao = new UserDao();
         return loginDao.authorizeUser(this.user.getText(), this.password.getText());
-    }
-
-    @FXML
-    void navigateToAlterUserPage(ActionEvent event) throws IOException {
-        throw new IllegalArgumentException("Move page");
     }
 
     private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {

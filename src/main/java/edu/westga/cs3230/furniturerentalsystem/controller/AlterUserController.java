@@ -18,7 +18,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-public class AlterUserController {
+public class AlterUserController extends SystemController{
 
     @FXML
     private ResourceBundle resources;
