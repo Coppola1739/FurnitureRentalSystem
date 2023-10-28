@@ -40,4 +40,27 @@ public class FurnitureDao {
         return allFurniture;
 	}
 
+		public ArrayList<Furniture> getFurnitureByStyle(String style) {
+	        ArrayList<Furniture> allFurniture= new ArrayList<>();
+	        String selectFurniture = "SELECT * FROM `furniture` WHERE style_name like '" + style + "'";
+
+	        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+	             PreparedStatement checkStmt = connection.prepareStatement(selectFurniture)) {
+
+	            try (ResultSet rs = checkStmt.executeQuery()) {
+	                while (rs.next()) {
+	                    Furniture newFurniture = Furniture.builder()
+	                            .furnitureId(rs.getString("furniture_id"))
+	                            .styleName(rs.getString("style_name"))
+	                            .categoryName(rs.getString("category_name"))
+	                            .rentalRate(rs.getString("rental_rate"))
+	                            .build();
+	                    allFurniture.add(newFurniture);
+	                }
+	            }
+	        } catch (SQLException exception) {
+	            throw new RuntimeException(exception);
+	        }
+	        return allFurniture;
+		}
 }

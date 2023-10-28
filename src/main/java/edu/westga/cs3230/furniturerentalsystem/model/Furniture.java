@@ -27,9 +27,13 @@ public class Furniture {
     @NonNull
     private String rentalRate;
     
-//    @Override
-//    public String toString() {
-//    	StringBuilder output = new Stringbuilder();
-//    	output.append(false)
-//    }
+    @Override
+    public String toString() {
+    	StringBuilder output = new StringBuilder();
+    	output.append("Furniture ID: ").append(this.furnitureId);
+    	output.append(" Style: ").append(this.styleName);
+    	output.append(" Category: ").append(this.categoryName);
+    	output.append("Rental Rate: ").append(this.rentalRate);
+    	return output.toString();
+    }
 }
