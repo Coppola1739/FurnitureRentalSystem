@@ -43,5 +43,10 @@ public class Member {
     
     public PersonalInformation getPInfo() {
     	return this.pInfo;
-    }    
+    }
+    
+    public String getPiD() {
+    	return this.pId;
+    }
+    
 }

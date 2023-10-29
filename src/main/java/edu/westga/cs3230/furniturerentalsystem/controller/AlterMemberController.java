@@ -152,15 +152,14 @@ public class AlterMemberController extends SystemController {
 		this.setListenersForFields();
 		this.genderComboBox.getItems().addAll("Male", "Female");
 		this.populateStateComboBox();
-		this.editMemberDao = new EditMemberDao();
+		this.editMemberDao = new EditMemberDao(this.currMember);
 	}
 
-	public void bind(String username, String password) {
-		this.userTextField.setText(username);
-		this.passwordTextField.setText(password);
-		MemberDao dao = new MemberDao();
-
-	}
+//	public void bind(String username, String password) {
+//		this.userTextField.setText(username);
+//		this.passwordTextField.setText(password);
+//		MemberDao dao = new MemberDao();
+//	}
 
 	private void populateAllFields(PersonalInformation pinfo) {
 		this.firstNameTextField.setText(pinfo.getFirstName());
