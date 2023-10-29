@@ -181,9 +181,11 @@ public class AlterMemberController extends SystemController {
 		this.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!this.isValidPhoneNum(newValue)) {
 				this.phoneTextField.setStyle("-fx-border-color: red;");
+				this.updatePhoneNumberButton.setDisable(true);
 				this.invalidPhoneNumText.setVisible(true);
 			} else {
 				this.phoneTextField.setStyle("");
+				this.updatePhoneNumberButton.setDisable(false);
 				this.invalidPhoneNumText.setVisible(false);
 			}
 		});
@@ -191,12 +193,12 @@ public class AlterMemberController extends SystemController {
 		this.zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!this.isValidZipCode(newValue)) {
 				this.invalidZipText.setVisible(true);
-				this.zipTextField.setText(oldValue);
+				this.updateZipButton.setDisable(true);
 			} else {
 				this.invalidZipText.setVisible(false);
+				this.updateZipButton.setDisable(false);
 			}
 		});
-
 	}
 
 	private boolean isValidZipCode(String zipCode) {
@@ -227,12 +229,17 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateBirthday(ActionEvent event) {
-		this.editMemberDao.updateBirthday(this.birthdatePicker.getValue());
+		this.editMemberDao.updateBirthday(this.birthdatePicker.getValue(), this.currMember.getPiD());
 	}
 
 	@FXML
 	void updateCity(ActionEvent event) {
 		this.editMemberDao.updateMember("city", this.cityTextField.getText(), this.currMember.getPiD());
+	}
+	
+	@FXML
+	void updateZip(ActionEvent event) {
+		this.editMemberDao.updateMember("zip", this.cityTextField.getText(), this.currMember.getPiD());
 	}
 
 	@FXML
@@ -242,7 +249,7 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateGender(ActionEvent event) {
-//		this.editMemberDao.updateMember(this.genderComboBox.getValue());
+		this.editMemberDao.updateMember("gender", this.genderComboBox.getValue(), this.currMember.getPiD());
 	}
 
 	@FXML
@@ -252,7 +259,7 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updatePhoneNumber(ActionEvent event) {
-		this.editMemberDao.updatePhoneNumber(this.phoneTextField.getText());
+		this.editMemberDao.updateMember("phone_num", this.phoneTextField.getText(), this.currMember.getPiD());
 	}
 
 	@FXML
@@ -262,7 +269,7 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateStreetAddress(ActionEvent event) {
-		this.editMemberDao.updateStreetAddress(this.streetAddressTextField.getText());
+		this.editMemberDao.updateMember("street_add", this.streetAddressTextField.getText(), this.currMember.getPiD());
 	}
 
 

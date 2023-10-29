@@ -1,6 +1,7 @@
 package edu.westga.cs3230.furniturerentalsystem.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,43 +18,14 @@ public class EditMemberDao {
 		this.currMember = member;
 	}
 
-	public void updateMember(String column, String value, String memberId) {
-		String updateMemberCity = "UPDATE personal_information " +
-                "SET " + column + " = ? " +
-                "WHERE personal_information.pid = ?";
+	public void updateMember(String column, String value, String pId) {
+		String updateMemberCity = "UPDATE personal_information " + "SET " + column + " = ? "
+				+ "WHERE personal_information.pid = ?";
 
-try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
-PreparedStatement updateStmt = connection.prepareStatement(updateMemberCity)) {
-updateStmt.setString(1, value);
-updateStmt.setString(2, memberId);
-
-int rowsUpdated = updateStmt.executeUpdate();
-
-if (rowsUpdated > 0) {
-System.out.println(rowsUpdated + " rows updated successfully.");
-} else {
-System.out.println("No rows were updated.");
-}
-} catch (SQLException e) {
-e.printStackTrace();
-// Handle any SQLException, such as database connection errors.
-}
-}
-	
-
-	public void updateCity(String text) {
-		
-	}
-
-	public void updateFirstName(String field, String text) {
-		String updateMemberCity = "UPDATE personal_information SET ? = ? " + "FROM member "
-				+ "WHERE personal_information.pid = " + this.currMember.getMemberId();
-		
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
 				PreparedStatement updateStmt = connection.prepareStatement(updateMemberCity)) {
-			updateStmt.setString(1, field);
-			updateStmt.setString(2, text);
-			
+			updateStmt.setString(1, value);
+			updateStmt.setString(2, pId);
 
 			int rowsUpdated = updateStmt.executeUpdate();
 
@@ -64,37 +36,28 @@ e.printStackTrace();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle any SQLException, such as database connection errors.
 		}
 	}
 
-	public void updateGender(String value) {
-		// TODO Auto-generated method stub
 
-	}
+	public void updateBirthday(LocalDate newBirthday, String pId) {
+		String updateBirthday = "UPDATE personal_information " + "SET b_date = ? " + "WHERE pid = ?";
 
-	public void updateLastName(String text) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				PreparedStatement updateStmt = connection.prepareStatement(updateBirthday)) {
+			Date sqlDate = Date.valueOf(newBirthday); 
+			updateStmt.setDate(1, sqlDate); // Convert Java Date to SQL Date
+	        updateStmt.setString(2, pId);
 
-	}
+			int rowsUpdated = updateStmt.executeUpdate();
 
-	public void updatePhoneNumber(String text) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void updateStreetAddress(String text) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void updateState(String value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void updateBirthday(LocalDate value) {
-		// TODO Auto-generated method stub
-
+			if (rowsUpdated > 0) {
+				System.out.println(rowsUpdated + " rows updated successfully.");
+			} else {
+				System.out.println("No rows were updated.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
