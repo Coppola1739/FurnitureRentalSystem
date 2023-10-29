@@ -105,7 +105,6 @@ public class MemberController extends SystemController {
         controller.setLoggedInLabel(super.loggedInUser);
 
         controller.setSelectedUser(this.memberListView.getSelectionModel().getSelectedItem());
-        
         newStage.setScene(scene);
         newStage.initModality(Modality.APPLICATION_MODAL);
 

@@ -17,17 +17,43 @@ public class EditMemberDao {
 		this.currMember = member;
 	}
 
-	public void editMember(Member member, String value) {
+	public void updateMember(String column, String value, String memberId) {
+		String updateMemberCity = "UPDATE personal_information " +
+                "SET " + column + " = ? " +
+                "WHERE personal_information.pid = ?";
 
-	}
+try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+PreparedStatement updateStmt = connection.prepareStatement(updateMemberCity)) {
+updateStmt.setString(1, value);
+updateStmt.setString(2, memberId);
+
+int rowsUpdated = updateStmt.executeUpdate();
+
+if (rowsUpdated > 0) {
+System.out.println(rowsUpdated + " rows updated successfully.");
+} else {
+System.out.println("No rows were updated.");
+}
+} catch (SQLException e) {
+e.printStackTrace();
+// Handle any SQLException, such as database connection errors.
+}
+}
+	
 
 	public void updateCity(String text) {
-		String updateMemberCity = "UPDATE personal_information SET city = ? " + "FROM member "
+		
+	}
+
+	public void updateFirstName(String field, String text) {
+		String updateMemberCity = "UPDATE personal_information SET ? = ? " + "FROM member "
 				+ "WHERE personal_information.pid = " + this.currMember.getMemberId();
 		
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
 				PreparedStatement updateStmt = connection.prepareStatement(updateMemberCity)) {
-			updateStmt.setString(1, text);
+			updateStmt.setString(1, field);
+			updateStmt.setString(2, text);
+			
 
 			int rowsUpdated = updateStmt.executeUpdate();
 
@@ -40,11 +66,6 @@ public class EditMemberDao {
 			e.printStackTrace();
 			// Handle any SQLException, such as database connection errors.
 		}
-	}
-
-	public void updateFirstName(String text) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void updateGender(String value) {

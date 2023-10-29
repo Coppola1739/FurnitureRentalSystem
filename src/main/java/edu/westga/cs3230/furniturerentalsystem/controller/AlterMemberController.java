@@ -155,12 +155,6 @@ public class AlterMemberController extends SystemController {
 		this.editMemberDao = new EditMemberDao(this.currMember);
 	}
 
-//	public void bind(String username, String password) {
-//		this.userTextField.setText(username);
-//		this.passwordTextField.setText(password);
-//		MemberDao dao = new MemberDao();
-//	}
-
 	private void populateAllFields(PersonalInformation pinfo) {
 		this.firstNameTextField.setText(pinfo.getFirstName());
 		this.lastNameTextField.setText(pinfo.getLastName());
@@ -176,6 +170,7 @@ public class AlterMemberController extends SystemController {
 	public void setSelectedUser(Member member) {
 		this.currMember = member;
 		this.populateAllFields(this.currMember.getPInfo());
+		System.out.println(member);
 	}
 
 	public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
@@ -237,22 +232,22 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateCity(ActionEvent event) {
-		this.editMemberDao.updateCity(this.cityTextField.getText());
+		this.editMemberDao.updateMember("city", this.cityTextField.getText(), this.currMember.getPiD());
 	}
 
 	@FXML
 	void updateFirstName(ActionEvent event) {
-		this.editMemberDao.updateFirstName(this.firstNameTextField.getText());
+		this.editMemberDao.updateMember("f_name", this.firstNameTextField.getText(), this.currMember.getPiD());
 	}
 
 	@FXML
 	void updateGender(ActionEvent event) {
-		this.editMemberDao.updateGender(this.genderComboBox.getValue());
+//		this.editMemberDao.updateMember(this.genderComboBox.getValue());
 	}
 
 	@FXML
 	void updateLastName(ActionEvent event) {
-		this.editMemberDao.updateLastName(this.lastNameTextField.getText());
+		this.editMemberDao.updateMember("l_name", this.lastNameTextField.getText(), this.currMember.getPiD());
 	}
 
 	@FXML
@@ -262,7 +257,7 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateState(ActionEvent event) {
-		this.editMemberDao.updateState(this.stateComboBox.getValue());
+		this.editMemberDao.updateMember("state", this.stateComboBox.getValue(), this.currMember.getPiD());
 	}
 
 	@FXML
