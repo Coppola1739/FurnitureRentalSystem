@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.EditMemberDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
-import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 public class AlterMemberController extends SystemController {
 
 	private Member currMember;
+	private EditMemberDao editMemberDao;
 
 	@FXML
 	private Label alterUserNameLabel;
@@ -151,6 +152,7 @@ public class AlterMemberController extends SystemController {
 		this.setListenersForFields();
 		this.genderComboBox.getItems().addAll("Male", "Female");
 		this.populateStateComboBox();
+		this.editMemberDao = new EditMemberDao();
 	}
 
 	public void bind(String username, String password) {
@@ -231,53 +233,44 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateBirthday(ActionEvent event) {
-
+		this.editMemberDao.updateBirthday(this.birthdatePicker.getValue());
 	}
 
 	@FXML
 	void updateCity(ActionEvent event) {
-
+		this.editMemberDao.updateCity(this.cityTextField.getText());
 	}
 
 	@FXML
 	void updateFirstName(ActionEvent event) {
-
+		this.editMemberDao.updateFirstName(this.firstNameTextField.getText());
 	}
 
 	@FXML
 	void updateGender(ActionEvent event) {
-
+		this.editMemberDao.updateGender(this.genderComboBox.getValue());
 	}
 
 	@FXML
 	void updateLastName(ActionEvent event) {
-
-	}
-
-	@FXML
-	void updatePassword(ActionEvent event) {
-
+		this.editMemberDao.updateLastName(this.lastNameTextField.getText());
 	}
 
 	@FXML
 	void updatePhoneNumber(ActionEvent event) {
-
+		this.editMemberDao.updatePhoneNumber(this.phoneTextField.getText());
 	}
 
 	@FXML
 	void updateState(ActionEvent event) {
-
+		this.editMemberDao.updateState(this.stateComboBox.getValue());
 	}
 
 	@FXML
 	void updateStreetAddress(ActionEvent event) {
-
+		this.editMemberDao.updateStreetAddress(this.streetAddressTextField.getText());
 	}
 
-	@FXML
-	void updateUsername(ActionEvent event) {
-
-	}
 
 	@FXML
 	void backToMemberPage(ActionEvent event) throws IOException {
