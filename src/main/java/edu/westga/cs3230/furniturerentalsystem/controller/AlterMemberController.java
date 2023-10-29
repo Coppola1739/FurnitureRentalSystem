@@ -1,18 +1,24 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -20,6 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class AlterMemberController extends SystemController{
 
@@ -52,9 +60,6 @@ public class AlterMemberController extends SystemController{
 
     @FXML
     private PasswordField passwordTextField;
-
-    @FXML
-    private Button alterUserButton;
 
     @FXML
     private TextField firstNameTextField;
@@ -119,42 +124,12 @@ public class AlterMemberController extends SystemController{
     @FXML
     private Button updateZipButton;
 
-
-    @FXML
-    void alterUser(ActionEvent event) {
-        // Clearing the error text
-        this.errorText.setText("");
-
-        // Creating PersonalInformation object
-        PersonalInformation pInfo = PersonalInformation.builder().firstName(this.firstNameTextField.getText().trim())
-                .lastName(this.lastNameTextField.getText().trim()).registrationDate(new Date())
-                .gender(this.genderComboBox.getValue().trim())
-                .phoneNumber(this.phoneTextField.getText().replaceAll("[^0-9]", "").trim())
-                .birthday(java.sql.Date.valueOf(this.birthdatePicker.getValue()))
-                .address(this.streetAddressTextField.getText().trim()).city(this.cityTextField.getText().trim())
-                .state(this.stateComboBox.getValue().trim()).zip(this.zipTextField.getText().trim()).build();
-
-        try {
-
-            UserDao alterUser = new UserDao();
-            alterUser.alterUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(),
-                    "customer", pInfo);
-
-            this.errorText.setText("Account updated successfully!");
-
-        } catch (Exception ex) {
-            this.errorText.setText(ex.getMessage());
-        }
-    }
-
     @FXML
     void initialize() {
         assert this.userTextField != null
                 : "fx:id=\"userTextField\" was not injected: check your FXML file 'Register.fxml'.";
         assert this.passwordTextField != null
                 : "fx:id=\"passwordTextField\" was not injected: check your FXML file 'Register.fxml'.";
-        assert this.alterUserButton != null
-                : "fx:id=\"createAccountButton\" was not injected: check your FXML file 'Register.fxml'.";
         assert this.firstNameTextField != null
                 : "fx:id=\"firstNameTextField\" was not injected: check your FXML file 'Register.fxml'.";
         assert this.genderTextField != null
@@ -190,7 +165,6 @@ public class AlterMemberController extends SystemController{
         this.firstNameTextField.setText(pinfo.getFirstName());
         this.lastNameTextField.setText(pinfo.getLastName());
         this.birthdatePicker.setValue(LocalDate.parse(pinfo.getBirthday().toString()));
-        System.out.println(pinfo.getBirthday().toString());
         this.cityTextField.setText(pinfo.getCity());
         this.genderComboBox.setValue(pinfo.getGender());
         this.zipTextField.setText(pinfo.getZip());
@@ -212,11 +186,9 @@ public class AlterMemberController extends SystemController{
             if (!this.isValidPhoneNum(newValue)) {
                 this.phoneTextField.setStyle("-fx-border-color: red;");
                 this.invalidPhoneNumText.setVisible(true);
-                this.alterUserButton.setDisable(true);
             } else {
                 this.phoneTextField.setStyle("");
                 this.invalidPhoneNumText.setVisible(false);
-                this.alterUserButton.setDisable(false);
             }
         });
 
@@ -226,7 +198,6 @@ public class AlterMemberController extends SystemController{
                 this.zipTextField.setText(oldValue);
             } else {
                 this.invalidZipText.setVisible(false);
-                this.alterUserButton.setDisable(false);
             }
         });
 
@@ -301,5 +272,25 @@ public class AlterMemberController extends SystemController{
     @FXML
     void updateUsername(ActionEvent event) {
 
+    }
+    
+    @FXML
+    void backToMemberPage(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.MEMBERS_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+        
+        MemberController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+        
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.cityTextField.getScene().getWindow();
+        stage.close();
     }
 }
