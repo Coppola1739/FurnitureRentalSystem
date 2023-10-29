@@ -6,7 +6,9 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -19,8 +21,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-public class AlterUserController extends SystemController{
+public class AlterMemberController extends SystemController{
 
+	
+	private Member currMember;
+	
 	@FXML
 	private Label alterUserNameLabel;
 	
@@ -120,19 +125,6 @@ public class AlterUserController extends SystemController{
         // Clearing the error text
         this.errorText.setText("");
 
-        // Validating the inputs
-        if (this.userTextField.getText().trim().isEmpty() || this.passwordTextField.getText().trim().isEmpty()
-                || this.firstNameTextField.getText().trim().isEmpty()
-                || this.lastNameTextField.getText().trim().isEmpty() || this.genderComboBox.getValue().trim().isEmpty()
-                || this.phoneTextField.getText().trim().isEmpty()
-                || this.streetAddressTextField.getText().trim().isEmpty()
-                || this.cityTextField.getText().trim().isEmpty() || this.stateComboBox.getValue().trim().isEmpty()
-                || this.zipTextField.getText().trim().isEmpty() || this.birthdatePicker.getValue() == null) {
-
-            this.errorText.setText("All fields are required!");
-            return;
-        }
-
         // Creating PersonalInformation object
         PersonalInformation pInfo = PersonalInformation.builder().firstName(this.firstNameTextField.getText().trim())
                 .lastName(this.lastNameTextField.getText().trim()).registrationDate(new Date())
@@ -190,9 +182,8 @@ public class AlterUserController extends SystemController{
     public void bind(String username, String password) {
         this.userTextField.setText(username);
         this.passwordTextField.setText(password);
-        UserDao dao = new UserDao();
-        PersonalInformation pi = dao.selectUserInformation(username);
-        this.populateAllFields(pi);
+        MemberDao dao = new MemberDao();
+
     }
 
     private void populateAllFields(PersonalInformation pinfo) {
@@ -208,6 +199,10 @@ public class AlterUserController extends SystemController{
         this.stateComboBox.setValue(pinfo.getState());
     }
 
+    public void setSelectedUser(Member member) {
+    	this.currMember = member;
+    	this.populateAllFields(this.currMember.getPInfo());
+    }
     public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }

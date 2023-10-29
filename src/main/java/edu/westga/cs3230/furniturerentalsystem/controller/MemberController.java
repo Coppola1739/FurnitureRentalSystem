@@ -88,9 +88,11 @@ public class MemberController extends SystemController {
         Scene scene = new Scene(parent);
         Stage newStage = new Stage();
         
-        SystemController controller = loader.getController();
+        AlterMemberController controller = loader.getController();
         controller.setLoggedInLabel(super.loggedInUser);
 
+        controller.setSelectedUser(this.memberListView.getSelectionModel().getSelectedItem());
+        
         newStage.setScene(scene);
         newStage.initModality(Modality.APPLICATION_MODAL);
 

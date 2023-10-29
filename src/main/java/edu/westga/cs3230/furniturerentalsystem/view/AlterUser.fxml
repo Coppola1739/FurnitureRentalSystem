@@ -4,7 +4,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,45 +11,32 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="449.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3230.furniturerentalsystem.controller.AlterUserController">
+<VBox prefHeight="449.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3230.furniturerentalsystem.controller.AlterMemberController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="407.0" prefWidth="548.0" VBox.vgrow="ALWAYS">
       <children>
             <ToolBar prefHeight="40.0" prefWidth="700.0" />
-            <TextField fx:id="userTextField" layoutX="126.0" layoutY="89.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter a Username" />
-            <PasswordField fx:id="passwordTextField" layoutX="124.0" layoutY="127.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter a Password" />
-            <Button fx:id="alterUserButton" layoutX="241.0" layoutY="355.0" mnemonicParsing="false" onAction="#alterUser" prefHeight="40.0" prefWidth="110.0" text="Alter User" />
-            <Label layoutX="49.0" layoutY="92.0" text="Username:">
+            <Label layoutX="45.0" layoutY="95.0" text="First Name:">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="53.0" layoutY="130.0" text="Password:">
+            <Label layoutX="46.0" layoutY="131.0" text="Last Name:">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="45.0" layoutY="165.0" text="First Name:">
+            <Label layoutX="67.0" layoutY="162.0" text="Gender:">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="46.0" layoutY="200.0" text="Last Name:">
+            <Label layoutX="53.0" layoutY="240.0" text="Birthday:">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="66.0" layoutY="234.0" text="Gender:">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="53.0" layoutY="309.0" text="Birthday:">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label layoutX="19.0" layoutY="275.0" text="Phone number:">
+            <Label layoutX="19.0" layoutY="201.0" text="Phone number:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -60,9 +46,9 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="firstNameTextField" layoutX="126.0" layoutY="162.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter First Name" />
-            <TextField fx:id="phoneTextField" layoutX="124.0" layoutY="272.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Phone #" />
-            <TextField fx:id="lastNameTextField" layoutX="124.0" layoutY="197.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter First Name" />
+            <TextField fx:id="firstNameTextField" layoutX="123.0" layoutY="92.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter First Name" />
+            <TextField fx:id="phoneTextField" layoutX="123.0" layoutY="198.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Phone #" />
+            <TextField fx:id="lastNameTextField" layoutX="123.0" layoutY="128.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter First Name" />
             <TextField fx:id="streetAddressTextField" layoutX="464.0" layoutY="92.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Street Address" />
             <TextField fx:id="cityTextField" layoutX="464.0" layoutY="127.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter City" />
             <TextField fx:id="zipTextField" layoutX="464.0" layoutY="214.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Zip" />
@@ -82,8 +68,8 @@
                </font>
             </Label>
             <Text fx:id="errorText" fill="#ee0202" layoutX="363.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <DatePicker fx:id="birthdatePicker" layoutX="124.0" layoutY="306.0" prefHeight="26.0" prefWidth="144.0" />
-            <ComboBox fx:id="genderComboBox" layoutX="123.0" layoutY="232.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
+            <DatePicker fx:id="birthdatePicker" layoutX="123.0" layoutY="237.0" prefHeight="26.0" prefWidth="144.0" />
+            <ComboBox fx:id="genderComboBox" layoutX="123.0" layoutY="162.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
             <ComboBox fx:id="stateComboBox" layoutX="464.0" layoutY="172.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
             <Text fx:id="invalidPhoneNumText" fill="#e40808" layoutX="297.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone number must be in format 'XXX-XXX-XXXX'" visible="false" />
             <Text fx:id="invalidZipText" fill="#e71515" layoutX="384.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please enter a 5-digit number." visible="false" />
@@ -92,13 +78,12 @@
             <Button fx:id="updateCityButton" layoutX="628.0" layoutY="128.0" mnemonicParsing="false" onAction="#updateCity" text="Update" />
             <Button fx:id="updateStateButton" layoutX="628.0" layoutY="173.0" mnemonicParsing="false" onAction="#updateState" text="Update" />
             <Button fx:id="updateZipButton" layoutX="628.0" layoutY="211.0" mnemonicParsing="false" text="Update" />
-            <Button fx:id="updateUsernameButton" layoutX="286.0" layoutY="90.0" mnemonicParsing="false" onAction="#updateUsername" text="Update" />
-            <Button fx:id="updatePasswordButton" layoutX="286.0" layoutY="128.0" mnemonicParsing="false" onAction="#updatePassword" text="Update" />
-            <Button fx:id="updateFirstNameButton" layoutX="286.0" layoutY="163.0" mnemonicParsing="false" onAction="#updateFirstName" text="Update" />
-            <Button fx:id="updateLastNameButton" layoutX="286.0" layoutY="198.0" mnemonicParsing="false" onAction="#updateLastName" text="Update" />
-            <Button fx:id="updateGenderButton" layoutX="286.0" layoutY="233.0" mnemonicParsing="false" onAction="#updateGender" text="Update" />
-            <Button fx:id="updatePhoneNumberButton" layoutX="288.0" layoutY="273.0" mnemonicParsing="false" onAction="#updatePhoneNumber" text="Update" />
-            <Button fx:id="updateBirthdayButton" layoutX="288.0" layoutY="307.0" mnemonicParsing="false" onAction="#updateBirthday" text="Update" />
+            <Button fx:id="updateFirstNameButton" layoutX="286.0" layoutY="92.0" mnemonicParsing="false" onAction="#updateFirstName" text="Update" />
+            <Button fx:id="updateLastNameButton" layoutX="286.0" layoutY="128.0" mnemonicParsing="false" onAction="#updateLastName" text="Update" />
+            <Button fx:id="updateGenderButton" layoutX="286.0" layoutY="162.0" mnemonicParsing="false" onAction="#updateGender" text="Update" />
+            <Button fx:id="updatePhoneNumberButton" layoutX="286.0" layoutY="198.0" mnemonicParsing="false" onAction="#updatePhoneNumber" text="Update" />
+            <Button fx:id="updateBirthdayButton" layoutX="286.0" layoutY="237.0" mnemonicParsing="false" onAction="#updateBirthday" text="Update" />
+            <Button fx:id="backToMemberPageButton" layoutX="468.0" layoutY="350.0" mnemonicParsing="false" onAction="#backToMemberPage" text="Back to Member Page" />
       </children>
     </AnchorPane>
   </children>

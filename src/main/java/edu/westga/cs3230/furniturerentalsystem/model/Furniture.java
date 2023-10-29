@@ -36,4 +36,5 @@ public class Furniture {
     	output.append(" Rental Rate: ").append(this.rentalRate);
     	return output.toString();
     }
+
 }
