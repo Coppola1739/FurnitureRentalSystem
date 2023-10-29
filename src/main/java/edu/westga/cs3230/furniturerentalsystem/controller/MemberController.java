@@ -67,6 +67,7 @@ public class MemberController extends SystemController {
         this.loadMemberListView(this.memberDao.getAllMembers());
         this.loadSearchFilterOptions();
         this.setListViewDoubleClickHandler();
+        this.addListenerToAlterUserButton();
     }
 
     /**
@@ -78,6 +79,18 @@ public class MemberController extends SystemController {
         super.loggedInUser = username;
         this.memberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
+    
+    private void addListenerToAlterUserButton() {
+    	this.editMemberButton.setDisable(true);
+    	this.memberListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                this.editMemberButton.setDisable(false);
+            } else {
+                this.editMemberButton.setDisable(true);
+            }
+    	});
+    }
+    
 
     @FXML
     void editMember(ActionEvent event)  throws IOException {
