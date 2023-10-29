@@ -84,6 +84,8 @@
             <Button fx:id="updatePhoneNumberButton" layoutX="286.0" layoutY="198.0" mnemonicParsing="false" onAction="#updatePhoneNumber" text="Update" />
             <Button fx:id="updateBirthdayButton" layoutX="286.0" layoutY="237.0" mnemonicParsing="false" onAction="#updateBirthday" text="Update" />
             <Button fx:id="backToMemberPageButton" layoutX="468.0" layoutY="350.0" mnemonicParsing="false" onAction="#backToMemberPage" text="Back to Member Page" />
+            <Label fx:id="successfulUpdateLabel" layoutX="181.0" layoutY="293.0" text="Account Updated Successfully!" visible="false" />
+            <Label fx:id="failedUpdateLabel" layoutX="181.0" layoutY="341.0" text="Account Update Failed" textFill="#d11f1f" visible="false" />
       </children>
     </AnchorPane>
   </children>

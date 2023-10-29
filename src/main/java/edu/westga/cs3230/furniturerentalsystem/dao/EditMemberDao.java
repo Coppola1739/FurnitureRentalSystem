@@ -7,19 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class EditMemberDao {
 
-	private Member currMember;
+	private static final String UPDATE_PERSONAL_INFORMATION = "UPDATE personal_information ";
 
-	public EditMemberDao(Member member) {
-		this.currMember = member;
-	}
-
-	public void updateMember(String column, String value, String pId) {
-		String updateMemberCity = "UPDATE personal_information " + "SET " + column + " = ? "
+	public boolean updateMember(String column, String value, String pId) {
+		String updateMemberCity = UPDATE_PERSONAL_INFORMATION + "SET " + column + " = ? "
 				+ "WHERE personal_information.pid = ?";
 
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
@@ -29,35 +26,32 @@ public class EditMemberDao {
 
 			int rowsUpdated = updateStmt.executeUpdate();
 
-			if (rowsUpdated > 0) {
-				System.out.println(rowsUpdated + " rows updated successfully.");
-			} else {
-				System.out.println("No rows were updated.");
-			}
+			return rowsUpdated > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
-
-	public void updateBirthday(LocalDate newBirthday, String pId) {
-		String updateBirthday = "UPDATE personal_information " + "SET b_date = ? " + "WHERE pid = ?";
+	public boolean updateBirthday(LocalDate newBirthday, String pId) {
+		String updateBirthday = UPDATE_PERSONAL_INFORMATION + "SET b_date = ? " + "WHERE pid = ?";
 
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
 				PreparedStatement updateStmt = connection.prepareStatement(updateBirthday)) {
-			Date sqlDate = Date.valueOf(newBirthday); 
-			updateStmt.setDate(1, sqlDate); // Convert Java Date to SQL Date
-	        updateStmt.setString(2, pId);
+			Date sqlDate = Date.valueOf(newBirthday);
+			updateStmt.setDate(1, sqlDate);
+			updateStmt.setString(2, pId);
 
 			int rowsUpdated = updateStmt.executeUpdate();
 
 			if (rowsUpdated > 0) {
-				System.out.println(rowsUpdated + " rows updated successfully.");
-			} else {
-				System.out.println("No rows were updated.");
+				return true;
 			}
+			return false;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 }
