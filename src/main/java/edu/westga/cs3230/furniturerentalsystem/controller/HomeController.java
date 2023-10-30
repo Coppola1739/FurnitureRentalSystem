@@ -86,8 +86,23 @@ public class HomeController extends SystemController {
     }
     
     @FXML
-    void navigateToTransactionsPage(ActionEvent event) {
+    void navigateToTransactionsPage(ActionEvent event) throws IOException {
+    	FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.TRANSACTION_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+        
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
 
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+        stage.close();
     }
 
 }
