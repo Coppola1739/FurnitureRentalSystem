@@ -3,6 +3,7 @@ package edu.westga.cs3230.furniturerentalsystem.dao;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,9 +12,8 @@ import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 
 public class RentalDao {
 
-	public static boolean addRental(Transaction rental, Date startDate, Date endDate) {
-		boolean success = false;
-
+	public static String addRental(Transaction rental, Date startDate, Date endDate) {
+		String returnedRentalId = null;
 		String furnitureIds = rental.getFurnitureIds();
 		String quantities = rental.getQuantities();
 		String costs = rental.getCosts();
@@ -32,16 +32,20 @@ public class RentalDao {
 				callableStatement.setString(6, quantities);
 				callableStatement.setString(7, costs);
 
-				callableStatement.execute();
-
-				success = true;
+				if (callableStatement.execute()) {
+					try (ResultSet resultSet = callableStatement.getResultSet()) {
+						if (resultSet.next()) {
+							returnedRentalId = resultSet.getString("rental_id");
+						}
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
 
-		return success;
+		return returnedRentalId;
 	}
 
 }

@@ -34,6 +34,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.NonNull;
 
 public class TransactionController extends SystemController {
 
@@ -121,34 +122,43 @@ public class TransactionController extends SystemController {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setHeaderText("Submission Error");
-			alert.setContentText("Please ensure you've selected a member and that the start date is before the end date.");
+			alert.setContentText(
+					"Please ensure you've selected a member and that the start date is before the end date.");
 			alert.showAndWait();
 		} else {
 			try {
-				Transaction tr = Transaction.builder().memberId(this.memberTextField.getText()).selectedItems(this.cartListView.getItems()).employeeNum(EmployeeDao.getEmployeeNumByUsername(loggedInUser)).build();
-				boolean rs = RentalDao.addRental(tr, java.sql.Date.valueOf(this.startDatePicker.getValue()),
+				Transaction tr = Transaction.builder().memberId(this.memberTextField.getText())
+						.selectedItems(this.cartListView.getItems())
+						.employeeNum(EmployeeDao.getEmployeeNumByUsername(loggedInUser)).build();
+				String rentalId = RentalDao.addRental(tr, java.sql.Date.valueOf(this.startDatePicker.getValue()),
 						java.sql.Date.valueOf(this.endDatePicker.getValue()));
-				if (!rs) {
+
+				if (rentalId == null) {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Fail");
 					alert.setHeaderText("Failed to Add");
 					alert.setContentText("Order could not be made at this time");
 					alert.showAndWait();
 				} else {
-					Alert alert = new Alert(Alert.AlertType.INFORMATION);
-					alert.setTitle("Sucess");
-					alert.setHeaderText("Rental Created");
-					alert.setContentText("Here is your recept.");
-					alert.showAndWait();
+					this.showReceipt(tr, rentalId);
 				}
 			} catch (Exception e) {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setTitle("Error");
 				alert.setHeaderText("Server error");
-				alert.setContentText("Please insure that you are signed in");
+				alert.setContentText("Please ensure that you are signed in");
 				alert.showAndWait();
 			}
+
 		}
+	}
+
+	private void showReceipt(Transaction tr, String rentalId) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Success");
+		alert.setHeaderText("Rental Created");
+		alert.setContentText("Here is your receipt:\n" + this.generateReceipt(tr, rentalId));
+		alert.showAndWait();
 	}
 
 	@FXML
@@ -381,6 +391,26 @@ public class TransactionController extends SystemController {
 			return frequencyMap.get(f2).compareTo(frequencyMap.get(f1));
 		});
 		this.cartListView.setItems(cartItems);
+	}
+
+	private String generateReceipt(Transaction transaction, String rentalId) {
+		StringBuilder receipt = new StringBuilder();
+		receipt.append("Rental ID: ").append(rentalId).append("\n");
+		receipt.append("Member ID: ").append(transaction.getMemberId()).append("\n");
+		receipt.append("Employee Number: ").append(transaction.getEmployeeNum()).append("\n\n");
+
+		receipt.append("Furniture Rented:\n");
+		for (Furniture furniture : transaction.getSelectedItems()) {
+			receipt.append(furniture.toString()).append("\n");
+		}
+
+		double totalCost = 0.0;
+		for (String costStr : transaction.getCosts().split(",")) {
+			totalCost += Double.parseDouble(costStr);
+		}
+		receipt.append("\nTotal Cost: $").append(String.format("%.2f", totalCost));
+
+		return receipt.toString();
 	}
 
 	@FXML
