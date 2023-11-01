@@ -44,7 +44,25 @@ public class HomeController extends SystemController {
         super.loggedInUser = username;
         this.homeUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
+    @FXML
+    void navigateToAdminPage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.ADMIN_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+        stage.close();
+    }
     @FXML
     void navigateToMembersPage(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
