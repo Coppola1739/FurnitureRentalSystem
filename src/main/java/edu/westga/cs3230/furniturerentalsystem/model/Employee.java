@@ -21,20 +21,9 @@ import lombok.NonNull;
 public class Employee {
 
     @NonNull
+    private String employeeNum;
+    @NonNull
+    private String pId;
+    @NonNull
     private String username;
-    @NonNull
-    private String password;
-    @NonNull
-    private String firstName;
-    @NonNull
-    private String lastName;
-    @NonNull
-    private Date hireDate;
-    @NonNull
-    private String gender;
-    @NonNull
-    private String phoneNumber;
-    @NonNull
-    private Date birthday;
-
 }

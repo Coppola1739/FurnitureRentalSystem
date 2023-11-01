@@ -36,17 +36,4 @@ public class Member {
         output.append("Name: ").append(this.pInfo.getFirstName()).append(" ").append(this.pInfo.getLastName());
         return output.toString();
     }
-
-    public String getMemberId() {
-    	return this.memberId;
-    }
-    
-    public PersonalInformation getPInfo() {
-    	return this.pInfo;
-    }
-    
-    public String getPiD() {
-    	return this.pId;
-    }
-    
 }

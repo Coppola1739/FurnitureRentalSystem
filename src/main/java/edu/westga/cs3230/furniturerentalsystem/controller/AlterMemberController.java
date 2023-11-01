@@ -239,63 +239,63 @@ public class AlterMemberController extends SystemController {
 
 	@FXML
 	void updateBirthday(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateBirthday(this.birthdatePicker.getValue(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateBirthday(this.birthdatePicker.getValue(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updateCity(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("city", this.cityTextField.getText(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("city", this.cityTextField.getText(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 	
 	@FXML
 	void updateZip(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("zip", this.cityTextField.getText(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("zip", this.cityTextField.getText(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updateFirstName(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("f_name", this.firstNameTextField.getText(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("f_name", this.firstNameTextField.getText(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updateGender(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("gender", this.genderComboBox.getValue(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("gender", this.genderComboBox.getValue(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updateLastName(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("l_name", this.lastNameTextField.getText(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("l_name", this.lastNameTextField.getText(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updatePhoneNumber(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("phone_num", this.phoneTextField.getText(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("phone_num", this.phoneTextField.getText(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updateState(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("state", this.stateComboBox.getValue(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("state", this.stateComboBox.getValue(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
 
 	@FXML
 	void updateStreetAddress(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("street_add", this.streetAddressTextField.getText(), this.currMember.getPiD());
+		boolean successful = this.editMemberDao.updateMember("street_add", this.streetAddressTextField.getText(), this.currMember.getPId());
 		this.failedUpdateLabel.setVisible(!successful);
 		this.successfulUpdateLabel.setVisible(successful);
 	}
