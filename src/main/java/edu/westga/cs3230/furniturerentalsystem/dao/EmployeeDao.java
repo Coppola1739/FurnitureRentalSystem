@@ -12,16 +12,16 @@ import static edu.westga.cs3230.furniturerentalsystem.util.Constants.CONNECTION_
 
 public class EmployeeDao {
 
-	public static String getEmployeeNumByUsername(String username) throws Exception {
+    public static String getEmployeeNumByUsername(String username) throws Exception {
         String employeeNum = null;
-        
+
         try (Connection connection = DriverManager.getConnection(CONNECTION_STRING)) {
-            
+
             String sql = "SELECT e.employee_num FROM Employee e WHERE e.username = ?";
-            
+
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, username);
-                
+
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         employeeNum = resultSet.getString("employee_num");

@@ -222,4 +222,3 @@ public class AdminController extends SystemController {
         stage.close();
     }
 }
-
