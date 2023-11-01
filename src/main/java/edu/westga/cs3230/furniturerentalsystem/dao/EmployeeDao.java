@@ -37,7 +37,7 @@ public class EmployeeDao {
         ArrayList<Employee> employees = new ArrayList<>();
         String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid;";
 
-        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
              PreparedStatement checkStmt = connection.prepareStatement(selectEmployee)) {
 
             try (ResultSet rs = checkStmt.executeQuery()) {
@@ -72,7 +72,7 @@ public class EmployeeDao {
         ArrayList<Employee> employees = new ArrayList<>();
         String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid WHERE e.employee_num = ?;";
 
-        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
              PreparedStatement checkStmt = connection.prepareStatement(selectEmployee)) {
             checkStmt.setString(1, employeeNumber);
             try (ResultSet rs = checkStmt.executeQuery()) {
@@ -102,7 +102,6 @@ public class EmployeeDao {
         }
         return employees;
     }
-
 
     public boolean alterEmployee(String employeeNumber, PersonalInformation pinfo) {
         String callProcedure = "{CALL UpdateEmployee(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";

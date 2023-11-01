@@ -1,17 +1,21 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
+
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
+
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+
 import edu.westga.cs3230.furniturerentalsystem.util.EmployeeStringFormatter;
 import edu.westga.cs3230.furniturerentalsystem.util.MemberStringFormatter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +25,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -69,7 +76,7 @@ public class AdminController extends SystemController {
         this.employeeDao = new EmployeeDao();
         this.loadEmployeeListView(EmployeeDao.getAllEmployees());
         this.setListViewDoubleClickHandler();
-        this.addListenerToAlterUserButton();
+        this.addListenerToAlterEmployeeButton();
     }
 
     private void setListViewDoubleClickHandler() {
@@ -187,7 +194,7 @@ public class AdminController extends SystemController {
         this.employeeListView.setItems(FXCollections.observableArrayList(employeesByEmployeeNumber));
     }
 
-    private void addListenerToAlterUserButton() {
+    private void addListenerToAlterEmployeeButton() {
         this.editEmployeeButton.setDisable(true);
         this.employeeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.editEmployeeButton.setDisable(newValue == null);
