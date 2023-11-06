@@ -55,6 +55,9 @@ public class FurnitureDao {
 		return this.searchQuery(selectFurniture);
 	}
 	
+	//TODO un-string-concatenate these methods
+	
+	
 	public ArrayList<Furniture> getFurnitureByStyleAndCategory(String style, String category) {
 		String selectFurniture = "SELECT * FROM `furniture` WHERE category_name LIKE '" + category + CLOSING_QUOTATION + " AND style_name LIKE '" + style + CLOSING_QUOTATION;
 		return this.searchQuery(selectFurniture);

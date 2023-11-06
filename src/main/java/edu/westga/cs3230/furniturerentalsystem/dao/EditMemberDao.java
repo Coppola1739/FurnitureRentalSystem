@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EditMemberDao {
 
+	//TODO Dr. Yang hates this class and the way I do this. This needs to be absorbed into the MemberDAO
 	private static final String UPDATE_PERSONAL_INFORMATION = "UPDATE personal_information ";
 
 	public boolean updateMember(String column, String value, String pId) {
