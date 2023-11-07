@@ -2,13 +2,14 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
-import edu.westga.cs3230.furniturerentalsystem.dao.EditMemberDao;
+import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
@@ -18,7 +19,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -31,8 +31,7 @@ import javafx.stage.Stage;
 public class AlterMemberController extends SystemController {
 
 	private Member currMember;
-	private EditMemberDao editMemberDao;
-
+	
 	@FXML
 	private Label failedUpdateLabel;
 	
@@ -93,38 +92,6 @@ public class AlterMemberController extends SystemController {
 	@FXML
 	private DatePicker birthdatePicker;
 
-	@FXML
-	private Button updateBirthdayButton;
-
-	@FXML
-	private Button updateCityButton;
-
-	@FXML
-	private Button updateFirstNameButton;
-
-	@FXML
-	private Button updateGenderButton;
-
-	@FXML
-	private Button updateLastNameButton;
-
-	@FXML
-	private Button updatePasswordButton;
-
-	@FXML
-	private Button updatePhoneNumberButton;
-
-	@FXML
-	private Button updateStateButton;
-
-	@FXML
-	private Button updateStreetAddressButton;
-
-	@FXML
-	private Button updateUsernameButton;
-
-	@FXML
-	private Button updateZipButton;
 
 	@FXML
 	void initialize() {
@@ -152,7 +119,6 @@ public class AlterMemberController extends SystemController {
 		this.setListenersForFields();
 		this.genderComboBox.getItems().addAll("Male", "Female");
 		this.populateStateComboBox();
-		this.editMemberDao = new EditMemberDao();
 		this.setAllFieldsToClearLabels();
 	}
 
@@ -191,11 +157,9 @@ public class AlterMemberController extends SystemController {
 		this.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!this.isValidPhoneNum(newValue)) {
 				this.phoneTextField.setStyle("-fx-border-color: red;");
-				this.updatePhoneNumberButton.setDisable(true);
 				this.invalidPhoneNumText.setVisible(true);
 			} else {
 				this.phoneTextField.setStyle("");
-				this.updatePhoneNumberButton.setDisable(false);
 				this.invalidPhoneNumText.setVisible(false);
 			}
 		});
@@ -203,10 +167,8 @@ public class AlterMemberController extends SystemController {
 		this.zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!this.isValidZipCode(newValue)) {
 				this.invalidZipText.setVisible(true);
-				this.updateZipButton.setDisable(true);
 			} else {
 				this.invalidZipText.setVisible(false);
-				this.updateZipButton.setDisable(false);
 			}
 		});
 	}
@@ -222,6 +184,7 @@ public class AlterMemberController extends SystemController {
 				"TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"));
 	}
 
+	
 	private boolean isValidPhoneNum(String phoneNum) {
 		boolean matches = false;
 		String phoneRegexFormatted = "\\d{3}-\\d{3}-\\d{4}";
@@ -232,74 +195,40 @@ public class AlterMemberController extends SystemController {
 		return matches;
 	}
 
+	
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		this.alterUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
 	}
 
-	@FXML
-	void updateBirthday(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateBirthday(this.birthdatePicker.getValue(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
-	@FXML
-	void updateCity(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("city", this.cityTextField.getText(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
+	
+	private PersonalInformation createPersonalInformation() {
+		PersonalInformation pInfo = PersonalInformation.builder().firstName(this.firstNameTextField.getText().trim())
+				.lastName(this.lastNameTextField.getText().trim()).registrationDate(new Date())
+				.gender(this.genderComboBox.getValue())
+				.phoneNumber(this.phoneTextField.getText().replaceAll("[^0-9]", "").trim())
+				.birthday(java.sql.Date.valueOf(this.birthdatePicker.getValue()))
+				.address(this.streetAddressTextField.getText().trim()).city(this.cityTextField.getText().trim())
+				.state(this.stateComboBox.getValue()).zip(this.zipTextField.getText().trim()).build();
+		return pInfo;
 	}
 	
 	@FXML
-	void updateZip(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("zip", this.cityTextField.getText(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
+	void updateUserClick(ActionEvent event) throws SQLException {
+		PersonalInformation pInfo = this.createPersonalInformation();
+		try {
+			UserDao updateUser = new UserDao();
+			boolean successful = updateUser.alterUser(this.currMember.getMemberId(), pInfo);
+			
+			this.failedUpdateLabel.setVisible(!successful);
+			this.successfulUpdateLabel.setVisible(successful);
+
+		} catch (IllegalArgumentException ex) {
+			this.errorText.setText(ex.getMessage());
+		}
 	}
 
-	@FXML
-	void updateFirstName(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("f_name", this.firstNameTextField.getText(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
-	@FXML
-	void updateGender(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("gender", this.genderComboBox.getValue(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
-	@FXML
-	void updateLastName(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("l_name", this.lastNameTextField.getText(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
-	@FXML
-	void updatePhoneNumber(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("phone_num", this.phoneTextField.getText(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
-	@FXML
-	void updateState(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("state", this.stateComboBox.getValue(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
-	@FXML
-	void updateStreetAddress(ActionEvent event) {
-		boolean successful = this.editMemberDao.updateMember("street_add", this.streetAddressTextField.getText(), this.currMember.getPId());
-		this.failedUpdateLabel.setVisible(!successful);
-		this.successfulUpdateLabel.setVisible(successful);
-	}
-
+	
 	private void clearLabelsOnFocus(TextField textField) {
         textField.setOnMouseClicked(event -> {
             this.successfulUpdateLabel.setVisible(false);

@@ -186,14 +186,14 @@ public class UserDao {
 	 * @throws SQLException shouldn't be thrown unless bad information is entered in
 	 *                      pInfo
 	 */
-	public boolean alterUser(String username, String password, String role, PersonalInformation pinfo)
-			throws SQLException {
-		String alterInfoQuery = "UPDATE personal_information JOIN member ON personal_information.pid = member.pid AND member.username = ? SET f_name = ?, l_name = ?, b_date = ?, gender = ?, phone_num = ?, street_add = ?, city = ?, state = ?, zip = ?";
+	public boolean alterUser(String memberId, PersonalInformation pinfo) {
+		String alterInfoQuery = "UPDATE personal_information JOIN member ON personal_information.pid = member.pid AND member_id = ? SET f_name = ?, l_name = ?, b_date = ?, gender = ?, phone_num = ?, street_add = ?, city = ?, state = ?, zip = ?";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement insertStmt = connection.prepareStatement(alterInfoQuery)) {
 
-			java.sql.Date sqlBirthDate = new java.sql.Date(pinfo.getBirthday().getTime());
-			insertStmt.setString(1, username);
+			java.sql.Date sqlBirthDate = java.sql.Date.valueOf(pinfo.getBirthday().toString());
+			
+			insertStmt.setString(1, memberId);
 			insertStmt.setString(2, pinfo.getFirstName());
 			insertStmt.setString(3, pinfo.getLastName());
 			insertStmt.setString(4, sqlBirthDate.toString());
@@ -206,6 +206,10 @@ public class UserDao {
 
 			int affectedRows = insertStmt.executeUpdate();
 			return affectedRows > 0;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 

@@ -47,10 +47,14 @@
                </font>
             </Label>
             <TextField fx:id="firstNameTextField" layoutX="123.0" layoutY="92.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter First Name" />
-            <TextField fx:id="phoneTextField" layoutX="123.0" layoutY="198.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Phone #" />
             <TextField fx:id="lastNameTextField" layoutX="123.0" layoutY="128.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter First Name" />
+            <ComboBox fx:id="genderComboBox" layoutX="123.0" layoutY="162.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
+            <TextField fx:id="phoneTextField" layoutX="123.0" layoutY="198.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Phone #" />
+            <DatePicker fx:id="birthdatePicker" layoutX="123.0" layoutY="237.0" prefHeight="26.0" prefWidth="144.0" />
+            <Text fx:id="errorText" fill="#ee0202" layoutX="363.0" layoutY="375.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="5.0" />
             <TextField fx:id="streetAddressTextField" layoutX="464.0" layoutY="92.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Street Address" />
             <TextField fx:id="cityTextField" layoutX="464.0" layoutY="127.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter City" />
+            <ComboBox fx:id="stateComboBox" layoutX="464.0" layoutY="172.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
             <TextField fx:id="zipTextField" layoutX="464.0" layoutY="214.0" prefHeight="26.0" prefWidth="144.0" promptText="Enter Zip" />
             <Label layoutX="419.0" layoutY="130.0" text="City:">
                <font>
@@ -67,25 +71,13 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fx:id="errorText" fill="#ee0202" layoutX="363.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <DatePicker fx:id="birthdatePicker" layoutX="123.0" layoutY="237.0" prefHeight="26.0" prefWidth="144.0" />
-            <ComboBox fx:id="genderComboBox" layoutX="123.0" layoutY="162.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
-            <ComboBox fx:id="stateComboBox" layoutX="464.0" layoutY="172.0" prefHeight="26.0" prefWidth="144.0" promptText="Select" />
             <Text fx:id="invalidPhoneNumText" fill="#e40808" layoutX="297.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone number must be in format 'XXX-XXX-XXXX' or 'XXXXXXXXXX'" visible="false" />
             <Text fx:id="invalidZipText" fill="#e71515" layoutX="384.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please enter a 5-digit number." visible="false" />
             <Label fx:id="alterUserNameLabel" layoutX="370.0" layoutY="52.0" text="User Information Failed" />
-            <Button fx:id="updateStreetAddressButton" layoutX="628.0" layoutY="92.0" mnemonicParsing="false" onAction="#updateStreetAddress" text="Update" />
-            <Button fx:id="updateCityButton" layoutX="628.0" layoutY="128.0" mnemonicParsing="false" onAction="#updateCity" text="Update" />
-            <Button fx:id="updateStateButton" layoutX="628.0" layoutY="173.0" mnemonicParsing="false" onAction="#updateState" text="Update" />
-            <Button fx:id="updateZipButton" layoutX="628.0" layoutY="211.0" mnemonicParsing="false" onAction="#updateZip" text="Update" />
-            <Button fx:id="updateFirstNameButton" layoutX="286.0" layoutY="92.0" mnemonicParsing="false" onAction="#updateFirstName" text="Update" />
-            <Button fx:id="updateLastNameButton" layoutX="286.0" layoutY="128.0" mnemonicParsing="false" onAction="#updateLastName" text="Update" />
-            <Button fx:id="updateGenderButton" layoutX="286.0" layoutY="162.0" mnemonicParsing="false" onAction="#updateGender" text="Update" />
-            <Button fx:id="updatePhoneNumberButton" layoutX="286.0" layoutY="198.0" mnemonicParsing="false" onAction="#updatePhoneNumber" text="Update" />
-            <Button fx:id="updateBirthdayButton" layoutX="286.0" layoutY="237.0" mnemonicParsing="false" onAction="#updateBirthday" text="Update" />
             <Button fx:id="backToMemberPageButton" layoutX="468.0" layoutY="350.0" mnemonicParsing="false" onAction="#backToMemberPage" text="Back to Member Page" />
-            <Label fx:id="successfulUpdateLabel" layoutX="181.0" layoutY="293.0" text="Account Updated Successfully!" visible="false" />
+            <Label fx:id="successfulUpdateLabel" layoutX="181.0" layoutY="325.0" text="Account Updated Successfully!" visible="false" />
             <Label fx:id="failedUpdateLabel" layoutX="181.0" layoutY="341.0" text="Account Update Failed" textFill="#d11f1f" visible="false" />
+            <Button fx:id="updateUserButton" layoutX="318.0" layoutY="289.0" mnemonicParsing="false" onAction="#updateUserClick" text="Update User" />
       </children>
     </AnchorPane>
   </children>
