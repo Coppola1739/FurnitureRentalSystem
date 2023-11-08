@@ -130,4 +130,6 @@ public class FurnitureDao {
 		}
 		return allFurniture;
 	}
+
+
 }
