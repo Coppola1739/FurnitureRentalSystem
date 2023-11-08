@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -31,13 +32,15 @@ import javafx.stage.Stage;
 public class AlterMemberController extends SystemController {
 
 	private Member currMember;
-	
+	private boolean validPhoneNum;
+	private boolean validZipCode;
+
 	@FXML
 	private Label failedUpdateLabel;
-	
+
 	@FXML
 	private Label successfulUpdateLabel;
-	
+
 	@FXML
 	private Label alterUserNameLabel;
 
@@ -92,6 +95,8 @@ public class AlterMemberController extends SystemController {
 	@FXML
 	private DatePicker birthdatePicker;
 
+	@FXML
+	private Button updateUserButton;
 
 	@FXML
 	void initialize() {
@@ -120,6 +125,8 @@ public class AlterMemberController extends SystemController {
 		this.genderComboBox.getItems().addAll("Male", "Female");
 		this.populateStateComboBox();
 		this.setAllFieldsToClearLabels();
+		this.validPhoneNum = true;
+		this.validZipCode = true;
 	}
 
 	@FXML
@@ -131,7 +138,7 @@ public class AlterMemberController extends SystemController {
 		this.clearLabelsOnFocus(this.streetAddressTextField);
 		this.clearLabelsOnFocus(this.zipTextField);
 	}
-	
+
 	private void populateAllFields(PersonalInformation pinfo) {
 		this.firstNameTextField.setText(pinfo.getFirstName());
 		this.lastNameTextField.setText(pinfo.getLastName());
@@ -158,17 +165,31 @@ public class AlterMemberController extends SystemController {
 			if (!this.isValidPhoneNum(newValue)) {
 				this.phoneTextField.setStyle("-fx-border-color: red;");
 				this.invalidPhoneNumText.setVisible(true);
+				this.validPhoneNum = false;
+				this.updateUserButton.setDisable(true);
 			} else {
 				this.phoneTextField.setStyle("");
 				this.invalidPhoneNumText.setVisible(false);
+				this.validPhoneNum = true;
+				if (this.validZipCode) {
+					this.updateUserButton.setDisable(false);
+				}
 			}
 		});
 
 		this.zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if (!this.isValidZipCode(newValue)) {
+				this.zipTextField.setStyle("-fx-border-color: red;");
 				this.invalidZipText.setVisible(true);
+				this.validZipCode = false;
+				this.updateUserButton.setDisable(true);
 			} else {
+				this.zipTextField.setStyle("");
 				this.invalidZipText.setVisible(false);
+				this.validZipCode = true;
+				if (this.validPhoneNum) {
+					this.updateUserButton.setDisable(false);
+				}
 			}
 		});
 	}
@@ -184,7 +205,6 @@ public class AlterMemberController extends SystemController {
 				"TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"));
 	}
 
-	
 	private boolean isValidPhoneNum(String phoneNum) {
 		boolean matches = false;
 		String phoneRegexFormatted = "\\d{3}-\\d{3}-\\d{4}";
@@ -195,13 +215,11 @@ public class AlterMemberController extends SystemController {
 		return matches;
 	}
 
-	
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		this.alterUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
 	}
 
-	
 	private PersonalInformation createPersonalInformation() {
 		PersonalInformation pInfo = PersonalInformation.builder().firstName(this.firstNameTextField.getText().trim())
 				.lastName(this.lastNameTextField.getText().trim()).registrationDate(new Date())
@@ -212,14 +230,14 @@ public class AlterMemberController extends SystemController {
 				.state(this.stateComboBox.getValue()).zip(this.zipTextField.getText().trim()).build();
 		return pInfo;
 	}
-	
+
 	@FXML
 	void updateUserClick(ActionEvent event) throws SQLException {
 		PersonalInformation pInfo = this.createPersonalInformation();
 		try {
 			UserDao updateUser = new UserDao();
 			boolean successful = updateUser.alterUser(this.currMember.getMemberId(), pInfo);
-			
+
 			this.failedUpdateLabel.setVisible(!successful);
 			this.successfulUpdateLabel.setVisible(successful);
 
@@ -228,12 +246,11 @@ public class AlterMemberController extends SystemController {
 		}
 	}
 
-	
 	private void clearLabelsOnFocus(TextField textField) {
-        textField.setOnMouseClicked(event -> {
-            this.successfulUpdateLabel.setVisible(false);
-            this.failedUpdateLabel.setVisible(false);
-        });
+		textField.setOnMouseClicked(event -> {
+			this.successfulUpdateLabel.setVisible(false);
+			this.failedUpdateLabel.setVisible(false);
+		});
 	}
 
 	@FXML
