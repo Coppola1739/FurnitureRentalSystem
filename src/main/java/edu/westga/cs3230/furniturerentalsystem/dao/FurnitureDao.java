@@ -36,7 +36,7 @@ public class FurnitureDao {
 				while (rs.next()) {
 					Furniture newFurniture = Furniture.builder().furnitureId(rs.getString("furniture_id"))
 							.styleName(rs.getString("style_name")).categoryName(rs.getString("category_name"))
-							.rentalRate(rs.getString("rental_rate")).build();
+							.rentalRate(rs.getString("rental_rate")).quantity(rs.getInt("quantity")).build();
 					allFurniture.add(newFurniture);
 				}
 			}

@@ -27,6 +27,8 @@ public class Furniture {
     @NonNull
     private String rentalRate;
     
+    private int quantity;
+    
     @Override
     public String toString() {
     	StringBuilder output = new StringBuilder();
@@ -34,6 +36,7 @@ public class Furniture {
     	output.append(" Style: ").append(this.styleName);
     	output.append(" Category: ").append(this.categoryName);
     	output.append(" Rental Rate: ").append(this.rentalRate);
+    	output.append(" Quantity:").append(this.quantity);
     	return output.toString();
     }
     
