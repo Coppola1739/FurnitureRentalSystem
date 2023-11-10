@@ -12,7 +12,6 @@ import lombok.NonNull;
  * @author Gavin Coppola
  * @version Fall 2023
  */
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
@@ -29,6 +28,17 @@ public class Furniture {
     
     private int quantity;
     
+    public Furniture(String furnitureId, String styleName, String categoryName, String rentalRate, int quantity) {
+    	if (quantity < 0){
+    		throw new IllegalArgumentException("Quantity must be greater than zero");
+    	}
+    	this.furnitureId = furnitureId;
+    	this.styleName = styleName;
+    	this.categoryName = categoryName;
+    	this.rentalRate = rentalRate;
+    	this.quantity = quantity;
+    }
+    
     @Override
     public String toString() {
     	StringBuilder output = new StringBuilder();
@@ -36,7 +46,6 @@ public class Furniture {
     	output.append(" Style: ").append(this.styleName);
     	output.append(" Category: ").append(this.categoryName);
     	output.append(" Rental Rate: ").append(this.rentalRate);
-    	output.append(" Quantity:").append(this.quantity);
     	return output.toString();
     }
     

@@ -63,6 +63,10 @@ public class Transaction {
 		return this.removeLastComma(costs);
 	}
 
+//	public boolean makeReturn() {
+//		
+//	}
+	
 	private Map<String, Integer> countFurnitureQuantities() {
 		Map<String, Integer> countMap = new HashMap<>();
 		for (Furniture furniture : this.selectedItems) {

@@ -42,6 +42,9 @@ public class TransactionController extends SystemController {
 	private FurnitureDao furnitureDao;
 
 	private MemberDao memberDao;
+	
+	@FXML
+	private Button makeReturnButton;
 
 	@FXML
 	private ResourceBundle resources;
@@ -148,7 +151,6 @@ public class TransactionController extends SystemController {
 				alert.setContentText("Please ensure that you are signed in");
 				alert.showAndWait();
 			}
-
 		}
 	}
 
@@ -191,8 +193,15 @@ public class TransactionController extends SystemController {
 	// refactored
 	@FXML
 	void logOut(ActionEvent event) throws IOException {
+		changeWindow(Constants.LOGIN_FXML);
+		Stage stage = (Stage) this.logOutButton.getScene().getWindow();
+
+		stage.close();
+	}
+
+	private void changeWindow(String window) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource(Constants.LOGIN_FXML));
+		loader.setLocation(Main.class.getResource(window));
 		loader.load();
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
@@ -202,9 +211,6 @@ public class TransactionController extends SystemController {
 		newStage.initModality(Modality.APPLICATION_MODAL);
 
 		newStage.show();
-		Stage stage = (Stage) this.logOutButton.getScene().getWindow();
-
-		stage.close();
 	}
 
 	@FXML
@@ -216,17 +222,35 @@ public class TransactionController extends SystemController {
 		Scene scene = new Scene(parent);
 		Stage newStage = new Stage();
 
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
+
+		newStage.show();
 		SystemController controller = loader.getController();
 		controller.setLoggedInLabel(super.loggedInUser);
+		Stage stage = (Stage) this.homeButton.getScene().getWindow();
+		stage.close();
+	}
+
+	@FXML
+	void makeReturn() throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(Constants.RETURNS_PAGE_FXML));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
 
 		newStage.setScene(scene);
 		newStage.initModality(Modality.APPLICATION_MODAL);
 
 		newStage.show();
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
 		Stage stage = (Stage) this.homeButton.getScene().getWindow();
 		stage.close();
 	}
-
+	
 	@FXML
 	void clearMemberSearch(ActionEvent event) {
 		this.searchFilterComboBox.getSelectionModel().clearSelection();

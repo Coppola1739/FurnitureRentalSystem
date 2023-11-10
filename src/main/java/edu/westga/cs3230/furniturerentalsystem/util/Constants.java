@@ -19,6 +19,7 @@ public class Constants {
     public static final String HOME_PAGE_FXML = "/HomePage.fxml";
     public static final String TRANSACTION_PAGE_FXML = "/Transaction.fxml";
     public static final String FAILED_SQL = "Try again later.";
+    public static final String RETURNS_PAGE_FXML = "/ReturnsPage.fxml";
     public static final String USERNAME_INUSE = "Username already used. Use another";
     public static final String CLOSING_QUOTATION = "'";
 }
