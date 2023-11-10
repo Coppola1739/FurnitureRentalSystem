@@ -1,5 +1,6 @@
 package edu.westga.cs3230.furniturerentalsystem.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -175,6 +176,16 @@ public class UserDao {
 		return pInfo;
 	}
 
+
+
+	private String generateTenDigitID() {
+		Random random = new Random();
+		int firstDigit = 1 + random.nextInt(9);
+		int remainingDigits = random.nextInt(1_000_000_000);
+
+		return String.valueOf(firstDigit) + String.format("%09d", remainingDigits);
+	}
+	
 	/**
 	 * Alters a user by updating personal information fields concurrently.
 	 * 
@@ -186,39 +197,32 @@ public class UserDao {
 	 * @throws SQLException shouldn't be thrown unless bad information is entered in
 	 *                      pInfo
 	 */
+	
 	public boolean alterUser(String memberId, PersonalInformation pinfo) {
-		String alterInfoQuery = "UPDATE personal_information JOIN member ON personal_information.pid = member.pid AND member_id = ? SET f_name = ?, l_name = ?, b_date = ?, gender = ?, phone_num = ?, street_add = ?, city = ?, state = ?, zip = ?";
-		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-				PreparedStatement insertStmt = connection.prepareStatement(alterInfoQuery)) {
+	    String callProcedure = "{CALL UpdateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+	    try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+	         CallableStatement callStmt = connection.prepareCall(callProcedure)) {
 
-			java.sql.Date sqlBirthDate = java.sql.Date.valueOf(pinfo.getBirthday().toString());
-			
-			insertStmt.setString(1, memberId);
-			insertStmt.setString(2, pinfo.getFirstName());
-			insertStmt.setString(3, pinfo.getLastName());
-			insertStmt.setString(4, sqlBirthDate.toString());
-			insertStmt.setString(5, pinfo.getGender());
-			insertStmt.setString(6, pinfo.getPhoneNumber());
-			insertStmt.setString(7, pinfo.getAddress());
-			insertStmt.setString(8, pinfo.getCity());
-			insertStmt.setString(9, pinfo.getState());
-			insertStmt.setString(10, pinfo.getZip());
+	        java.sql.Date sqlBirthDate = java.sql.Date.valueOf(pinfo.getBirthday().toString());
 
-			int affectedRows = insertStmt.executeUpdate();
-			return affectedRows > 0;
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+	        callStmt.setString(1, memberId);
+	        callStmt.setString(2, pinfo.getFirstName());
+	        callStmt.setString(3, pinfo.getLastName());
+	        callStmt.setDate(4, sqlBirthDate);
+	        callStmt.setString(5, pinfo.getGender());
+	        callStmt.setString(6, pinfo.getPhoneNumber());
+	        callStmt.setString(7, pinfo.getAddress());
+	        callStmt.setString(8, pinfo.getCity());
+	        callStmt.setString(9, pinfo.getState());
+	        callStmt.setString(10, pinfo.getZip());
 
-	private String generateTenDigitID() {
-		Random random = new Random();
-		int firstDigit = 1 + random.nextInt(9);
-		int remainingDigits = random.nextInt(1_000_000_000);
+	        int affectedRows = callStmt.executeUpdate();
+	        return affectedRows > 0;
 
-		return String.valueOf(firstDigit) + String.format("%09d", remainingDigits);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 }

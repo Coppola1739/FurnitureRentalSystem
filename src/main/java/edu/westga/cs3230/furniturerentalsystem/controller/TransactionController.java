@@ -34,7 +34,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.NonNull;
 
 public class TransactionController extends SystemController {
 
