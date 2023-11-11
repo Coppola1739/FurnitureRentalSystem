@@ -56,4 +56,30 @@ public class RentalInfo {
 		return sb.toString();
 	}
 
+	
+	public String toStringForReturns() {
+		StringBuilder inlineString = new StringBuilder();
+		inlineString.append("Member: ").append(this.memberFullName);
+		inlineString.append(" Rental ID: ").append(this.rentalId);
+		inlineString.append(" Start Date: ").append(this.startDate);
+		inlineString.append(" Due Date: ").append(this.dueDate);
+		return inlineString.toString();
+	}
+//	
+//	public class Rental{
+//		
+//		public String rentalId;
+//		
+//		public Date startDate;
+//		
+//		public Date dueDate;
+//		
+//		public String memberId;
+//		
+//		public String 
+//		
+//		public Rental() {
+//			
+//		}
+//	}
 }

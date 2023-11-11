@@ -67,6 +67,8 @@ public class Transaction {
 //		
 //	}
 	
+	
+	
 	private Map<String, Integer> countFurnitureQuantities() {
 		Map<String, Integer> countMap = new HashMap<>();
 		for (Furniture furniture : this.selectedItems) {
