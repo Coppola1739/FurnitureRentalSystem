@@ -10,7 +10,7 @@
    <children>
       <AnchorPane prefHeight="424.0" prefWidth="600.0">
          <children>
-            <ListView layoutX="21.0" layoutY="19.0" prefHeight="249.0" prefWidth="558.0" />
+            <ListView fx:id="rentalsListView" layoutX="21.0" layoutY="19.0" prefHeight="249.0" prefWidth="558.0" />
             <Button fx:id="returnFurnitureButton" layoutX="91.0" layoutY="307.0" mnemonicParsing="false" onAction="#returnSelectedFurniture" text="Return Selected" />
             <Button fx:id="returnsPageBackButton" layoutX="424.0" layoutY="307.0" mnemonicParsing="false" onAction="#backToTransactionsPage" text="Back" />
             <Label fx:id="loggedInLabel" layoutX="77.0" layoutY="354.0" text="Logged In: Null" />

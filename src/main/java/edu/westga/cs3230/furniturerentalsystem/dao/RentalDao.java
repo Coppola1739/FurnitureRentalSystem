@@ -3,10 +3,14 @@ package edu.westga.cs3230.furniturerentalsystem.dao;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
+import edu.westga.cs3230.furniturerentalsystem.model.Rental;
 import edu.westga.cs3230.furniturerentalsystem.model.Transaction;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 
@@ -46,6 +50,51 @@ public class RentalDao {
 		}
 
 		return returnedRentalId;
+	}
+
+	public ArrayList<Rental> getAllRentalsForMember(String memberID) {
+		ArrayList<Rental> rentals = new ArrayList<>();
+		String selectMember = "SELECT * FROM `rental` WHERE member_id = ?;";
+
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				PreparedStatement checkStmt = connection.prepareStatement(selectMember)) {
+			checkStmt.setString(1, memberID);
+			try (ResultSet rs = checkStmt.executeQuery()) {
+				while (rs.next()) {
+					Rental rentalInfo = Rental.builder().rentalId(rs.getString("rental_id"))
+							.memberId(rs.getString("member_id")).employeeId(rs.getString("employee_num"))
+							.startDate(rs.getDate("start_date")).dueDate(rs.getDate("due_date")).build();
+
+					rentals.add(rentalInfo);
+				}
+			}
+		} catch (SQLException exception) {
+			throw new RuntimeException(exception);
+		}
+
+		return rentals;
+	}
+	
+	public ArrayList<Rental> getAllRentals() {
+		ArrayList<Rental> rentals = new ArrayList<>();
+		String selectMember = "SELECT * FROM `rental`;";
+
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				PreparedStatement checkStmt = connection.prepareStatement(selectMember)) {
+			try (ResultSet rs = checkStmt.executeQuery()) {
+				while (rs.next()) {
+					Rental rentalInfo = Rental.builder().rentalId(rs.getString("rental_id"))
+							.memberId(rs.getString("member_id")).employeeId(rs.getString("employee_num"))
+							.startDate(rs.getDate("start_date")).dueDate(rs.getDate("due_date")).build();
+
+					rentals.add(rentalInfo);
+				}
+			}
+		} catch (SQLException exception) {
+			throw new RuntimeException(exception);
+		}
+
+		return rentals;
 	}
 
 }

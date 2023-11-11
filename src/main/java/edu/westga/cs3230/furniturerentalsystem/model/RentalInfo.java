@@ -1,12 +1,15 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

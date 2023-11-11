@@ -1,20 +1,24 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
-import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
-import edu.westga.cs3230.furniturerentalsystem.model.RentalInfo;
+import edu.westga.cs3230.furniturerentalsystem.model.Rental;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import lombok.NonNull;
 
 public class ReturnsController extends SystemController {
 
+	private RentalDao rentalDao;
+	private Member currMember;
+	private ArrayList<Rental> rentals;
 	@FXML
 	private Button returnFurnitureButton;
 	
@@ -22,12 +26,11 @@ public class ReturnsController extends SystemController {
 	private Button returnsPageBackButton;
 	
 	@FXML
-	private ListView<RentalInfo> rentalsListView;
+	private ListView<Rental> rentalsListView;
 	
 	@FXML
 	private Label loggedInLabel;
 	
-	private Member currMember;
 	
 	@FXML
 	void returnSelectedFurniture() {
@@ -36,7 +39,8 @@ public class ReturnsController extends SystemController {
 		
 	@FXML
 	void initialize() {
-		
+		this.rentalDao = new RentalDao();
+		this.currMember = new Member();
 	}
 	
 	@FXML
@@ -54,12 +58,14 @@ public class ReturnsController extends SystemController {
 
 	public void setSelectedUser(Member member) {
 		this.currMember = member;
-		this.populateRentalsListView(this.currMember.getPInfo());
+		this.populateRentalsListView(member.getMemberId());
 	}
 
-	private void populateRentalsListView(@NonNull PersonalInformation pInfo) {
-		// TODO Auto-generated method stub
-		
+	private void populateRentalsListView(String memberId) {
+		ArrayList<Rental> allRentalsForCustomer = this.rentalDao.getAllRentalsForMember(currMember.getMemberId());
+		this.rentals = allRentalsForCustomer;
+		System.out.println(allRentalsForCustomer);
+		this.rentalsListView.setItems(FXCollections.observableArrayList(this.rentals));
 	}
 }
 
