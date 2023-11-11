@@ -4,12 +4,14 @@ import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@Getter
 public class Rental {
 
 	@NonNull
@@ -30,11 +32,11 @@ public class Rental {
 	@Override
 	public String toString() {
 		StringBuilder inlineString = new StringBuilder();
-		inlineString.append("Member ID: ").append(this.memberId);
-		inlineString.append(" Employee ID:").append(this.employeeId);
 		inlineString.append(" Rental ID: ").append(this.rentalId);
 		inlineString.append(" Start Date: ").append(this.startDate);
 		inlineString.append(" Due Date: ").append(this.dueDate);
+		inlineString.append(" Member ID: ").append(this.memberId);
+		inlineString.append(" Employee ID:").append(this.employeeId);
 		return inlineString.toString();
 	}
 

@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Rental;
+import edu.westga.cs3230.furniturerentalsystem.model.RentalItem;
+import edu.westga.cs3230.furniturerentalsystem.model.Return;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class ReturnsController extends SystemController {
@@ -31,16 +35,29 @@ public class ReturnsController extends SystemController {
 	@FXML
 	private Label loggedInLabel;
 	
+	@FXML
+	private ListView<RentalItem> selectedTransactionRentalItems;
 	
+    @FXML
+    private ListView<RentalItem> returnFurnitureCartListView;
+
+    @FXML
+    private ListView<RentalItem> returnsListView;
+	
+    @FXML
+    private TextField lateFeeOwedTextArea;
+    
 	@FXML
 	void returnSelectedFurniture() {
 		
 	}
 		
+	
 	@FXML
 	void initialize() {
 		this.rentalDao = new RentalDao();
 		this.currMember = new Member();
+		this.handleRentalListDoubleClick();
 	}
 	
 	@FXML
@@ -64,8 +81,19 @@ public class ReturnsController extends SystemController {
 	private void populateRentalsListView(String memberId) {
 		ArrayList<Rental> allRentalsForCustomer = this.rentalDao.getAllRentalsForMember(currMember.getMemberId());
 		this.rentals = allRentalsForCustomer;
-		System.out.println(allRentalsForCustomer);
 		this.rentalsListView.setItems(FXCollections.observableArrayList(this.rentals));
+	}
+	
+	private void handleRentalListDoubleClick() {
+		this.rentalsListView.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				Rental selectedRental = this.rentalsListView.getSelectionModel().getSelectedItem();
+				if (selectedRental != null) {
+					ObservableList<RentalItem> rentalItems = FXCollections.observableArrayList(this.rentalDao.getRentalItemsFromRental(selectedRental.getRentalId()));
+					this.selectedTransactionRentalItems.setItems(rentalItems);
+				}
+			}
+		});
 	}
 }
 
