@@ -91,7 +91,8 @@ public class ReturnsController extends SystemController {
 				Rental selectedRental = this.rentalsListView.getSelectionModel().getSelectedItem();
 				if (selectedRental != null) {
 					ArrayList<RentalItem> rentalItems = this.rentalDao.getRentalItemsFromRental(selectedRental.getRentalId());
-					ArrayList<RentalItem> iteratedRentalItems = this.changeQuantityToOne(rentalItems);
+					ArrayList<RentalItem> duplicatesRemovedList = this.checkForDuplicates(rentalItems);
+					ArrayList<RentalItem> iteratedRentalItems = this.changeQuantityToOne(duplicatesRemovedList);
 					ObservableList<RentalItem> rentalItemsObservable = FXCollections.observableArrayList(iteratedRentalItems);
 					this.selectedTransactionRentalItems.setItems(rentalItemsObservable);
 				}
@@ -123,9 +124,18 @@ public class ReturnsController extends SystemController {
 		});
 	}
 	
-	private void checkForDuplicates() {
-		
-	}
+//	private ArrayList<RentalItem> checkForDuplicates(ArrayList<RentalItem> selectedTransactionItems) {
+//		ArrayList<RentalItem> transactionDuplicates = new ArrayList<RentalItem>(selectedTransactionItems);
+//		ArrayList<RentalItem> cartDuplicates = new ArrayList<RentalItem>(this.returnFurnitureCartListView.getItems());
+//		for (RentalItem item:transactionDuplicates) {
+//			for (RentalItem fakeItem:cartDuplicates) {
+//				if (item.equals(fakeItem)) {
+//					cartDuplicates.remove(fakeItem);
+//					transactionDuplicates.remove(item);
+//				}
+//			}
+//		} return transactionDuplicates;
+//	}
 	
 	private ArrayList<RentalItem> changeQuantityToOne(ArrayList<RentalItem> listView) {
 		ArrayList<RentalItem> splitItems = new ArrayList<RentalItem>();
@@ -139,5 +149,7 @@ public class ReturnsController extends SystemController {
 		}
 		return splitItems;
 	}
+	
+	
 }
 
