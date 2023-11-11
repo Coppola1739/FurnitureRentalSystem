@@ -7,7 +7,6 @@ import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Rental;
 import edu.westga.cs3230.furniturerentalsystem.model.RentalItem;
-import edu.westga.cs3230.furniturerentalsystem.model.Return;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,6 +57,8 @@ public class ReturnsController extends SystemController {
 		this.rentalDao = new RentalDao();
 		this.currMember = new Member();
 		this.handleRentalListDoubleClick();
+		this.handleRentalItemsDoubleClick();
+		this.handleFurnitureCartDoubleClick();
 	}
 	
 	@FXML
@@ -89,11 +90,54 @@ public class ReturnsController extends SystemController {
 			if (event.getClickCount() == 2) {
 				Rental selectedRental = this.rentalsListView.getSelectionModel().getSelectedItem();
 				if (selectedRental != null) {
-					ObservableList<RentalItem> rentalItems = FXCollections.observableArrayList(this.rentalDao.getRentalItemsFromRental(selectedRental.getRentalId()));
-					this.selectedTransactionRentalItems.setItems(rentalItems);
+					ArrayList<RentalItem> rentalItems = this.rentalDao.getRentalItemsFromRental(selectedRental.getRentalId());
+					ArrayList<RentalItem> iteratedRentalItems = this.changeQuantityToOne(rentalItems);
+					ObservableList<RentalItem> rentalItemsObservable = FXCollections.observableArrayList(iteratedRentalItems);
+					this.selectedTransactionRentalItems.setItems(rentalItemsObservable);
 				}
 			}
 		});
+	}
+	
+	private void handleRentalItemsDoubleClick() {
+		this.selectedTransactionRentalItems.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				RentalItem selectedRentalItem = this.selectedTransactionRentalItems.getSelectionModel().getSelectedItem();
+				if (selectedRentalItem != null) {
+					this.returnFurnitureCartListView.getItems().add(selectedRentalItem);
+					this.selectedTransactionRentalItems.getItems().remove(selectedRentalItem);
+				}
+			}
+		});
+	}
+	
+	private void handleFurnitureCartDoubleClick() {
+		this.returnFurnitureCartListView.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				RentalItem selectedRentalItem = this.returnFurnitureCartListView.getSelectionModel().getSelectedItem();
+				if (selectedRentalItem != null) {
+					this.returnFurnitureCartListView.getItems().remove(selectedRentalItem);
+					this.selectedTransactionRentalItems.getItems().add(selectedRentalItem);
+				}
+			}
+		});
+	}
+	
+	private void checkForDuplicates() {
+		
+	}
+	
+	private ArrayList<RentalItem> changeQuantityToOne(ArrayList<RentalItem> listView) {
+		ArrayList<RentalItem> splitItems = new ArrayList<RentalItem>();
+		int quantity = 0;
+		for (RentalItem item:listView) {
+			quantity = item.getQuantity();
+			for (int i = 0; i < quantity; i++) {
+				item.setQuantity(1);
+				splitItems.add(item);
+			}
+		}
+		return splitItems;
 	}
 }
 
