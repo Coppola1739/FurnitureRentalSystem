@@ -26,4 +26,5 @@ public class RentalItem {
 	public String toString() {
 		return "Item ID: " + this.furnitureId + ", Quantity: " + this.quantity + ", Cost: $" + this.cost;
 	}
+	
 }

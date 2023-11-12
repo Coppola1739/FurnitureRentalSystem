@@ -27,17 +27,14 @@ public class ReturnDao {
 				callableStatement.setString(2, memberId);
 				callableStatement.setString(3, employeeId);
 
-				//
-				System.out.println("Stored procedure executed successfully!");
-				callableStatement.execute();
-//				if (callableStatement.execute()) {
-//					try (ResultSet resultSet = callableStatement.getResultSet()) {
-//						if (resultSet.next()) {
-//							returnedRentalId = resultSet.getString("rental_id");
-//						}
-//					}
+				if (callableStatement.execute()) {
+					try (ResultSet resultSet = callableStatement.getResultSet()) {
+						if (resultSet.next()) {
+							returnedRentalId = resultSet.getString("rental_id");
+						}
+					}
 				}
-			
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -52,16 +49,12 @@ public class ReturnDao {
 
 			String sql = "SELECT return_id FROM `return` ORDER BY return_id DESC LIMIT 1";
 
-			try (PreparedStatement preparedStatement = connection.prepareStatement(sql,
-					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+			try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 				try (ResultSet resultSet = preparedStatement.executeQuery()) {
 					if (resultSet.next()) {
 						String lastReturnId = resultSet.getString("return_id");
-                        System.out.println("Last Return ID: " + lastReturnId);
-						int lastReturnIDasInt = Integer.parseInt(lastReturnId) + 1;
-//						int returnIdAsInt = Integer.parseInt(returnId);
-						returnId = String.format("%010d", lastReturnIDasInt);
-						System.out.println(lastReturnId);
+						int lastReturnedIdAsInt = Integer.parseInt(lastReturnId) + 1;
+						returnId = String.format("%010d", lastReturnedIdAsInt);
 						return returnId;
 
 					}

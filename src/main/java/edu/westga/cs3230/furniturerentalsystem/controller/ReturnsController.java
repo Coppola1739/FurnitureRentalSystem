@@ -11,6 +11,7 @@ import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Rental;
 import edu.westga.cs3230.furniturerentalsystem.model.RentalItem;
 import edu.westga.cs3230.furniturerentalsystem.model.Return;
+import edu.westga.cs3230.furniturerentalsystem.model.ReturnItem;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,6 +59,32 @@ public class ReturnsController extends SystemController {
 	void returnSelectedFurniture() throws Exception {
 		String employeeNum = EmployeeDao.getEmployeeNumByUsername(loggedInUser);
 		ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
+		this.arrangeCartItemsForReturn();
+		
+	}
+
+	private ArrayList<RentalItem> arrangeCartItemsForReturn() {
+	    ArrayList<RentalItem> itemsBeingReturned = new ArrayList<>(this.returnFurnitureCartListView.getItems());
+	    ArrayList<RentalItem> withCorrectQuantity = new ArrayList<>();
+
+	    for (RentalItem itemOne : itemsBeingReturned) {
+	        boolean found = false;
+
+	        for (RentalItem itemTwo : withCorrectQuantity) {
+	            if (itemOne.getFurnitureId().equals(itemTwo.getFurnitureId()) && itemOne.getRentalId().equals(itemTwo.getRentalId())) {
+	                itemTwo.setQuantity(itemTwo.getQuantity() + 1);
+	                found = true;
+	                break;
+	            }
+	        }
+
+	        if (!found) {
+	            withCorrectQuantity.add(new RentalItem(itemOne.getRentalId(), itemOne.getFurnitureId(), itemOne.getQuantity(), itemOne.getCost()));
+	        }
+	    }
+
+	    System.out.println(withCorrectQuantity.toString());
+	    return withCorrectQuantity;
 	}
 
 	@FXML
