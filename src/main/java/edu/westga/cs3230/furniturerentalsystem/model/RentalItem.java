@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RentalItem {
 
+	private String rentalId;
 	@NonNull
 	private String furnitureId;
 

@@ -108,7 +108,7 @@ public class RentalDao {
 		
 			try (ResultSet rs = checkStmt.executeQuery()) {
 				while (rs.next()) {
-					RentalItem rentalItem = RentalItem.builder().furnitureId(rs.getString("furniture_id"))
+					RentalItem rentalItem = RentalItem.builder().rentalId(rs.getString("rental_id")).furnitureId(rs.getString("furniture_id"))
 							.quantity(rs.getInt("quantity")).cost(rs.getDouble("cost")).build();
 							
 
