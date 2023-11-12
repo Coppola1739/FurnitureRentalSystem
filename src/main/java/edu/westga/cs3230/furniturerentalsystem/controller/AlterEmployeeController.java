@@ -230,7 +230,7 @@ public class AlterEmployeeController extends SystemController{
         Scene scene = new Scene(parent);
         Stage newStage = new Stage();
 
-        MemberController controller = loader.getController();
+        AdminController controller = loader.getController();
         controller.setLoggedInLabel(super.loggedInUser);
 
         newStage.setScene(scene);
