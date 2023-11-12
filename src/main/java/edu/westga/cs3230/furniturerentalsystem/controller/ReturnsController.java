@@ -3,10 +3,14 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
+import edu.westga.cs3230.furniturerentalsystem.dao.ReturnDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Rental;
 import edu.westga.cs3230.furniturerentalsystem.model.RentalItem;
+import edu.westga.cs3230.furniturerentalsystem.model.Return;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,9 +23,13 @@ import javafx.stage.Stage;
 
 public class ReturnsController extends SystemController {
 
+	private EmployeeDao employeeDao;
 	private RentalDao rentalDao;
 	private Member currMember;
 	private ArrayList<Rental> rentals;
+	private ReturnDao returnDao;
+	private Employee currEmployee;
+	
 	@FXML
 	private Button returnFurnitureButton;
 
@@ -41,18 +49,21 @@ public class ReturnsController extends SystemController {
 	private ListView<RentalItem> returnFurnitureCartListView;
 
 	@FXML
-	private ListView<RentalItem> returnsListView;
+	private ListView<Return> returnsListView;
 
 	@FXML
 	private TextField lateFeeOwedTextArea;
 
 	@FXML
-	void returnSelectedFurniture() {
-
+	void returnSelectedFurniture() throws Exception {
+		String employeeNum = EmployeeDao.getEmployeeNumByUsername(loggedInUser);
+		ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
 	}
 
 	@FXML
 	void initialize() {
+		this.employeeDao = new EmployeeDao();
+		this.returnDao = new ReturnDao();
 		this.rentalDao = new RentalDao();
 		this.currMember = new Member();
 		this.handleRentalListDoubleClick();
@@ -130,7 +141,7 @@ public class ReturnsController extends SystemController {
 	 * This method goes through what is in your cart and removes duplicates if you reload the same rental.
 	 * Because the return cart is only tentative until the transaction goes through, it is necessary
 	 * to keep all the lists current. Without this method, changing to a transaction and changing back would
-	 * cause duplicates to appear in your rentals when they should be put in your cart.
+	 * cause duplicates to appear between your rentals and your cart.
 	 * @param selectedTransactionItems
 	 * @return
 	 */
@@ -149,6 +160,12 @@ public class ReturnsController extends SystemController {
 		return transactionDuplicates;
 	}
 
+	/**
+	 * Splits a rentalItem into individual items, i.e., if a rentalItem has a quantity of 5,
+	 * this method makes it appear as 5 individual items of quantity 1.
+	 * @param listView
+	 * @return
+	 */
 	private ArrayList<RentalItem> changeQuantityToOne(ArrayList<RentalItem> listView) {
 		ArrayList<RentalItem> splitItems = new ArrayList<RentalItem>();
 		int quantity = 0;
