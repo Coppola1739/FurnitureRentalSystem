@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import lombok.NoArgsConstructor;
@@ -16,22 +18,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDao {
 
+	private static final String BCRYPT_SALT = "$2a$10$CUB6pak90Mm9/A0pyy6m/u";
+
 	private static final String CONNECTION_STRING = "jdbc:mysql://160.10.217.6:3306/cs3230f23c?user=cs3230f23c&password=qjvw6rTXAXCmmR7EUBU@";
 
 	public boolean authorizeUser(String username, String password) {
-		String query = "select * from user where username = ? and password = ? and role != ?";
+		String query = "select * from user where username = ? and role != ?";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 				PreparedStatement stmt = connection.prepareStatement(query)) {
 
 			stmt.setString(1, username);
-			stmt.setString(2, password);
-			stmt.setString(3, "member");
+			stmt.setString(2, "member");
 
 			ResultSet rs = stmt.executeQuery();
+			
 			if (rs.next()) {
-				System.out.println("Successfull login");
 
-				return true;
+				return (BCrypt.checkpw(password, rs.getString("password")));
+
 			}
 		} catch (SQLException ex) {
 			System.out.println("SQLException: " + ex.getMessage());
@@ -48,7 +52,8 @@ public class UserDao {
 		return this.setupUser(username, password, role, pinfo);
 	}
 
-	private boolean setupUser(String username, String password, String role, PersonalInformation pinfo) throws IllegalArgumentException {
+	private boolean setupUser(String username, String password, String role, PersonalInformation pinfo)
+			throws IllegalArgumentException {
 		if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
 			return false;
 		}
@@ -71,7 +76,7 @@ public class UserDao {
 			throw new IllegalArgumentException(Constants.FAILED_SQL);
 		}
 	}
-	
+
 	private boolean checkExists(Connection conn, String username) throws IllegalArgumentException {
 		String checkQuery = "SELECT * FROM user WHERE username = ?;";
 
@@ -86,9 +91,10 @@ public class UserDao {
 		}
 
 	}
-	
+
 	private boolean insertUserCreds(Connection conn, String username, String password, String role)
 			throws IllegalArgumentException {
+		password = BCrypt.hashpw(password, BCRYPT_SALT);
 		String insertUserQuery = "INSERT INTO user (username, password, role) VALUES (?, ?, ?);";
 		try (PreparedStatement insertStmt = conn.prepareStatement(insertUserQuery)) {
 
@@ -135,8 +141,7 @@ public class UserDao {
 			return 0;
 		}
 	}
-	
-	
+
 	private boolean addMember(Connection conn, long pid, String username) throws SQLException {
 		String uid = this.generateTenDigitID();
 		String insertMember = "INSERT INTO member (member_id,pid,username) VALUES (?,?,?);";
@@ -146,7 +151,7 @@ public class UserDao {
 			checkStmt.setString(3, username);
 
 			int result = checkStmt.executeUpdate();
-			
+
 			return result > 0;
 		}
 	}
@@ -176,8 +181,6 @@ public class UserDao {
 		return pInfo;
 	}
 
-
-
 	private String generateTenDigitID() {
 		Random random = new Random();
 		int firstDigit = 1 + random.nextInt(9);
@@ -185,7 +188,7 @@ public class UserDao {
 
 		return String.valueOf(firstDigit) + String.format("%09d", remainingDigits);
 	}
-	
+
 	/**
 	 * Alters a user by updating personal information fields concurrently.
 	 * 
@@ -197,32 +200,32 @@ public class UserDao {
 	 * @throws SQLException shouldn't be thrown unless bad information is entered in
 	 *                      pInfo
 	 */
-	
+
 	public boolean alterUser(String memberId, PersonalInformation pinfo) {
-	    String callProcedure = "{CALL UpdateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
-	    try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
-	         CallableStatement callStmt = connection.prepareCall(callProcedure)) {
+		String callProcedure = "{CALL UpdateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+				CallableStatement callStmt = connection.prepareCall(callProcedure)) {
 
-	        java.sql.Date sqlBirthDate = java.sql.Date.valueOf(pinfo.getBirthday().toString());
+			java.sql.Date sqlBirthDate = java.sql.Date.valueOf(pinfo.getBirthday().toString());
 
-	        callStmt.setString(1, memberId);
-	        callStmt.setString(2, pinfo.getFirstName());
-	        callStmt.setString(3, pinfo.getLastName());
-	        callStmt.setDate(4, sqlBirthDate);
-	        callStmt.setString(5, pinfo.getGender());
-	        callStmt.setString(6, pinfo.getPhoneNumber());
-	        callStmt.setString(7, pinfo.getAddress());
-	        callStmt.setString(8, pinfo.getCity());
-	        callStmt.setString(9, pinfo.getState());
-	        callStmt.setString(10, pinfo.getZip());
+			callStmt.setString(1, memberId);
+			callStmt.setString(2, pinfo.getFirstName());
+			callStmt.setString(3, pinfo.getLastName());
+			callStmt.setDate(4, sqlBirthDate);
+			callStmt.setString(5, pinfo.getGender());
+			callStmt.setString(6, pinfo.getPhoneNumber());
+			callStmt.setString(7, pinfo.getAddress());
+			callStmt.setString(8, pinfo.getCity());
+			callStmt.setString(9, pinfo.getState());
+			callStmt.setString(10, pinfo.getZip());
 
-	        int affectedRows = callStmt.executeUpdate();
-	        return affectedRows > 0;
+			int affectedRows = callStmt.executeUpdate();
+			return affectedRows > 0;
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }
