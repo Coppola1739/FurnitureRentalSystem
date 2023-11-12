@@ -12,6 +12,7 @@ import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
+import edu.westga.cs3230.furniturerentalsystem.model.User;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -31,7 +32,7 @@ import javafx.stage.Stage;
 
 public class AlterMemberController extends SystemController {
 
-	private Member currMember;
+	private Member currUser;
 	private boolean validPhoneNum;
 	private boolean validZipCode;
 
@@ -152,8 +153,8 @@ public class AlterMemberController extends SystemController {
 	}
 
 	public void setSelectedUser(Member member) {
-		this.currMember = member;
-		this.populateAllFields(this.currMember.getPInfo());
+		this.currUser = member;
+		this.populateAllFields(this.currUser.getPInfo());
 	}
 
 	public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
@@ -236,7 +237,7 @@ public class AlterMemberController extends SystemController {
 		PersonalInformation pInfo = this.createPersonalInformation();
 		try {
 			UserDao updateUser = new UserDao();
-			boolean successful = updateUser.alterUser(this.currMember.getMemberId(), pInfo);
+			boolean successful = updateUser.alterMember(this.currUser.getMemberId(), pInfo);
 
 			this.failedUpdateLabel.setVisible(!successful);
 			this.successfulUpdateLabel.setVisible(successful);

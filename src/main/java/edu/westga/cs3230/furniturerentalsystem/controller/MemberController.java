@@ -148,8 +148,6 @@ public class MemberController extends SystemController {
                 throw new IllegalStateException("Unexpected value: " + selectedFilter);
         }
     }
-
-    // Todo: these navigate methods and others through out the code can be refactored
     @FXML
     void logOut(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();

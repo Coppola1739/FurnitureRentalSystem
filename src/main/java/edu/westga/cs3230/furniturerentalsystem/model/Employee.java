@@ -18,7 +18,7 @@ import lombok.NonNull;
 @NoArgsConstructor
 @Builder
 @Data
-public class Employee {
+public class Employee extends User{
 
     @NonNull
     private String employeeNum;

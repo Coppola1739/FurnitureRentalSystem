@@ -1,18 +1,26 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
+import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import edu.westga.cs3230.furniturerentalsystem.util.EmployeeStringFormatter;
 import edu.westga.cs3230.furniturerentalsystem.util.MemberStringFormatter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -115,8 +123,24 @@ public class AdminController extends SystemController {
     }
 
     @FXML
-    void editEmployee(ActionEvent event) {
+    void editEmployee(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.ALTER_EMPLOYEE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
+        AlterEmployeeController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        controller.setSelectedUser(this.employeeListView.getSelectionModel().getSelectedItem());
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.editEmployeeButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -125,13 +149,32 @@ public class AdminController extends SystemController {
     }
 
     @FXML
-    void navigateToHomePage(ActionEvent event) {
+    void navigateToHomePage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.HOME_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.homeButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     void registerEmployee(ActionEvent event) {
-
+        try {
+            this.navigateTo(event, Constants.REGISTER_FXML);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @FXML
@@ -143,6 +186,7 @@ public class AdminController extends SystemController {
         ArrayList<Employee> employeesByEmployeeNumber = EmployeeDao.getEmployeesByEmployeeNumber(searchText);
         this.employeeListView.setItems(FXCollections.observableArrayList(employeesByEmployeeNumber));
     }
+
     private void addListenerToAlterUserButton() {
         this.editEmployeeButton.setDisable(true);
         this.employeeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -150,5 +194,25 @@ public class AdminController extends SystemController {
         });
     }
 
+    private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(fxmlPath));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+
+        Stage stage = (Stage) this.registerEmployeeButton.getScene().getWindow();
+
+        stage.close();
+    }
 }
 
