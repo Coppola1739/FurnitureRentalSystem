@@ -3,14 +3,11 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 import edu.westga.cs3230.furniturerentalsystem.Main;
 
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
-import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
-import edu.westga.cs3230.furniturerentalsystem.model.Member;
 
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 
 import edu.westga.cs3230.furniturerentalsystem.util.EmployeeStringFormatter;
-import edu.westga.cs3230.furniturerentalsystem.util.MemberStringFormatter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,10 +22,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 
-import java.lang.reflect.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AdminController extends SystemController {
@@ -74,9 +69,10 @@ public class AdminController extends SystemController {
     @FXML
     void initialize() {
         this.employeeDao = new EmployeeDao();
-        this.loadEmployeeListView(EmployeeDao.getAllEmployees());
+        this.loadEmployeeListView(EmployeeDao.getAllEnabledEmployees());
         this.setListViewDoubleClickHandler();
         this.addListenerToAlterEmployeeButton();
+        this.addListenerToDeleteEmployeeButton();
     }
 
     private void setListViewDoubleClickHandler() {
@@ -121,12 +117,14 @@ public class AdminController extends SystemController {
     @FXML
     void clearEmployeeSearch(ActionEvent event) {
         this.employeeSearchTextField.setText("");
-        this.loadEmployeeListView(EmployeeDao.getAllEmployees());
+        this.loadEmployeeListView(EmployeeDao.getAllEnabledEmployees());
     }
 
     @FXML
-    void deleteEmployee(ActionEvent event) {
-
+    void deleteEmployee(ActionEvent event) throws SQLException {
+        Employee employee = AdminController.this.employeeListView.getSelectionModel().getSelectedItem();
+        this.employeeDao.disableEmployee(employee);
+        this.loadEmployeeListView(EmployeeDao.getAllEnabledEmployees());
     }
 
     @FXML
@@ -151,8 +149,21 @@ public class AdminController extends SystemController {
     }
 
     @FXML
-    void logOut(ActionEvent event) {
+    void logOut(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.LOGIN_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
 
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.logOutButton.getScene().getWindow();
+
+        stage.close();
     }
 
     @FXML
@@ -178,7 +189,7 @@ public class AdminController extends SystemController {
     @FXML
     void registerEmployee(ActionEvent event) {
         try {
-            this.navigateTo(event, Constants.REGISTER_FXML);
+            this.navigateTo(event, Constants.REGISTER_EMPLOYEE_FXML);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -198,6 +209,13 @@ public class AdminController extends SystemController {
         this.editEmployeeButton.setDisable(true);
         this.employeeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             this.editEmployeeButton.setDisable(newValue == null);
+        });
+    }
+
+    private void addListenerToDeleteEmployeeButton() {
+        this.deleteEmployeeButton.setDisable(true);
+        this.employeeListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            this.deleteEmployeeButton.setDisable(newValue == null);
         });
     }
 

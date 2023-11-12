@@ -4,9 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
-import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+import edu.westga.cs3230.furniturerentalsystem.util.UserStatus;
 
 import static edu.westga.cs3230.furniturerentalsystem.util.Constants.CONNECTION_STRING;
 
@@ -33,9 +33,11 @@ public class EmployeeDao {
         return employeeNum;
     }
 
-    public static ArrayList<Employee> getAllEmployees() {
+
+
+    public static ArrayList<Employee> getAllEnabledEmployees() {
         ArrayList<Employee> employees = new ArrayList<>();
-        String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid;";
+        String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip, u.role FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid JOIN user u on u.username = e.username WHERE u.role != 'disabled';";
 
         try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
              PreparedStatement checkStmt = connection.prepareStatement(selectEmployee)) {
@@ -56,6 +58,7 @@ public class EmployeeDao {
                             .build();
                     Employee employee = Employee.builder()
                             .employeeNum(rs.getString("employee_num"))
+                            .username(rs.getString("username"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
                             .build();
@@ -91,6 +94,7 @@ public class EmployeeDao {
                             .build();
                     Employee employee = Employee.builder()
                             .employeeNum(rs.getString("employee_num"))
+                            .username(rs.getString("username"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
                             .build();
@@ -124,6 +128,22 @@ public class EmployeeDao {
             int affectedRows = callStmt.executeUpdate();
             return affectedRows > 0;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean disableEmployee(Employee employee) throws SQLException {
+        String callProcedure = "{CALL ChangeEmployeeRole(?, ?)}";
+        String employeeUsername = employee.getUsername();
+        try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
+             CallableStatement callStmt = connection.prepareCall(callProcedure)) {
+            callStmt.setString(1, employeeUsername);
+            callStmt.setString(2, UserStatus.DISABLED.toString().toLowerCase());
+
+            int affectedRows = callStmt.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

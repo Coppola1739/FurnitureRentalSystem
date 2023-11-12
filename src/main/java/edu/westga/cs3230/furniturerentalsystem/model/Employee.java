@@ -24,6 +24,7 @@ public class Employee{
     private String employeeNum;
     @NonNull
     private String pId;
+    @NonNull
     private String username;
     private PersonalInformation pInfo;
 

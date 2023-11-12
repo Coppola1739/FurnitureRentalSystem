@@ -16,6 +16,7 @@ public class Constants {
     public static final String MEMBERS_PAGE_FXML = "/MembersPage.fxml";
     public static final String FURNITURE_PAGE_FXML = "/Furniture.fxml";
     public static final String REGISTER_FXML = "/Register.fxml";
+    public static final String REGISTER_EMPLOYEE_FXML = "/RegisterEmployee.fxml";
     public static final String HOME_PAGE_FXML = "/HomePage.fxml";
     public static final String ADMIN_PAGE_FXML = "/AdminPage.fxml";
     public static final String TRANSACTION_PAGE_FXML = "/Transaction.fxml";
