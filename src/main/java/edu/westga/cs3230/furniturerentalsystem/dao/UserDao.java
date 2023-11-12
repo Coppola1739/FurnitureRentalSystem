@@ -201,7 +201,7 @@ public class UserDao {
 	 *                      pInfo
 	 */
 
-	public boolean alterUser(String memberId, PersonalInformation pinfo) {
+	public boolean alterMember(String memberId, PersonalInformation pinfo) {
 		String callProcedure = "{CALL UpdateUser(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 		try (Connection connection = DriverManager.getConnection(CONNECTION_STRING);
 				CallableStatement callStmt = connection.prepareCall(callProcedure)) {

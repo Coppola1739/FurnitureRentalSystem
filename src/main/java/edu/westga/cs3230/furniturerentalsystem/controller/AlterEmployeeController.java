@@ -2,10 +2,8 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
-import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
-import edu.westga.cs3230.furniturerentalsystem.model.User;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -239,7 +237,7 @@ public class AlterEmployeeController extends SystemController{
         newStage.initModality(Modality.APPLICATION_MODAL);
 
         newStage.show();
-        Stage stage = (Stage) this.cityTextField.getScene().getWindow();
+        Stage stage = (Stage) this.backToAdminPageButton.getScene().getWindow();
         stage.close();
     }
 }
