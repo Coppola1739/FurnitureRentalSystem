@@ -61,6 +61,8 @@ public class ReturnsController extends SystemController {
 		String returnId = ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
 		ArrayList<ReturnItem> returnItems = this.changeRentalCartToReturns(this.arrangeCartItemsForReturn(), returnId);
 		ReturnDao.insertReturnItemsIntoDatabase(returnItems);
+		ReturnDao.updateRentalItemsInDatabase(returnItems);
+		this.returnFurnitureCartListView.getItems().clear();
 	}
 
 	private ArrayList<RentalItem> arrangeCartItemsForReturn() {

@@ -83,7 +83,6 @@ public class ReturnDao {
                     preparedStatement.setDouble(4, returnItem.getFineAmount());
                     preparedStatement.setInt(5, returnItem.getQuantity());
 
-                    // Execute the SQL statement for each ReturnItem
                     preparedStatement.executeUpdate();
                 }
 
@@ -93,4 +92,26 @@ public class ReturnDao {
             e.printStackTrace();
         }
     }
+	
+	  public static void updateRentalItemsInDatabase(ArrayList<ReturnItem> returnItemList) {
+
+	        String sql = "UPDATE rental_item SET quantity = quantity - ? WHERE rental_id = ? AND furniture_id = ?";
+
+	        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING)) {
+	            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	                for (ReturnItem returnItem : returnItemList) {
+	                    preparedStatement.setInt(1, returnItem.getQuantity());
+	                    preparedStatement.setString(2, returnItem.getRentalId());
+	                    preparedStatement.setString(3, returnItem.getFurnitureId());
+
+	                    preparedStatement.executeUpdate();
+	                }
+
+	                System.out.println("RentalItems updated in the database successfully.");
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
 }
