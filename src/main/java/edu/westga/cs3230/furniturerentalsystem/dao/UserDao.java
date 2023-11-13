@@ -1,20 +1,15 @@
 package edu.westga.cs3230.furniturerentalsystem.dao;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Random;
-
+import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
+import edu.westga.cs3230.furniturerentalsystem.model.User;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import edu.westga.cs3230.furniturerentalsystem.util.UserStatus;
+import lombok.NoArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 
-import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
-import edu.westga.cs3230.furniturerentalsystem.util.Constants;
-import lombok.NoArgsConstructor;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 @NoArgsConstructor
 public class UserDao {
@@ -48,6 +43,27 @@ public class UserDao {
         }
         System.out.println("Unsuccessfull login");
         return false;
+    }
+
+    public ArrayList<User> getUserWithUsername(String username){
+        String query = "SELECT * FROM user WHERE username = ?;";
+        ArrayList<User> users = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+             PreparedStatement checkStmt = connection.prepareStatement(query)) {
+            checkStmt.setString(1, username);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                while (rs.next()) {
+                    User user = User.builder()
+                            .username(rs.getString("username"))
+                            .role(rs.getString("role"))
+                            .build();
+                    users.add(user);
+                }
+            }
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+        return users;
     }
 
     public boolean registerUser(String username, String password, UserStatus role, PersonalInformation pinfo) {
@@ -109,7 +125,6 @@ public class UserDao {
         } catch (SQLException e) {
             throw new IllegalArgumentException(Constants.FAILED_SQL);
         }
-
     }
 
     private boolean insertUserCreds(Connection conn, String username, String password, String role)

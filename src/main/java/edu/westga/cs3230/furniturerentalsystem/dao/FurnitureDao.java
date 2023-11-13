@@ -1,14 +1,10 @@
 package edu.westga.cs3230.furniturerentalsystem.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import edu.westga.cs3230.furniturerentalsystem.model.Furniture;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Furniture DAO Class for accessing furniture table in database

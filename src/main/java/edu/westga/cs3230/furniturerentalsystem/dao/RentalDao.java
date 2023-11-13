@@ -1,14 +1,14 @@
 package edu.westga.cs3230.furniturerentalsystem.dao;
 
+import edu.westga.cs3230.furniturerentalsystem.model.Transaction;
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import edu.westga.cs3230.furniturerentalsystem.model.Transaction;
-import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 
 public class RentalDao {
 

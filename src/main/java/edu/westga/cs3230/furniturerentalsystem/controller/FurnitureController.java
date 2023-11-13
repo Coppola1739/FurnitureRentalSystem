@@ -1,8 +1,5 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.FurnitureDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Furniture;
@@ -13,13 +10,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class FurnitureController extends SystemController {
 	
