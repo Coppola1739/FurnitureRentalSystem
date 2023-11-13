@@ -1,13 +1,17 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+
+@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -55,6 +59,16 @@ public class RentalInfo {
 		sb.append("-------------------------------");
 
 		return sb.toString();
+	}
+
+	
+	public String toStringForReturns() {
+		StringBuilder inlineString = new StringBuilder();
+		inlineString.append("Member: ").append(this.memberFullName);
+		inlineString.append(" Rental ID: ").append(this.rentalId);
+		inlineString.append(" Start Date: ").append(this.startDate);
+		inlineString.append(" Due Date: ").append(this.dueDate);
+		return inlineString.toString();
 	}
 
 }

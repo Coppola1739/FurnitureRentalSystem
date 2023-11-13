@@ -33,6 +33,9 @@ public class TransactionController extends SystemController {
 	private FurnitureDao furnitureDao;
 
 	private MemberDao memberDao;
+	
+	@FXML
+	private Button makeReturnButton;
 
 	@FXML
 	private ResourceBundle resources;
@@ -139,7 +142,6 @@ public class TransactionController extends SystemController {
 				alert.setContentText("Please ensure that you are signed in");
 				alert.showAndWait();
 			}
-
 		}
 	}
 
@@ -182,8 +184,15 @@ public class TransactionController extends SystemController {
 	// refactored
 	@FXML
 	void logOut(ActionEvent event) throws IOException {
+		changeWindow(Constants.LOGIN_FXML);
+		Stage stage = (Stage) this.logOutButton.getScene().getWindow();
+
+		stage.close();
+	}
+
+	private void changeWindow(String window) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(Main.class.getResource(Constants.LOGIN_FXML));
+		loader.setLocation(Main.class.getResource(window));
 		loader.load();
 		Parent parent = loader.getRoot();
 		Scene scene = new Scene(parent);
@@ -193,9 +202,6 @@ public class TransactionController extends SystemController {
 		newStage.initModality(Modality.APPLICATION_MODAL);
 
 		newStage.show();
-		Stage stage = (Stage) this.logOutButton.getScene().getWindow();
-
-		stage.close();
 	}
 
 	@FXML
@@ -207,17 +213,37 @@ public class TransactionController extends SystemController {
 		Scene scene = new Scene(parent);
 		Stage newStage = new Stage();
 
-		SystemController controller = loader.getController();
-		controller.setLoggedInLabel(super.loggedInUser);
-
 		newStage.setScene(scene);
 		newStage.initModality(Modality.APPLICATION_MODAL);
 
 		newStage.show();
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
 		Stage stage = (Stage) this.homeButton.getScene().getWindow();
 		stage.close();
 	}
 
+	@FXML
+	void makeReturn() throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.RETURNS_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+        
+        ReturnsController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+       
+		controller.setSelectedUser(this.membersListView.getSelectionModel().getSelectedItem());
+		newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+		Stage stage = (Stage) this.homeButton.getScene().getWindow();
+		stage.close();
+	}
+	
 	@FXML
 	void clearMemberSearch(ActionEvent event) {
 		this.searchFilterComboBox.getSelectionModel().clearSelection();
@@ -243,6 +269,7 @@ public class TransactionController extends SystemController {
 				FXCollections.observableArrayList("Modern", "Traditional", "Rustic", "Scandinavian", NO_SELECTION));
 	}
 
+	@Override
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
@@ -404,6 +431,17 @@ public class TransactionController extends SystemController {
 		return receipt.toString();
 	}
 
+	 private void addListenerToMakeReturnButton() {
+	    	this.makeReturnButton.setDisable(true);
+	    	this.membersListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+	            if (newValue != null) {
+	                this.makeReturnButton.setDisable(false);
+	            } else {
+	                this.makeReturnButton.setDisable(true);
+	            }
+	    	});
+	    }
+	
 	@FXML
 	void initialize() {
 		this.memberTextField.setEditable(false);
@@ -415,6 +453,7 @@ public class TransactionController extends SystemController {
 		this.furnitureCategoryComboBox.setValue(NO_SELECTION);
 		this.addListenerForStyleComboBox();
 		this.addListenerForCategoryComboBox();
+		this.addListenerToMakeReturnButton();
 		this.memberDao = new MemberDao();
 		this.loadMemberListView(this.memberDao.getAllMembers());
 		this.loadSearchFilterOptions();
