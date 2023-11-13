@@ -58,8 +58,8 @@ public class ReturnsController extends SystemController {
 	@FXML
 	void returnSelectedFurniture() throws Exception {
 		String employeeNum = EmployeeDao.getEmployeeNumByUsername(loggedInUser);
-		ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
-		this.arrangeCartItemsForReturn();
+		String returnId = ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
+		this.changeRentalCartToReturns(this.arrangeCartItemsForReturn(), returnId);
 		
 	}
 
@@ -83,6 +83,15 @@ public class ReturnsController extends SystemController {
 	        }
 	    }
 	    return withCorrectQuantity;
+	}
+	
+	private ArrayList<ReturnItem> changeRentalCartToReturns(ArrayList<RentalItem> rentals, String returnId){
+		ArrayList<ReturnItem> returnItems = new ArrayList<ReturnItem>();
+		for(RentalItem item: rentals) {
+			returnItems.add(ReturnItem.changeRentalItemToReturnItem(item, returnId));	
+		}
+		System.out.println(returnItems.toString());
+		return returnItems;
 	}
 
 	@FXML

@@ -1,9 +1,10 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 
+import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,22 +24,24 @@ public class ReturnItem {
 	private double fineAmount;
 	private int quantity;
 	
-	public void determineFineAmount(Date dueDate, Date returnDate, double price) {
-        LocalDate localDate = returnDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate currentDate = LocalDate.now();
+	 public void determineFineAmount(Date dueDate, double price) {
+		 	Instant instantDueDate = Instant.ofEpochMilli(dueDate.getTime());
+	        Instant currentInstant = Instant.now();
 
-        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(localDate, currentDate);
-        
-        this.fineAmount = price * daysBetween * this.quantity;
-    }
+	        long daysBetween = Duration.between(instantDueDate, currentInstant).toDays();
+
+	        this.fineAmount = price * daysBetween * this.quantity;
+	    }
 	
-	public ReturnItem changeRentalItemToReturnItem(RentalItem rentalItem, String returnId) {
+	public static ReturnItem changeRentalItemToReturnItem(RentalItem rentalItem, String returnId) {
 		ReturnItem newReturnItem = new ReturnItem();
 		newReturnItem.rentalId = rentalItem.getRentalId();
 		newReturnItem.furnitureId = rentalItem.getFurnitureId();
 		newReturnItem.returnId = returnId;
 		newReturnItem.quantity = rentalItem.getQuantity();
-		newReturnItem.fineAmount = 0.00;
+		
+		Rental rental = RentalDao.getRentalByRentalId(rentalItem.getRentalId());
+		newReturnItem.determineFineAmount(rental.getDueDate(),rentalItem.getCost());
 		return newReturnItem;
 	}
 

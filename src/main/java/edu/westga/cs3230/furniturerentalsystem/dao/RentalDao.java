@@ -122,28 +122,26 @@ public class RentalDao {
 		return rentalItems;
 	}
 	
-	public Rental getRentalByRentalId(String rentalId){
-		Rental rentalItems = new ArrayList<>();
-		String selectMember = "SELECT * FROM `rental_item` where rental_id = ?;";
+	public static Rental getRentalByRentalId(String rentalId){
+		Rental rental = null;
+		String selectReturn = "SELECT * FROM `rental` where rental_id = ?;";
 
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
-				PreparedStatement checkStmt = connection.prepareStatement(selectMember)){
+				PreparedStatement checkStmt = connection.prepareStatement(selectReturn)){
 			checkStmt.setString(1, rentalId);
 		
 			try (ResultSet rs = checkStmt.executeQuery()) {
 				while (rs.next()) {
-					RentalItem rentalItem = RentalItem.builder().rentalId(rs.getString("rental_id")).furnitureId(rs.getString("furniture_id"))
-							.quantity(rs.getInt("quantity")).cost(rs.getDouble("cost")).build();
-							
+					rental = Rental.builder().rentalId(rs.getString("rental_id")).memberId(rs.getString("member_id"))
+							.employeeId(rs.getString("employee_num")).startDate(rs.getDate("start_date")).dueDate(rs.getDate("due_date")).build();
 
-					rentalItems.add(rentalItem);
 				}
 			}
 		} catch (SQLException exception) {
 			throw new RuntimeException(exception);
 		}
 
-		return rentalItems;
+		return rental;
 	}
 
 }
