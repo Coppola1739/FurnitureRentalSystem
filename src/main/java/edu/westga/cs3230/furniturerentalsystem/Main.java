@@ -2,6 +2,7 @@ package edu.westga.cs3230.furniturerentalsystem;
 
 import java.io.IOException;
 
+import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,8 +23,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            System.out.println(getClass().getResource(GUI_FXML));
-			Parent root = FXMLLoader.load(getClass().getResource(GUI_FXML));
+            System.out.println(getClass().getResource(Constants.LOGIN_FXML));
+			Parent root = FXMLLoader.load(getClass().getResource(Constants.LOGIN_FXML));
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle(WINDOW_TITLE);

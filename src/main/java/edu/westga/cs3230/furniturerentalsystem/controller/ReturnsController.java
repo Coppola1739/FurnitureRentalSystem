@@ -24,12 +24,11 @@ import javafx.stage.Stage;
 
 public class ReturnsController extends SystemController {
 
-	private EmployeeDao employeeDao;
+
 	private RentalDao rentalDao;
 	private Member currMember;
 	private ArrayList<Rental> rentals;
-	private ReturnDao returnDao;
-	private Employee currEmployee;
+	private ArrayList<Return> returns;
 	
 	@FXML
 	private Button returnFurnitureButton;
@@ -98,8 +97,6 @@ public class ReturnsController extends SystemController {
 
 	@FXML
 	void initialize() {
-		this.employeeDao = new EmployeeDao();
-		this.returnDao = new ReturnDao();
 		this.rentalDao = new RentalDao();
 		this.currMember = new Member();
 		this.handleRentalListDoubleClick();
@@ -123,12 +120,19 @@ public class ReturnsController extends SystemController {
 	public void setSelectedUser(Member member) {
 		this.currMember = member;
 		this.populateRentalsListView(member.getMemberId());
+		this.populateReturnsListView(member.getMemberId());
 	}
 
 	private void populateRentalsListView(String memberId) {
 		ArrayList<Rental> allRentalsForCustomer = this.rentalDao.getAllRentalsForMember(currMember.getMemberId());
 		this.rentals = allRentalsForCustomer;
 		this.rentalsListView.setItems(FXCollections.observableArrayList(this.rentals));
+	}
+	
+	private void populateReturnsListView(String memberId) {
+		ArrayList<Return> allReturnsForCustomer = ReturnDao.getAllReturnsForMember(currMember.getMemberId());
+		this.returns = allReturnsForCustomer;
+		this.returnsListView.setItems(FXCollections.observableArrayList(this.returns));
 	}
 
 	private void handleRentalListDoubleClick() {

@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import edu.westga.cs3230.furniturerentalsystem.model.Rental;
+import edu.westga.cs3230.furniturerentalsystem.model.Return;
 import edu.westga.cs3230.furniturerentalsystem.model.ReturnItem;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 
@@ -15,11 +17,6 @@ public class ReturnDao {
 
 	public static String addReturn(String memberId, String employeeId) {
 		String returnedRentalId = null;
-		System.out.println(memberId);
-//		String furnitureIds = rental.getFurnitureIds();
-//		String quantities = rental.getQuantities();
-//		String costs = rental.getCosts();
-
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING)) {
 			String callProcedure = "{CALL AddReturn(?, ?, ?)}";
 			try (CallableStatement callableStatement = connection.prepareCall(callProcedure)) {
@@ -70,8 +67,6 @@ public class ReturnDao {
 	}
 	
 	public static void insertReturnItemsIntoDatabase(ArrayList<ReturnItem> returnItemList) {
-
-        // SQL statement for inserting ReturnItem into the database (replace with your table structure)
         String sql = "INSERT INTO return_item (rental_id, furniture_id, return_id, fine_amount, quantity) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING)) {
@@ -113,5 +108,28 @@ public class ReturnDao {
 	            e.printStackTrace();
 	        }
 	    }
+
+	  public static ArrayList<Return> getAllReturnsForMember(String memberID) {
+			ArrayList<Return> returns = new ArrayList<>();
+			String selectMember = "SELECT * FROM `return` WHERE member_id = ?;";
+
+			try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+					PreparedStatement checkStmt = connection.prepareStatement(selectMember)) {
+				checkStmt.setString(1, memberID);
+				try (ResultSet rs = checkStmt.executeQuery()) {
+					while (rs.next()) {
+						Return rentalInfo = Return.builder().returnId(rs.getString("return_id"))
+								.memberId(rs.getString("member_id")).employeeId(rs.getString("employee_num"))
+								.build();
+
+						returns.add(rentalInfo);
+					}
+				}
+			} catch (SQLException exception) {
+				throw new RuntimeException(exception);
+			}
+
+			return returns;
+		}
 
 }
