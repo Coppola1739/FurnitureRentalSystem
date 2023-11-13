@@ -31,6 +31,16 @@ public class ReturnItem {
         
         this.fineAmount = price * daysBetween * this.quantity;
     }
+	
+	public ReturnItem changeRentalItemToReturnItem(RentalItem rentalItem, String returnId) {
+		ReturnItem newReturnItem = new ReturnItem();
+		newReturnItem.rentalId = rentalItem.getRentalId();
+		newReturnItem.furnitureId = rentalItem.getFurnitureId();
+		newReturnItem.returnId = returnId;
+		newReturnItem.quantity = rentalItem.getQuantity();
+		newReturnItem.fineAmount = 0.00;
+		return newReturnItem;
+	}
 
 	
 

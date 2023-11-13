@@ -82,8 +82,6 @@ public class ReturnsController extends SystemController {
 	            withCorrectQuantity.add(new RentalItem(itemOne.getRentalId(), itemOne.getFurnitureId(), itemOne.getQuantity(), itemOne.getCost()));
 	        }
 	    }
-
-	    System.out.println(withCorrectQuantity.toString());
 	    return withCorrectQuantity;
 	}
 
