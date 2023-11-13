@@ -1,10 +1,9 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.FurnitureDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Furniture;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
@@ -13,13 +12,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class FurnitureController extends SystemController {
 	
@@ -66,9 +64,10 @@ public class FurnitureController extends SystemController {
 	private void populateStyleComboBox() {
 		this.furnitureStyleComboBox.setItems(FXCollections.observableArrayList("Modern", "Traditional", "Rustic", "Scandinavian", NO_SELECTION));
 	}
-	public void setLoggedInLabel(String username) {
+    public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
-        this.furnitureUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+        this.furnitureUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
     }
     
     @FXML

@@ -1,12 +1,8 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import java.util.Date;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import java.util.Date;
 
 /**
  * Personal Information model class

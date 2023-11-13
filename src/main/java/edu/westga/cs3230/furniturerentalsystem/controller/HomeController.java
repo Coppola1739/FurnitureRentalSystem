@@ -1,6 +1,8 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,6 +32,8 @@ public class HomeController extends SystemController {
 
     @FXML
     private Button membersNavigationButton;
+    @FXML
+    private Button adminNavigationButton;
 
     @FXML
     private Button transactionsNavigationButton;
@@ -42,7 +46,28 @@ public class HomeController extends SystemController {
     @FXML
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
-        this.homeUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+        this.homeUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
+    }
+    
+    @FXML
+    void navigateToAdminPage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(Constants.ADMIN_PAGE_FXML));
+        loader.load();
+        Parent parent = loader.getRoot();
+        Scene scene = new Scene(parent);
+        Stage newStage = new Stage();
+
+        SystemController controller = loader.getController();
+        controller.setLoggedInLabel(super.loggedInUser);
+
+        newStage.setScene(scene);
+        newStage.initModality(Modality.APPLICATION_MODAL);
+
+        newStage.show();
+        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -67,13 +92,13 @@ public class HomeController extends SystemController {
 
     @FXML
     void navigateToFurniturePage(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader();
+        FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(Constants.FURNITURE_PAGE_FXML));
         loader.load();
         Parent parent = loader.getRoot();
         Scene scene = new Scene(parent);
         Stage newStage = new Stage();
-        
+
         SystemController controller = loader.getController();
         controller.setLoggedInLabel(super.loggedInUser);
 
@@ -84,16 +109,16 @@ public class HomeController extends SystemController {
         Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
         stage.close();
     }
-    
+
     @FXML
     void navigateToTransactionsPage(ActionEvent event) throws IOException {
-    	FXMLLoader loader = new FXMLLoader();
+        FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(Constants.TRANSACTION_PAGE_FXML));
         loader.load();
         Parent parent = loader.getRoot();
         Scene scene = new Scene(parent);
         Stage newStage = new Stage();
-        
+
         SystemController controller = loader.getController();
         controller.setLoggedInLabel(super.loggedInUser);
 

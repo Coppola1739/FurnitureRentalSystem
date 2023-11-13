@@ -1,5 +1,6 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+
 
 @Builder
 @Getter
@@ -68,21 +70,5 @@ public class RentalInfo {
 		inlineString.append(" Due Date: ").append(this.dueDate);
 		return inlineString.toString();
 	}
-//	
-//	public class Rental{
-//		
-//		public String rentalId;
-//		
-//		public Date startDate;
-//		
-//		public Date dueDate;
-//		
-//		public String memberId;
-//		
-//		public String 
-//		
-//		public Rental() {
-//			
-//		}
-//	}
+
 }

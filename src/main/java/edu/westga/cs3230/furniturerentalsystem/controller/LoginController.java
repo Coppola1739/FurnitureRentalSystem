@@ -1,8 +1,5 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
@@ -17,6 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Controller for the login page.

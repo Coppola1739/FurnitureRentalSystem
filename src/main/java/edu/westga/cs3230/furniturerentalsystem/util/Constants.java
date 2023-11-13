@@ -16,8 +16,11 @@ public class Constants {
     public static final String MEMBERS_PAGE_FXML = "/MembersPage.fxml";
     public static final String FURNITURE_PAGE_FXML = "/Furniture.fxml";
     public static final String REGISTER_FXML = "/Register.fxml";
+    public static final String REGISTER_EMPLOYEE_FXML = "/RegisterEmployee.fxml";
     public static final String HOME_PAGE_FXML = "/HomePage.fxml";
+    public static final String ADMIN_PAGE_FXML = "/AdminPage.fxml";
     public static final String TRANSACTION_PAGE_FXML = "/Transaction.fxml";
+    public static final String ALTER_EMPLOYEE_FXML = "/AlterEmployee.fxml";
     public static final String FAILED_SQL = "Try again later.";
     public static final String RETURNS_PAGE_FXML = "/ReturnsPage.fxml";
     public static final String USERNAME_INUSE = "Username already used. Use another";

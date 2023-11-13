@@ -1,18 +1,11 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.FurnitureDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Furniture;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Transaction;
@@ -25,15 +18,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 public class TransactionController extends SystemController {
 
@@ -281,7 +272,8 @@ public class TransactionController extends SystemController {
 	@Override
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
-		this.furnitureUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+		this.furnitureUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
 	}
 
 	@FXML

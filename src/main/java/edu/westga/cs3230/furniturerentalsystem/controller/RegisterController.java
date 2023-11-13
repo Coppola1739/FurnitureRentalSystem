@@ -7,9 +7,12 @@ import java.util.ResourceBundle;
 
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
+import edu.westga.cs3230.furniturerentalsystem.util.UserStatus;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -89,7 +92,6 @@ public class RegisterController extends SystemController {
 
 	@FXML
 	private Button backButton;
-	
 	@FXML
 	private Label memberUserNameLabel;
 
@@ -113,7 +115,7 @@ public class RegisterController extends SystemController {
 		try {
 
 			UserDao login = new UserDao();
-			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), "member",
+			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), UserStatus.MEMBER,
 					pInfo);
 
 			this.errorText.setText("Account created successfully!");
@@ -146,10 +148,11 @@ public class RegisterController extends SystemController {
 
         stage.close();
     }
-	
+
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
-		this.memberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+		this.memberUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
 	}
 
 	private PersonalInformation createPersonalInformation() {
