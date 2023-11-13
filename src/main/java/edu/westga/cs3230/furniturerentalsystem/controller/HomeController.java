@@ -1,6 +1,8 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,7 +46,8 @@ public class HomeController extends SystemController {
     @FXML
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
-        this.homeUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+        this.homeUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
     }
     
     @FXML

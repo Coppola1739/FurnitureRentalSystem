@@ -1,7 +1,9 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
+import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.PersonalInformation;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import edu.westga.cs3230.furniturerentalsystem.util.UserStatus;
@@ -128,7 +130,8 @@ public class RegisterEmployeeController extends SystemController{
 
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
-        this.memberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+        this.memberUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
     }
 
     private PersonalInformation createPersonalInformation() {
