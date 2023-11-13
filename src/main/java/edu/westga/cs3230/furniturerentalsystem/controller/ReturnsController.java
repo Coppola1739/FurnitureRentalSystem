@@ -59,8 +59,8 @@ public class ReturnsController extends SystemController {
 	void returnSelectedFurniture() throws Exception {
 		String employeeNum = EmployeeDao.getEmployeeNumByUsername(loggedInUser);
 		String returnId = ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
-		this.changeRentalCartToReturns(this.arrangeCartItemsForReturn(), returnId);
-		
+		ArrayList<ReturnItem> returnItems = this.changeRentalCartToReturns(this.arrangeCartItemsForReturn(), returnId);
+		ReturnDao.insertReturnItemsIntoDatabase(returnItems);
 	}
 
 	private ArrayList<RentalItem> arrangeCartItemsForReturn() {

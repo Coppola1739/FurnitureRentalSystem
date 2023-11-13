@@ -6,7 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import edu.westga.cs3230.furniturerentalsystem.model.ReturnItem;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 
 public class ReturnDao {
@@ -66,4 +68,29 @@ public class ReturnDao {
 		}
 		return returnId;
 	}
+	
+	public static void insertReturnItemsIntoDatabase(ArrayList<ReturnItem> returnItemList) {
+
+        // SQL statement for inserting ReturnItem into the database (replace with your table structure)
+        String sql = "INSERT INTO return_item (rental_id, furniture_id, return_id, fine_amount, quantity) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                for (ReturnItem returnItem : returnItemList) {
+                    preparedStatement.setString(1, returnItem.getRentalId());
+                    preparedStatement.setString(2, returnItem.getFurnitureId());
+                    preparedStatement.setString(3, returnItem.getReturnId());
+                    preparedStatement.setDouble(4, returnItem.getFineAmount());
+                    preparedStatement.setInt(5, returnItem.getQuantity());
+
+                    // Execute the SQL statement for each ReturnItem
+                    preparedStatement.executeUpdate();
+                }
+
+                System.out.println("ReturnItems inserted into the database successfully.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
