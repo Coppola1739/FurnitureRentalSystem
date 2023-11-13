@@ -1,13 +1,5 @@
 package edu.westga.cs3230.furniturerentalsystem.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.ResourceBundle;
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
@@ -19,19 +11,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.ResourceBundle;
+
 public class AlterMemberController extends SystemController {
 
-	private Member currMember;
+	private Member currUser;
 	private boolean validPhoneNum;
 	private boolean validZipCode;
 
@@ -152,8 +147,8 @@ public class AlterMemberController extends SystemController {
 	}
 
 	public void setSelectedUser(Member member) {
-		this.currMember = member;
-		this.populateAllFields(this.currMember.getPInfo());
+		this.currUser = member;
+		this.populateAllFields(this.currUser.getPInfo());
 	}
 
 	public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
@@ -236,7 +231,7 @@ public class AlterMemberController extends SystemController {
 		PersonalInformation pInfo = this.createPersonalInformation();
 		try {
 			UserDao updateUser = new UserDao();
-			boolean successful = updateUser.alterUser(this.currMember.getMemberId(), pInfo);
+			boolean successful = updateUser.alterMember(this.currUser.getMemberId(), pInfo);
 
 			this.failedUpdateLabel.setVisible(!successful);
 			this.successfulUpdateLabel.setVisible(successful);

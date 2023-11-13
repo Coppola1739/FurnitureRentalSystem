@@ -6,7 +6,6 @@ import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import edu.westga.cs3230.furniturerentalsystem.util.MemberStringFormatter;
 import edu.westga.cs3230.furniturerentalsystem.util.SearchFilter;
-
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,13 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -148,8 +141,6 @@ public class MemberController extends SystemController {
                 throw new IllegalStateException("Unexpected value: " + selectedFilter);
         }
     }
-
-    // Todo: these navigate methods and others through out the code can be refactored
     @FXML
     void logOut(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();

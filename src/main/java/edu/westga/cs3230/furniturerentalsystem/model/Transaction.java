@@ -1,14 +1,10 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
+import lombok.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
