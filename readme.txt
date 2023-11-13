@@ -1,10 +1,6 @@
 Sample username and password: 
-Nick , Password
-Larry ,	12345
-Requis ,	12313
-
-Current issues
-When a user is created they are assigned as a customer but they are not added to the member table.
+bobmiller,password4
+charliebrown,password5
 
 Project is a Java Maven project.
 To get dependency working in eclipse, run this in the terminal:
