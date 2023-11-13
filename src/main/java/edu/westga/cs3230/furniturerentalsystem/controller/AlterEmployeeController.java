@@ -182,7 +182,8 @@ public class AlterEmployeeController extends SystemController{
 
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
-        this.alterUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+        this.alterUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
     }
     private boolean isValidZipCode(String zipCode) {
         return zipCode.matches("\\d{5}");

@@ -70,6 +70,12 @@ public class AdminController extends SystemController {
         this.addListenerToDeleteEmployeeButton();
     }
 
+    public void setLoggedInLabel(String username) {
+        super.loggedInUser = username;
+        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+        this.memberUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
+    }
+
     private void setListViewDoubleClickHandler() {
         this.employeeListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -102,11 +108,6 @@ public class AdminController extends SystemController {
 
     private void loadEmployeeListView(ArrayList<Employee> employees) {
         this.employeeListView.setItems(FXCollections.observableArrayList(employees));
-    }
-
-    public void setLoggedInLabel(String username) {
-        super.loggedInUser = username;
-        this.memberUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
     }
 
     @FXML

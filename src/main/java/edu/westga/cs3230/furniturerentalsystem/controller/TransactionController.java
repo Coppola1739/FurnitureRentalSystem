@@ -5,6 +5,7 @@ import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.FurnitureDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.MemberDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
+import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Furniture;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Transaction;
@@ -244,7 +245,8 @@ public class TransactionController extends SystemController {
 
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
-		this.furnitureUserNameLabel.textProperty().set("Logged In: " + super.loggedInUser);
+		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+		this.furnitureUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
 	}
 
 	@FXML
