@@ -5,7 +5,9 @@ import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import edu.westga.cs3230.furniturerentalsystem.util.EmployeeStringFormatter;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -18,8 +20,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminController extends SystemController {
 
@@ -62,18 +65,68 @@ public class AdminController extends SystemController {
     private EmployeeDao employeeDao;
 
     @FXML
+    private TableView<List<SimpleStringProperty>> sqlQueryTableView;
+
+    @FXML
+    private TextField sqlQueryTextField;
+
+    @FXML
+    private Button executeSqlQueryButton;
+
+    @FXML
     void initialize() {
         this.employeeDao = new EmployeeDao();
         this.loadEmployeeListView(EmployeeDao.getAllEnabledEmployees());
         this.setListViewDoubleClickHandler();
         this.addListenerToAlterEmployeeButton();
         this.addListenerToDeleteEmployeeButton();
+        this.initializeSqlQueryTableView();
     }
 
     public void setLoggedInLabel(String username) {
         super.loggedInUser = username;
         Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
         this.memberUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
+    }
+
+    private void initializeSqlQueryTableView(){
+        this.sqlQueryTableView.getColumns().clear();
+    }
+
+    @FXML
+    void executeSqlQuery(ActionEvent event) {
+        this.sqlQueryTableView.getColumns().clear();
+        ObservableList<List<SimpleStringProperty>> data = FXCollections.observableArrayList();
+        data.clear();
+        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+             PreparedStatement checkStmt = connection.prepareStatement(this.sqlQueryTextField.getText())) {
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                int columnCount = rs.getMetaData().getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    final int columnIndex = i - 1;
+                    TableColumn<List<SimpleStringProperty>, String> column = new TableColumn<>(rs.getMetaData().getColumnName(i));
+                    column.setCellValueFactory(cellData -> {
+                        List<SimpleStringProperty> row = cellData.getValue();
+                        return row != null && row.size() > columnIndex ? row.get(columnIndex) : null;
+                    });
+                    this.sqlQueryTableView.getColumns().add(column);
+                }
+                while (rs.next()) {
+                    List<SimpleStringProperty> row = new ArrayList<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        row.add(new SimpleStringProperty(rs.getString(i)));
+                    }
+                    data.add(row);
+                }
+            }catch(Exception e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                alert.showAndWait();
+            }
+        } catch (SQLException exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, exception.getMessage());
+            alert.showAndWait();
+        }
+        this.sqlQueryTableView.setItems(data);
     }
 
     private void setListViewDoubleClickHandler() {
@@ -200,6 +253,7 @@ public class AdminController extends SystemController {
         ArrayList<Employee> employeesByEmployeeNumber = EmployeeDao.getEmployeesByEmployeeNumber(searchText);
         this.employeeListView.setItems(FXCollections.observableArrayList(employeesByEmployeeNumber));
     }
+
 
     private void addListenerToAlterEmployeeButton() {
         this.editEmployeeButton.setDisable(true);
