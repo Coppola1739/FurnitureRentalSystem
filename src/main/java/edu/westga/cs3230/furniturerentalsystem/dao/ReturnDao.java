@@ -128,7 +128,6 @@ public class ReturnDao {
 			} catch (SQLException exception) {
 				throw new RuntimeException(exception);
 			}
-
 			return returns;
 		}
 

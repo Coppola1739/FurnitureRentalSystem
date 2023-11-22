@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.ReturnDao;
-import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.model.Member;
 import edu.westga.cs3230.furniturerentalsystem.model.Rental;
 import edu.westga.cs3230.furniturerentalsystem.model.RentalItem;
@@ -16,7 +15,10 @@ import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -24,12 +26,11 @@ import javafx.stage.Stage;
 
 public class ReturnsController extends SystemController {
 
-
 	private RentalDao rentalDao;
 	private Member currMember;
 	private ArrayList<Rental> rentals;
 	private ArrayList<Return> returns;
-	
+
 	@FXML
 	private Button returnFurnitureButton;
 
@@ -65,31 +66,33 @@ public class ReturnsController extends SystemController {
 	}
 
 	private ArrayList<RentalItem> arrangeCartItemsForReturn() {
-	    ArrayList<RentalItem> itemsBeingReturned = new ArrayList<>(this.returnFurnitureCartListView.getItems());
-	    ArrayList<RentalItem> withCorrectQuantity = new ArrayList<>();
+		ArrayList<RentalItem> itemsBeingReturned = new ArrayList<>(this.returnFurnitureCartListView.getItems());
+		ArrayList<RentalItem> withCorrectQuantity = new ArrayList<>();
 
-	    for (RentalItem itemOne : itemsBeingReturned) {
-	        boolean found = false;
+		for (RentalItem itemOne : itemsBeingReturned) {
+			boolean found = false;
 
-	        for (RentalItem itemTwo : withCorrectQuantity) {
-	            if (itemOne.getFurnitureId().equals(itemTwo.getFurnitureId()) && itemOne.getRentalId().equals(itemTwo.getRentalId())) {
-	                itemTwo.setQuantity(itemTwo.getQuantity() + 1);
-	                found = true;
-	                break;
-	            }
-	        }
+			for (RentalItem itemTwo : withCorrectQuantity) {
+				if (itemOne.getFurnitureId().equals(itemTwo.getFurnitureId())
+						&& itemOne.getRentalId().equals(itemTwo.getRentalId())) {
+					itemTwo.setQuantity(itemTwo.getQuantity() + 1);
+					found = true;
+					break;
+				}
+			}
 
-	        if (!found) {
-	            withCorrectQuantity.add(new RentalItem(itemOne.getRentalId(), itemOne.getFurnitureId(), itemOne.getQuantity(), itemOne.getCost()));
-	        }
-	    }
-	    return withCorrectQuantity;
+			if (!found) {
+				withCorrectQuantity.add(new RentalItem(itemOne.getRentalId(), itemOne.getFurnitureId(),
+						itemOne.getQuantity(), itemOne.getCost()));
+			}
+		}
+		return withCorrectQuantity;
 	}
-	
-	private ArrayList<ReturnItem> changeRentalCartToReturns(ArrayList<RentalItem> rentals, String returnId){
+
+	private ArrayList<ReturnItem> changeRentalCartToReturns(ArrayList<RentalItem> rentals, String returnId) {
 		ArrayList<ReturnItem> returnItems = new ArrayList<ReturnItem>();
-		for(RentalItem item: rentals) {
-			returnItems.add(ReturnItem.changeRentalItemToReturnItem(item, returnId));	
+		for (RentalItem item : rentals) {
+			returnItems.add(ReturnItem.changeRentalItemToReturnItem(item, returnId));
 		}
 		System.out.println(returnItems.toString());
 		return returnItems;
@@ -128,7 +131,7 @@ public class ReturnsController extends SystemController {
 		this.rentals = allRentalsForCustomer;
 		this.rentalsListView.setItems(FXCollections.observableArrayList(this.rentals));
 	}
-	
+
 	private void populateReturnsListView(String memberId) {
 		ArrayList<Return> allReturnsForCustomer = ReturnDao.getAllReturnsForMember(currMember.getMemberId());
 		this.returns = allReturnsForCustomer;
@@ -137,7 +140,7 @@ public class ReturnsController extends SystemController {
 
 	private void handleRentalListDoubleClick() {
 		this.rentalsListView.setOnMouseClicked(event -> {
-			if (event.getClickCount() == 2) {
+			if (event.getClickCount() == 1) {
 				Rental selectedRental = this.rentalsListView.getSelectionModel().getSelectedItem();
 				if (selectedRental != null) {
 					ArrayList<RentalItem> rentalItems = this.rentalDao
@@ -178,10 +181,12 @@ public class ReturnsController extends SystemController {
 	}
 
 	/**
-	 * This method goes through what is in your cart and removes duplicates if you reload the same rental.
-	 * Because the return cart is only tentative until the transaction goes through, it is necessary
-	 * to keep all the lists current. Without this method, changing to a transaction and changing back would
-	 * cause duplicates to appear between your rentals and your cart.
+	 * This method goes through what is in your cart and removes duplicates if you
+	 * reload the same rental. Because the return cart is only tentative until the
+	 * transaction goes through, it is necessary to keep all the lists current.
+	 * Without this method, changing to a transaction and changing back would cause
+	 * duplicates to appear between your rentals and your cart.
+	 * 
 	 * @param selectedTransactionItems
 	 * @return
 	 */
@@ -201,8 +206,10 @@ public class ReturnsController extends SystemController {
 	}
 
 	/**
-	 * Splits a rentalItem into individual items, i.e., if a rentalItem has a quantity of 5,
-	 * this method makes it appear as 5 individual items of quantity 1.
+	 * Splits a rentalItem into individual items, i.e., if a rentalItem has a
+	 * quantity of 5, this method makes it appear as 5 individual items of quantity
+	 * 1.
+	 * 
 	 * @param listView
 	 * @return
 	 */
@@ -217,6 +224,32 @@ public class ReturnsController extends SystemController {
 			}
 		}
 		return splitItems;
+	}
+
+	@FXML
+	private void showConfirmationPopup() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation Dialog");
+		alert.setHeaderText("Are you sure?");
+		alert.setContentText("Click OK to confirm, or Cancel to go back.");
+
+		ButtonType okButton = new ButtonType("OK");
+		ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+		alert.getButtonTypes().setAll(okButton, cancelButton);
+
+		alert.showAndWait().ifPresent(result -> {
+			if (result == okButton) {
+				try {
+					this.returnSelectedFurniture();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Confirmed!");
+			} else {
+				System.out.println("Cancelled!");
+			}
+		});
 	}
 
 }
