@@ -29,6 +29,9 @@ public class ReturnItem {
 	        Instant currentInstant = Instant.now();
 
 	        long daysBetween = Duration.between(instantDueDate, currentInstant).toDays();
+	        if (daysBetween < 0) {
+	        	daysBetween = 0;
+	        }
 
 	        this.fineAmount = price * daysBetween * this.quantity;
 	    }
