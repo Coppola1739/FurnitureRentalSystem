@@ -59,7 +59,6 @@ public class HomeController extends SystemController {
 	 *
 	 * @param username the username to set
 	 */
-	@FXML
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
