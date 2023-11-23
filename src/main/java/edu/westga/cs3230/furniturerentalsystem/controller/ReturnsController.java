@@ -23,6 +23,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 public class ReturnsController extends SystemController {
@@ -66,6 +67,7 @@ public class ReturnsController extends SystemController {
 		ArrayList<ReturnItem> returnItems = this.changeRentalCartToReturns(this.arrangeCartItemsForReturn(), returnId);
 		ReturnDao.insertReturnItemsIntoDatabase(returnItems);
 		ReturnDao.updateFurnitureQuantityInDatabase(returnItems);
+		this.showReturnPopup(ReturnDao.getReturnFromReturnId(returnId));
 		this.returnFurnitureCartListView.getItems().clear();
 	}
 
@@ -109,6 +111,7 @@ public class ReturnsController extends SystemController {
 		this.handleRentalListDoubleClick();
 		this.handleRentalItemsDoubleClick();
 		this.handleFurnitureCartDoubleClick();
+		this.handleReturnsDoubleClick();
 		this.setupReturnButtonListener();
 	}
 
@@ -187,6 +190,17 @@ public class ReturnsController extends SystemController {
 				if (selectedRentalItem != null) {
 					this.returnFurnitureCartListView.getItems().add(selectedRentalItem);
 					this.selectedTransactionRentalItems.getItems().remove(selectedRentalItem);
+				}
+			}
+		});
+	}
+	
+	private void handleReturnsDoubleClick() {
+		this.returnsListView.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				Return selectedReturn = this.returnsListView.getSelectionModel().getSelectedItem();
+				if (selectedReturn != null) {
+					this.showReturnPopup(selectedReturn);
 				}
 			}
 		});
@@ -274,5 +288,17 @@ public class ReturnsController extends SystemController {
 			}
 		});
 	}
+	
+	
+	private void showReturnPopup(Return selectedReturn) {
+		Alert returnInformationPopup = new Alert(Alert.AlertType.INFORMATION);
+		returnInformationPopup.setTitle(selectedReturn.getReturnId());
+		returnInformationPopup.setHeaderText("Employee ID:" + selectedReturn.getEmployeeId() + " Member ID:" + selectedReturn.getMemberId() + "\nReturn Number:" + selectedReturn.getReturnId());
+		ArrayList<ReturnItem> itemsFromSelectedReturn = ReturnDao.getAllItemsInReturn(selectedReturn.getReturnId());
+		returnInformationPopup.setContentText(Return.generateReturnReceipt(itemsFromSelectedReturn));
 
+        returnInformationPopup.getButtonTypes().setAll(ButtonType.OK);
+
+        returnInformationPopup.showAndWait();
+	}
 }

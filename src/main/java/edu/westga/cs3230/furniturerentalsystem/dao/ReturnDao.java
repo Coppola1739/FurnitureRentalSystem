@@ -209,8 +209,8 @@ public class ReturnDao {
 			checkStmt.setString(1, returnId);
 			try (ResultSet rs = checkStmt.executeQuery()) {
 				while (rs.next()) {
-					ReturnItem returnItem = ReturnItem.builder().returnId(rs.getString(returnId))
-							.rentalId(rs.getString("rental_id")).furnitureId(rs.getString("furniture_id")).quantity(rs.getInt("quanitity")).build();
+					ReturnItem returnItem = ReturnItem.builder().returnId(rs.getString("return_id"))
+							.rentalId(rs.getString("rental_id")).furnitureId(rs.getString("furniture_id")).quantity(rs.getInt("quantity")).fineAmount(rs.getDouble("fine_amount")).build();
 
 					returnItems.add(returnItem);
 				}
@@ -222,4 +222,23 @@ public class ReturnDao {
 		}
 	}
 
+	public static Return getReturnFromReturnId(String returnId) {
+		String selectReturnQuery = "SELECT * FROM `return` WHERE return_id = ?;";
+		Return selectedReturn = null;
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				PreparedStatement checkStmt = connection.prepareStatement(selectReturnQuery)) {
+			checkStmt.setString(1, returnId);
+			try (ResultSet rs = checkStmt.executeQuery()) {
+				while (rs.next()) {
+					Return returnItem = Return.builder().returnId(rs.getString("return_id"))
+							.memberId(rs.getString("member_id")).employeeId(rs.getString("employee_num")).build();
+					
+					selectedReturn = returnItem;
+				}
+				return selectedReturn;
+			}
+		} catch (SQLException exception) {
+			throw new RuntimeException(exception);
+		}
+	}
 }
