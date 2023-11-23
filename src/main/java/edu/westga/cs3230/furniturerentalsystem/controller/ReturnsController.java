@@ -13,6 +13,7 @@ import edu.westga.cs3230.furniturerentalsystem.model.Return;
 import edu.westga.cs3230.furniturerentalsystem.model.ReturnItem;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -108,8 +109,19 @@ public class ReturnsController extends SystemController {
 		this.handleRentalListDoubleClick();
 		this.handleRentalItemsDoubleClick();
 		this.handleFurnitureCartDoubleClick();
+		this.setupReturnButtonListener();
 	}
 
+	public void setupReturnButtonListener() {
+        returnFurnitureButton.setDisable(returnFurnitureCartListView.getItems().isEmpty());
+        returnFurnitureCartListView.getItems().addListener(new ListChangeListener<RentalItem>() {
+            @Override
+            public void onChanged(Change<? extends RentalItem> c) {
+                returnFurnitureButton.setDisable(returnFurnitureCartListView.getItems().isEmpty());
+            }
+        });
+    }
+	
 	@FXML
 	void backToTransactionsPage() throws IOException {
 		changePage(Constants.TRANSACTION_PAGE_FXML);
@@ -254,10 +266,9 @@ public class ReturnsController extends SystemController {
 				try {
 					this.returnSelectedFurniture();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println("Confirmed!");
+				this.populateReturnsListView(this.currMember.getMemberId());
 			} else {
 				System.out.println("Cancelled!");
 			}

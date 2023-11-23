@@ -57,10 +57,8 @@ public class ReturnDao {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-
 			throw new RuntimeException(e);
 		}
-
 		return returnCount;
 	}
 
@@ -101,7 +99,6 @@ public class ReturnDao {
 						int lastReturnedIdAsInt = Integer.parseInt(lastReturnId) + 1;
 						returnId = String.format("%010d", lastReturnedIdAsInt);
 						return returnId;
-
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -134,7 +131,7 @@ public class ReturnDao {
 		}
 	}
 
-	public static void updateFurnitureQuantityInDatabase(ArrayList<ReturnItem> returnItemList) {
+	public static boolean updateFurnitureQuantityInDatabase(ArrayList<ReturnItem> returnItemList) {
 
 		String sql = "UPDATE furniture SET quantity = quantity + ? WHERE furniture_id = ?";
 
@@ -144,13 +141,17 @@ public class ReturnDao {
 					preparedStatement.setInt(1, returnItem.getQuantity());
 					preparedStatement.setString(2, returnItem.getFurnitureId());
 
-					preparedStatement.executeUpdate();
-				}
+					int rowsAffected = preparedStatement.executeUpdate();
 
-				System.out.println("RentalItems updated in the database successfully.");
-			}
+					// Check if any rows were affected by the update
+					if (rowsAffected > 0) {
+						return true;
+					} 
+				}
+			}return false;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -179,40 +180,46 @@ public class ReturnDao {
 		ArrayList<RentalItem> returns = new ArrayList<RentalItem>();
 
 		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
-				// Assuming you have a stored procedure named "your_stored_procedure" that
-				// returns a result set
 				CallableStatement callableStatement = connection.prepareCall("{call GetUnreturnedItems(?)}")) {
 			callableStatement.setString(1, rentalId);
-
-			// Execute the stored procedure and get the result set
 			ResultSet resultSet = callableStatement.executeQuery();
 
-			// Process the result set as needed
 			while (resultSet.next()) {
-				// Retrieve data from the result set
-				RentalItem rentalItem = RentalItem.builder().rentalId(resultSet.getString("rental_id")).furnitureId(resultSet.getString("furniture_id")).
-						quantity(resultSet.getInt("quantity_difference")).cost(resultSet.getDouble("cost")).build();
+				RentalItem rentalItem = RentalItem.builder().rentalId(resultSet.getString("rental_id"))
+						.furnitureId(resultSet.getString("furniture_id"))
+						.quantity(resultSet.getInt("quantity_difference")).cost(resultSet.getDouble("cost")).build();
 
-				int returnQuantityFromResultSet = resultSet.getInt("return_quantity");
-				int quantityDifferenceFromResultSet = resultSet.getInt("quantity_difference");
-
-				// Process or print the retrieved data
-//				System.out.println("Rental ID: " + rentalIdFromResultSet);
-//				System.out.println("Furniture ID: " + furnitureIdFromResultSet);
-//				System.out.println("Rental Quantity: " + rentalQuantityFromResultSet);
-				System.out.println("Return Quantity: " + returnQuantityFromResultSet);
-				System.out.println("Quantity Difference: " + quantityDifferenceFromResultSet);
 				returns.add(rentalItem);
 			}
-			
-			// Close the result set
+
 			resultSet.close();
 			return returns;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
 
+	public static ArrayList<ReturnItem> getAllItemsInReturn(String returnId) {
+		ArrayList<ReturnItem> returnItems = new ArrayList<>();
+		String selectMember = "SELECT * FROM `return_item` WHERE return_id = ?;";
+
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				PreparedStatement checkStmt = connection.prepareStatement(selectMember)) {
+			checkStmt.setString(1, returnId);
+			try (ResultSet rs = checkStmt.executeQuery()) {
+				while (rs.next()) {
+					ReturnItem returnItem = ReturnItem.builder().returnId(rs.getString(returnId))
+							.rentalId(rs.getString("rental_id")).furnitureId(rs.getString("furniture_id")).quantity(rs.getInt("quanitity")).build();
+
+					returnItems.add(returnItem);
+				}
+			}
+			System.out.println(returnItems.toString());
+			return returnItems;
+		} catch (SQLException exception) {
+			throw new RuntimeException(exception);
+		}
 	}
 
 }
