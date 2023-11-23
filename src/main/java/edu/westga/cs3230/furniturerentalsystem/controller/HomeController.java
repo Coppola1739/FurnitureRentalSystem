@@ -2,6 +2,8 @@ package edu.westga.cs3230.furniturerentalsystem.controller;
 
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
+import edu.westga.cs3230.furniturerentalsystem.dao.RentalDao;
+import edu.westga.cs3230.furniturerentalsystem.dao.ReturnDao;
 import edu.westga.cs3230.furniturerentalsystem.model.Employee;
 import edu.westga.cs3230.furniturerentalsystem.util.Constants;
 import javafx.event.ActionEvent;
@@ -15,6 +17,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Controller for home page
@@ -24,110 +28,135 @@ import java.io.IOException;
  */
 public class HomeController extends SystemController {
 
-    @FXML
-    private Button furnitureNavigationButton;
+	@FXML
+	private Button furnitureNavigationButton;
 
-    @FXML
-    private Label homeUserNameLabel;
+	@FXML
+	private Label homeUserNameLabel;
 
-    @FXML
-    private Button membersNavigationButton;
-    @FXML
-    private Button adminNavigationButton;
+	@FXML
+	private Button membersNavigationButton;
+	@FXML
+	private Button adminNavigationButton;
 
-    @FXML
-    private Button transactionsNavigationButton;
+	@FXML
+	private Button transactionsNavigationButton;
 
-    /**
-     * Sets the logged in label of the view
-     *
-     * @param username the username to set
-     */
-    @FXML
-    public void setLoggedInLabel(String username) {
-        super.loggedInUser = username;
-        Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
-        this.homeUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
-    }
-    
-    @FXML
-    void navigateToAdminPage(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(Constants.ADMIN_PAGE_FXML));
-        loader.load();
-        Parent parent = loader.getRoot();
-        Scene scene = new Scene(parent);
-        Stage newStage = new Stage();
+	@FXML
+	private Label rentalsLabel;
 
-        SystemController controller = loader.getController();
-        controller.setLoggedInLabel(super.loggedInUser);
+	@FXML
+	private Label moneyRentalsLabel;
 
-        newStage.setScene(scene);
-        newStage.initModality(Modality.APPLICATION_MODAL);
+	@FXML
+	private Label returnsLabel;
 
-        newStage.show();
-        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
-        stage.close();
-    }
+	@FXML
+	private Label amountReturnsLabel;
 
-    @FXML
-    void navigateToMembersPage(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(Constants.MEMBERS_PAGE_FXML));
-        loader.load();
-        Parent parent = loader.getRoot();
-        Scene scene = new Scene(parent);
-        Stage newStage = new Stage();
+	/**
+	 * Sets the logged in label of the view
+	 *
+	 * @param username the username to set
+	 */
+	@FXML
+	public void setLoggedInLabel(String username) {
+		super.loggedInUser = username;
+		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+		this.homeUserNameLabel.textProperty()
+				.set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
+		RentalDao rentalDao = new RentalDao();
+		double[] rentalInfo = rentalDao.getEmployeeRentalCountAndAmount(username);
+		this.rentalsLabel.textProperty().set((int) rentalInfo[0] + "");
+		this.moneyRentalsLabel.textProperty().set(this.formatAmountAsDollar(rentalInfo[1]));
+		this.returnsLabel.textProperty().set(ReturnDao.getEmployeeReturnCount(username) + "");
+		this.amountReturnsLabel.textProperty()
+				.set(this.formatAmountAsDollar(ReturnDao.getEmployeeTotalFines(username)));
+	}
 
-        SystemController controller = loader.getController();
-        controller.setLoggedInLabel(super.loggedInUser);
+	private String formatAmountAsDollar(double amount) {
+		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		return currencyFormat.format(amount);
+	}
 
-        newStage.setScene(scene);
-        newStage.initModality(Modality.APPLICATION_MODAL);
+	@FXML
+	void navigateToAdminPage(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(Constants.ADMIN_PAGE_FXML));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
 
-        newStage.show();
-        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
-        stage.close();
-    }
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
 
-    @FXML
-    void navigateToFurniturePage(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(Constants.FURNITURE_PAGE_FXML));
-        loader.load();
-        Parent parent = loader.getRoot();
-        Scene scene = new Scene(parent);
-        Stage newStage = new Stage();
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
 
-        SystemController controller = loader.getController();
-        controller.setLoggedInLabel(super.loggedInUser);
+		newStage.show();
+		Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+		stage.close();
+	}
 
-        newStage.setScene(scene);
-        newStage.initModality(Modality.APPLICATION_MODAL);
+	@FXML
+	void navigateToMembersPage(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(Constants.MEMBERS_PAGE_FXML));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
 
-        newStage.show();
-        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
-        stage.close();
-    }
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
 
-    @FXML
-    void navigateToTransactionsPage(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(Constants.TRANSACTION_PAGE_FXML));
-        loader.load();
-        Parent parent = loader.getRoot();
-        Scene scene = new Scene(parent);
-        Stage newStage = new Stage();
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
 
-        SystemController controller = loader.getController();
-        controller.setLoggedInLabel(super.loggedInUser);
+		newStage.show();
+		Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+		stage.close();
+	}
 
-        newStage.setScene(scene);
-        newStage.initModality(Modality.APPLICATION_MODAL);
+	@FXML
+	void navigateToFurniturePage(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(Constants.FURNITURE_PAGE_FXML));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
 
-        newStage.show();
-        Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
-        stage.close();
-    }
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
+
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
+
+		newStage.show();
+		Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+		stage.close();
+	}
+
+	@FXML
+	void navigateToTransactionsPage(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(Constants.TRANSACTION_PAGE_FXML));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
+
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
+
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
+
+		newStage.show();
+		Stage stage = (Stage) this.membersNavigationButton.getScene().getWindow();
+		stage.close();
+	}
 
 }
