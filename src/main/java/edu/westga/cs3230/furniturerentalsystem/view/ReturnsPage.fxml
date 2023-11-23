@@ -19,6 +19,11 @@
             <ListView fx:id="returnFurnitureCartListView" layoutX="635.0" layoutY="333.0" prefHeight="249.0" prefWidth="346.0" />
             <ListView fx:id="returnsListView" layoutX="21.0" layoutY="333.0" prefHeight="249.0" prefWidth="558.0" />
             <TextField fx:id="lateFeeOwedTextArea" alignment="CENTER_RIGHT" editable="false" layoutX="734.0" layoutY="621.0" promptText="0.00" />
+            <Label layoutX="83.0" layoutY="275.0" text="Rentals" />
+            <Label layoutX="82.0" layoutY="583.0" text="Returns" />
+            <Label layoutX="662.0" layoutY="275.0" text="Furniture in Selected Rental" />
+            <Label layoutX="662.0" layoutY="583.0" text="Return Cart" />
+            <Label fx:id="allFurnitureReturnedLabel" layoutX="662.0" layoutY="293.0" text="All furniture for selected rental has been returned." textFill="#3b21a6" visible="false" />
          </children>
       </AnchorPane>
    </children>

@@ -35,6 +35,9 @@ public class ReturnsController extends SystemController {
 	private Button returnFurnitureButton;
 
 	@FXML
+	private Label allFurnitureReturnedLabel;
+
+	@FXML
 	private Button returnsPageBackButton;
 
 	@FXML
@@ -61,7 +64,7 @@ public class ReturnsController extends SystemController {
 		String returnId = ReturnDao.addReturn(this.currMember.getMemberId(), employeeNum);
 		ArrayList<ReturnItem> returnItems = this.changeRentalCartToReturns(this.arrangeCartItemsForReturn(), returnId);
 		ReturnDao.insertReturnItemsIntoDatabase(returnItems);
-		ReturnDao.updateRentalItemsInDatabase(returnItems);
+		ReturnDao.updateFurnitureQuantityInDatabase(returnItems);
 		this.returnFurnitureCartListView.getItems().clear();
 	}
 
@@ -142,14 +145,23 @@ public class ReturnsController extends SystemController {
 		this.rentalsListView.setOnMouseClicked(event -> {
 			if (event.getClickCount() == 1) {
 				Rental selectedRental = this.rentalsListView.getSelectionModel().getSelectedItem();
+
 				if (selectedRental != null) {
-					ArrayList<RentalItem> rentalItems = this.rentalDao
-							.getRentalItemsFromRental(selectedRental.getRentalId());
-					ArrayList<RentalItem> duplicatesRemovedList = this.checkForDuplicates(rentalItems);
-					ArrayList<RentalItem> iteratedRentalItems = this.changeQuantityToOne(duplicatesRemovedList);
-					ObservableList<RentalItem> rentalItemsObservable = FXCollections
-							.observableArrayList(iteratedRentalItems);
-					this.selectedTransactionRentalItems.setItems(rentalItemsObservable);
+					ArrayList<RentalItem> rentalItems = ReturnDao
+							.getAllRentalItemsStillCheckedOut(selectedRental.getRentalId());
+					if (rentalItems.isEmpty()) {
+						this.allFurnitureReturnedLabel.setVisible(true);
+						ObservableList<RentalItem> rentalItemsObservable = FXCollections
+								.observableArrayList(rentalItems);
+						this.selectedTransactionRentalItems.setItems(rentalItemsObservable);
+					} else {
+						ArrayList<RentalItem> duplicatesRemovedList = this.checkForDuplicates(rentalItems);
+						ArrayList<RentalItem> iteratedRentalItems = this.changeQuantityToOne(duplicatesRemovedList);
+						ObservableList<RentalItem> rentalItemsObservable = FXCollections
+								.observableArrayList(iteratedRentalItems);
+						this.selectedTransactionRentalItems.setItems(rentalItemsObservable);
+						this.allFurnitureReturnedLabel.setVisible(false);
+					}
 				}
 			}
 		});

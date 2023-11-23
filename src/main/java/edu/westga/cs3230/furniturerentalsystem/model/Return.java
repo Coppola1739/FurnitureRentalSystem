@@ -20,10 +20,6 @@ public class Return {
 	
 	@Override
     public String toString() {
-        return "Return{" +
-                "returnId='" + returnId + '\'' +
-                ", memberId='" + memberId + '\'' +
-                ", employeeId='" + employeeId + '\'' +
-                '}';
-    }
+        return "Return " + returnId;
+	}
 }
