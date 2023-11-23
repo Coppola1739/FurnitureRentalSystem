@@ -18,13 +18,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class TransactionController extends SystemController {
 
@@ -33,7 +43,7 @@ public class TransactionController extends SystemController {
 	private FurnitureDao furnitureDao;
 
 	private MemberDao memberDao;
-	
+
 	@FXML
 	private Button makeReturnButton;
 
@@ -47,19 +57,19 @@ public class TransactionController extends SystemController {
 	private TextField memberSearchTextField;
 
 	@FXML
-	private Label MembersListLabel;
+	private Label membersListLabel;
 
 	@FXML
 	private ComboBox<SearchFilter> searchFilterComboBox;
 
 	@FXML
-	private Button SearchButton;
+	private Button searchMemberButton;
 
 	@FXML
-	private Button ClearSearchButton;
+	private Button clearSearchButton;
 
 	@FXML
-	private Label SearchFilterLabel;
+	private Label searchFilterLabel;
 
 	@FXML
 	private Button logOutButton;
@@ -84,12 +94,6 @@ public class TransactionController extends SystemController {
 
 	@FXML
 	private Label furnitureUserNameLabel;
-
-	@FXML
-	private TextField amountTextField;
-
-	@FXML
-	private TextField furnitureIdTextField;
 
 	@FXML
 	private TextField memberTextField;
@@ -184,7 +188,7 @@ public class TransactionController extends SystemController {
 	// refactored
 	@FXML
 	void logOut(ActionEvent event) throws IOException {
-		changeWindow(Constants.LOGIN_FXML);
+		this.changeWindow(Constants.LOGIN_FXML);
 		Stage stage = (Stage) this.logOutButton.getScene().getWindow();
 
 		stage.close();
@@ -226,24 +230,24 @@ public class TransactionController extends SystemController {
 	@FXML
 	void makeReturn() throws IOException {
 		FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(Constants.RETURNS_PAGE_FXML));
-        loader.load();
-        Parent parent = loader.getRoot();
-        Scene scene = new Scene(parent);
-        Stage newStage = new Stage();
-        
-        ReturnsController controller = loader.getController();
-        controller.setLoggedInLabel(super.loggedInUser);
-       
+		loader.setLocation(Main.class.getResource(Constants.RETURNS_PAGE_FXML));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
+
+		ReturnsController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
+
 		controller.setSelectedUser(this.membersListView.getSelectionModel().getSelectedItem());
 		newStage.setScene(scene);
-        newStage.initModality(Modality.APPLICATION_MODAL);
+		newStage.initModality(Modality.APPLICATION_MODAL);
 
-        newStage.show();
+		newStage.show();
 		Stage stage = (Stage) this.homeButton.getScene().getWindow();
 		stage.close();
 	}
-	
+
 	@FXML
 	void clearMemberSearch(ActionEvent event) {
 		this.searchFilterComboBox.getSelectionModel().clearSelection();
@@ -273,7 +277,8 @@ public class TransactionController extends SystemController {
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
-		this.furnitureUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
+		this.furnitureUserNameLabel.textProperty()
+				.set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
 	}
 
 	@FXML
@@ -431,17 +436,18 @@ public class TransactionController extends SystemController {
 		return receipt.toString();
 	}
 
-	 private void addListenerToMakeReturnButton() {
-	    	this.makeReturnButton.setDisable(true);
-	    	this.membersListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-	            if (newValue != null) {
-	                this.makeReturnButton.setDisable(false);
-	            } else {
-	                this.makeReturnButton.setDisable(true);
-	            }
-	    	});
-	    }
-	
+	private void addListenerToMakeReturnButton() {
+		this.makeReturnButton.setDisable(true);
+		this.membersListView.getSelectionModel().selectedItemProperty()
+				.addListener((observable, oldValue, newValue) -> {
+					if (newValue != null) {
+						this.makeReturnButton.setDisable(false);
+					} else {
+						this.makeReturnButton.setDisable(true);
+					}
+				});
+	}
+
 	@FXML
 	void initialize() {
 		this.memberTextField.setEditable(false);

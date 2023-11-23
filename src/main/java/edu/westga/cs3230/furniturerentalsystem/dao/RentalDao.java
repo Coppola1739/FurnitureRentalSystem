@@ -55,6 +55,30 @@ public class RentalDao {
 
 		return returnedRentalId;
 	}
+	
+	public double[] getEmployeeRentalCountAndAmount(String username) {
+        double[] results = new double[2]; 
+
+        String callProcedure = "{CALL GetEmployeeRentalCountAndAmount(?)}";
+        try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+             CallableStatement callableStatement = connection.prepareCall(callProcedure)) {
+            
+            callableStatement.setString(1, username);
+
+            try (ResultSet resultSet = callableStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    results[0] = resultSet.getDouble("RentalCount"); 
+                    results[1] = resultSet.getDouble("TotalAmount"); 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+            throw new RuntimeException(e);
+        }
+
+        return results;
+    }
 
 	public ArrayList<Rental> getAllRentalsForMember(String memberID) {
 		ArrayList<Rental> rentals = new ArrayList<>();

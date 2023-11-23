@@ -41,6 +41,52 @@ public class ReturnDao {
 		return returnedRentalId;
 	}
 
+	public static int getEmployeeReturnCount(String username) {
+		int returnCount = 0;
+
+		String callProcedure = "{CALL GetEmployeeReturnCountByUsername(?)}";
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				CallableStatement callableStatement = connection.prepareCall(callProcedure)) {
+
+			callableStatement.setString(1, username);
+
+			try (ResultSet resultSet = callableStatement.executeQuery()) {
+				if (resultSet.next()) {
+					returnCount = resultSet.getInt("ReturnCount");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			throw new RuntimeException(e);
+		}
+
+		return returnCount;
+	}
+
+	public static double getEmployeeTotalFines(String username) {
+		double totalFines = 0.0;
+
+		String callProcedure = "{CALL GetEmployeeTotalFines(?)}";
+		try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
+				CallableStatement callableStatement = connection.prepareCall(callProcedure)) {
+
+			callableStatement.setString(1, username);
+
+			try (ResultSet resultSet = callableStatement.executeQuery()) {
+				if (resultSet.next()) {
+					totalFines = resultSet.getDouble("TotalFines");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			throw new RuntimeException(e);
+		}
+
+		return totalFines;
+	}
+
 	private static String iterateId() throws SQLException {
 		String returnId = "0000000000";
 
