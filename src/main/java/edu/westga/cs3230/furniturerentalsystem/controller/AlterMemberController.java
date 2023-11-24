@@ -158,41 +158,44 @@ public class AlterMemberController extends SystemController {
 	}
 
 	private void setListenersForFields() {
-		this.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!this.isValidPhoneNum(newValue)) {
-				this.phoneTextField.setStyle("-fx-border-color: red;");
-				this.invalidPhoneNumText.setVisible(true);
-				this.validPhoneNum = false;
-				this.updateUserButton.setDisable(true);
-			} else {
-				this.phoneTextField.setStyle("");
-				this.invalidPhoneNumText.setVisible(false);
-				this.validPhoneNum = true;
-				if (this.validZipCode) {
-					this.updateUserButton.setDisable(false);
-				}
-			}
-		});
+	    this.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+	        String filteredValue = newValue.replaceAll("[^\\d-]", "");
+	        if (!filteredValue.equals(newValue)) {
+	            this.phoneTextField.setText(filteredValue);
+	        }
 
-		this.zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!this.isValidZipCode(newValue)) {
-				this.zipTextField.setStyle("-fx-border-color: red;");
-				this.invalidZipText.setVisible(true);
-				this.validZipCode = false;
-				this.updateUserButton.setDisable(true);
-			} else {
-				this.zipTextField.setStyle("");
-				this.invalidZipText.setVisible(false);
-				this.validZipCode = true;
-				if (this.validPhoneNum) {
-					this.updateUserButton.setDisable(false);
-				}
-			}
-		});
+	        this.validPhoneNum = this.isValidPhoneNum(filteredValue);
+	        this.phoneTextField.setStyle(this.validPhoneNum ? "" : "-fx-border-color: red;");
+	        this.invalidPhoneNumText.setVisible(!this.validPhoneNum);
+	        this.updateUserButton.setDisable(!(this.validPhoneNum && this.validZipCode));
+	    });
+
+	    this.zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+	        String filteredValue = newValue.replaceAll("[^\\d]", "");
+	        if (!filteredValue.equals(newValue)) {
+	            this.zipTextField.setText(filteredValue);
+	        }
+
+	        if (filteredValue.length() > 5) {
+	        	filteredValue = filteredValue.substring(0, 5);
+	            this.zipTextField.setText(filteredValue);
+	        }
+
+	        this.validZipCode = this.isValidZipCode(filteredValue);
+	        this.zipTextField.setStyle(this.validZipCode ? "" : "-fx-border-color: red;");
+	        this.invalidZipText.setVisible(!this.validZipCode);
+	        this.updateUserButton.setDisable(!(this.validPhoneNum && this.validZipCode));
+	    });
 	}
 
 	private boolean isValidZipCode(String zipCode) {
-		return zipCode.matches("\\d{5}");
+	    return zipCode.matches("\\d{5}");
+	}
+
+	private boolean isValidPhoneNum(String phoneNum) {
+	    String phoneRegexFormatted = "\\d{3}-\\d{3}-\\d{4}";
+	    String phoneRegexUnformatted = "^\\d{10}$";
+	    return phoneNum.matches(phoneRegexUnformatted) || phoneNum.matches(phoneRegexFormatted);
 	}
 
 	private void populateStateComboBox() {
@@ -202,16 +205,7 @@ public class AlterMemberController extends SystemController {
 				"TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"));
 	}
 
-	private boolean isValidPhoneNum(String phoneNum) {
-		boolean matches = false;
-		String phoneRegexFormatted = "\\d{3}-\\d{3}-\\d{4}";
-		String phoneRegexUnformatted = "^\\d{10}$";
-		if (phoneNum.matches(phoneRegexUnformatted) || phoneNum.matches(phoneRegexFormatted)) {
-			matches = true;
-		}
-		return matches;
-	}
-
+	
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);

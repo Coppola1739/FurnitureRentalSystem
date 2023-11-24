@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-
 import edu.westga.cs3230.furniturerentalsystem.Main;
 import edu.westga.cs3230.furniturerentalsystem.dao.EmployeeDao;
 import edu.westga.cs3230.furniturerentalsystem.dao.UserDao;
@@ -32,6 +31,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class RegisterController extends SystemController {
+
+	private boolean validPhoneNum;
+	private boolean validZipCode;
 
 	@FXML
 	private ComboBox<String> genderComboBox;
@@ -115,8 +117,8 @@ public class RegisterController extends SystemController {
 		try {
 
 			UserDao login = new UserDao();
-			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(), UserStatus.MEMBER,
-					pInfo);
+			login.registerUser(this.userTextField.getText().trim(), this.passwordTextField.getText().trim(),
+					UserStatus.MEMBER, pInfo);
 
 			this.errorText.setText("Account created successfully!");
 			Alert alert = new Alert(AlertType.INFORMATION, "Account Created");
@@ -128,31 +130,33 @@ public class RegisterController extends SystemController {
 			this.errorText.setText("Failed to add account.");
 		}
 	}
+
 	private void navigateTo(ActionEvent event, String fxmlPath) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource(fxmlPath));
-        loader.load();
-        Parent parent = loader.getRoot();
-        Scene scene = new Scene(parent);
-        Stage newStage = new Stage();
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(fxmlPath));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
 
-        SystemController controller = loader.getController();
-        controller.setLoggedInLabel(super.loggedInUser);
+		SystemController controller = loader.getController();
+		controller.setLoggedInLabel(super.loggedInUser);
 
-        newStage.setScene(scene);
-        newStage.initModality(Modality.APPLICATION_MODAL);
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
 
-        newStage.show();
+		newStage.show();
 
-        Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
+		Stage stage = (Stage) this.createAccountButton.getScene().getWindow();
 
-        stage.close();
-    }
+		stage.close();
+	}
 
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
-		this.memberUserNameLabel.textProperty().set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
+		this.memberUserNameLabel.textProperty()
+				.set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
 	}
 
 	private PersonalInformation createPersonalInformation() {
@@ -208,16 +212,47 @@ public class RegisterController extends SystemController {
 	}
 
 	private void setListenersForFields() {
+		this.setupPhoneTextField();
+
+		this.setupZipTextField();
+	}
+
+	private void setupPhoneTextField() {
 		this.phoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!this.isValidPhoneNum(newValue)) {
-				this.phoneTextField.setStyle("-fx-border-color: red;");
-				this.invalidPhoneNumText.setVisible(true);
-				this.createAccountButton.setDisable(true);
-			} else {
-				this.phoneTextField.setStyle("");
-				this.invalidPhoneNumText.setVisible(false);
-				this.createAccountButton.setDisable(false);
+
+			String filteredValue = newValue.replaceAll("[^\\d-]", "");
+			if (!filteredValue.equals(newValue)) {
+				this.phoneTextField.setText(filteredValue);
 			}
+
+			if (filteredValue.replaceAll("-", "").length() > 10) {
+				filteredValue = oldValue;
+				this.phoneTextField.setText(filteredValue);
+			}
+
+			this.validPhoneNum = this.isValidPhoneNum(filteredValue);
+			this.phoneTextField.setStyle(this.validPhoneNum ? "" : "-fx-border-color: red;");
+			this.invalidPhoneNumText.setVisible(!this.validPhoneNum);
+			this.createAccountButton.setDisable(!(this.validPhoneNum && this.validZipCode));
+		});
+	}
+
+	private void setupZipTextField() {
+		this.zipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+			String filteredValue = newValue.replaceAll("[^\\d]", "");
+			if (!filteredValue.equals(newValue)) {
+				this.zipTextField.setText(filteredValue);
+			}
+
+			if (filteredValue.length() > 5) {
+				filteredValue = filteredValue.substring(0, 5);
+				this.zipTextField.setText(filteredValue);
+			}
+
+			this.validZipCode = this.isValidZipCode(filteredValue);
+			this.zipTextField.setStyle(this.validZipCode ? "" : "-fx-border-color: red;");
+			this.invalidZipText.setVisible(!this.validZipCode);
+			this.createAccountButton.setDisable(!(this.validPhoneNum && this.validZipCode));
 		});
 	}
 
