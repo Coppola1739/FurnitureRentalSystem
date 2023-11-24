@@ -21,6 +21,9 @@ public class Employee{
     private String pId;
     @NonNull
     private String username;
+    @NonNull
+    private String role;
+    
     private PersonalInformation pInfo;
 
 

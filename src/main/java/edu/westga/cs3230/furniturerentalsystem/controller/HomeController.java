@@ -91,6 +91,7 @@ public class HomeController extends SystemController {
 	public void setLoggedInLabel(String username) {
 		super.loggedInUser = username;
 		Employee employee = EmployeeDao.getEmployeeByUsername(username).get(0);
+		this.adminNavigationButton.setVisible(employee.getRole().equals("manager"));
 		this.homeUserNameLabel.textProperty()
 				.set("Logged In: " + employee.getPInfo().getFirstName() + " " + employee.getPInfo().getLastName());
 		RentalDao rentalDao = new RentalDao();

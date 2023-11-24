@@ -35,7 +35,6 @@ public class EmployeeDao {
     public static ArrayList<Employee> getAllEnabledEmployees() {
         ArrayList<Employee> employees = new ArrayList<>();
         String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip, u.role FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid JOIN user u on u.username = e.username WHERE u.role != 'disabled';";
-
         try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
              PreparedStatement checkStmt = connection.prepareStatement(selectEmployee)) {
 
@@ -58,6 +57,7 @@ public class EmployeeDao {
                             .username(rs.getString("username"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
+                            .role(rs.getString("role"))
                             .build();
                     employees.add(employee);
                 }
@@ -69,8 +69,7 @@ public class EmployeeDao {
     }
     public static ArrayList<Employee> getEmployeeByUsername(String username){
         ArrayList<Employee> employees = new ArrayList<>();
-        String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid WHERE e.username = ?;";
-
+        String selectEmployee = "SELECT e.employee_num, e.pid, e.username, pi.f_name, pi.l_name, pi.register_date, pi.gender, pi.phone_num, pi.b_date, pi.street_add, pi.city, pi.state, pi.zip, u.role FROM `employee` e JOIN personal_information pi ON pi.pid = e.pid Join user u ON u.username = e.username WHERE e.username = ?;";
         try (Connection connection = DriverManager.getConnection(Constants.CONNECTION_STRING);
              PreparedStatement checkStmt = connection.prepareStatement(selectEmployee)) {
             checkStmt.setString(1, username);
@@ -93,6 +92,7 @@ public class EmployeeDao {
                             .username(rs.getString("username"))
                             .pId(rs.getString("pid"))
                             .pInfo(pInfo)
+                            .role(rs.getString("role"))
                             .build();
                     employees.add(employee);
                 }
