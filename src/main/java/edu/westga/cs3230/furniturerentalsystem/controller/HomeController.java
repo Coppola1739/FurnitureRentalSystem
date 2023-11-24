@@ -53,6 +53,35 @@ public class HomeController extends SystemController {
 
 	@FXML
 	private Label amountReturnsLabel;
+	
+	@FXML
+    private Button logoutButton;
+
+    @FXML
+    void logout(ActionEvent event) {
+    	try {
+			this.changeWindow(Constants.LOGIN_FXML);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Stage stage = (Stage) this.logoutButton.getScene().getWindow();
+
+		stage.close();
+	}
+
+	private void changeWindow(String window) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource(window));
+		loader.load();
+		Parent parent = loader.getRoot();
+		Scene scene = new Scene(parent);
+		Stage newStage = new Stage();
+
+		newStage.setScene(scene);
+		newStage.initModality(Modality.APPLICATION_MODAL);
+
+		newStage.show();
+	}
 
 	/**
 	 * Sets the logged in label of the view

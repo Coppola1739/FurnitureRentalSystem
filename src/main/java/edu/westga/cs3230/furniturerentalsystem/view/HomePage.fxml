@@ -13,9 +13,9 @@
       <AnchorPane prefHeight="321.0" prefWidth="619.0">
          <children>
             <Label fx:id="homeUserNameLabel" layoutY="6.0" prefHeight="17.0" prefWidth="184.0" />
-            <Button fx:id="membersNavigationButton" layoutX="48.0" layoutY="244.0" mnemonicParsing="false" onAction="#navigateToMembersPage" prefHeight="26.0" prefWidth="88.0" text="Members" />
-            <Button fx:id="furnitureNavigationButton" layoutX="427.0" layoutY="244.0" mnemonicParsing="false" onAction="#navigateToFurniturePage" prefHeight="26.0" prefWidth="88.0" text="Furniture" />
-            <Button fx:id="transactionsNavigationButton" layoutX="219.0" layoutY="244.0" mnemonicParsing="false" onAction="#navigateToTransactionsPage" prefHeight="26.0" prefWidth="111.0" text="Transactions" />
+            <Button fx:id="membersNavigationButton" layoutX="48.0" layoutY="231.0" mnemonicParsing="false" onAction="#navigateToMembersPage" prefHeight="26.0" prefWidth="88.0" text="Members" />
+            <Button fx:id="furnitureNavigationButton" layoutX="421.0" layoutY="231.0" mnemonicParsing="false" onAction="#navigateToFurniturePage" prefHeight="26.0" prefWidth="88.0" text="Furniture" />
+            <Button fx:id="transactionsNavigationButton" layoutX="219.0" layoutY="231.0" mnemonicParsing="false" onAction="#navigateToTransactionsPage" prefHeight="26.0" prefWidth="111.0" text="Transactions" />
             <Button fx:id="adminNavigationButton" layoutX="447.0" layoutY="11.0" mnemonicParsing="false" onAction="#navigateToAdminPage" prefHeight="26.0" prefWidth="88.0" text="Admin" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#abc2d7" height="182.0" layoutX="36.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" width="473.0" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#606972" height="42.0" layoutX="36.0" layoutY="42.0" stroke="BLACK" strokeType="INSIDE" width="473.0" />
@@ -58,6 +58,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
+            <Button fx:id="logoutButton" layoutX="249.0" layoutY="260.0" mnemonicParsing="false" onAction="#logout" text="Logout" />
          </children>
       </AnchorPane>
    </children>

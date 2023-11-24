@@ -18,14 +18,14 @@ SET SQL_SAFE_UPDATES=1;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- add users
-
+-- johndoe password1 janesmith password2 alicejohnson password3 bobmiller password4 charliebrown password5
 INSERT INTO `user` (username, password, role)
 VALUES 
-('johndoe', 'password1', 'member'),
-('janesmith', 'password2', 'member'),
-('alicejohnson', 'password3', 'member'),
-('bobmiller', 'password4', 'employee'),
-('charliebrown', 'password5', 'manager');
+('johndoe', '$2a$10$CUB6pak90Mm9/A0pyy6m/u9VTYIlpYnDmGA8iCNP7HYXIWWefECgu', 'member'),
+('janesmith', '$2a$10$CUB6pak90Mm9/A0pyy6m/u2G0ClquO/WjJIwYjIjkJTGhuXWwXtz6', 'member'),
+('alicejohnson', '$2a$10$CUB6pak90Mm9/A0pyy6m/uQ6BGDhsliNGpLCeFZW6TnpuElfGG9mO', 'member'),
+('bobmiller', '$2a$10$CUB6pak90Mm9/A0pyy6m/u9kv6eJQiNfzwfnZvLK6gWYj5QZUcAsS', 'employee'),
+('charliebrown', '$2a$10$CUB6pak90Mm9/A0pyy6m/uPJuQ80MMU9eWs/tYmKGkyyvMVQUcuFW', 'manager');
 
 -- Personal Info
 INSERT INTO personal_information (f_name, l_name, b_date, gender, phone_num, street_add, city, state, zip, register_date)
@@ -79,5 +79,3 @@ VALUES
 ('1000000006', 'Rustic', 'Table', 17.99),
 ('1000000007', 'Traditional', 'Cabinet', 25.99),
 ('1000000008', 'Modern', 'Cabinet', 27.99);
-
-
