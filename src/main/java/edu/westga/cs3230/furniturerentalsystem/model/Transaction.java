@@ -1,16 +1,25 @@
 package edu.westga.cs3230.furniturerentalsystem.model;
 
-import lombok.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class Transaction {
+
+	@NonNull
+	@Setter
+	private String rentalId;
 
 	@NonNull
 	private String memberId;
@@ -59,12 +68,25 @@ public class Transaction {
 		return this.removeLastComma(costs);
 	}
 
-//	public boolean makeReturn() {
-//		
-//	}
-	
-	
-	
+	public String generateReceipt() {
+		StringBuilder receipt = new StringBuilder();
+		receipt.append("Rental ID: ").append(this.rentalId).append("\n");
+		receipt.append("Member ID: ").append(this.memberId).append("\n");
+		receipt.append("Employee Number: ").append(this.employeeNum).append("\n\n");
+		receipt.append("Furniture Rented:\n");
+		for (Furniture furniture : this.selectedItems) {
+			receipt.append(furniture.toString()).append("\n");
+		}
+
+		double totalCost = 0.0;
+		for (String costStr : this.getCosts().split(",")) {
+			totalCost += Double.parseDouble(costStr);
+		}
+		receipt.append("\nTotal Cost: $").append(String.format("%.2f", totalCost));
+
+		return receipt.toString();
+	}
+
 	private Map<String, Integer> countFurnitureQuantities() {
 		Map<String, Integer> countMap = new HashMap<>();
 		for (Furniture furniture : this.selectedItems) {

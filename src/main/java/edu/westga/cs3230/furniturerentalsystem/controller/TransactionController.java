@@ -19,7 +19,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class TransactionController extends SystemController {
@@ -123,38 +126,56 @@ public class TransactionController extends SystemController {
 					"Please ensure you've selected a member and that the start date is before the end date.");
 			alert.showAndWait();
 		} else {
-			try {
-				Transaction tr = Transaction.builder().memberId(this.memberTextField.getText())
-						.selectedItems(this.cartListView.getItems())
-						.employeeNum(EmployeeDao.getEmployeeNumByUsername(loggedInUser)).build();
-				String rentalId = RentalDao.addRental(tr, java.sql.Date.valueOf(this.startDatePicker.getValue()),
-						java.sql.Date.valueOf(this.endDatePicker.getValue()));
-
-				if (rentalId == null) {
+			if (this.showConfirmationAlert("Confirmation", "Make rental",
+					"Are you sure you want to make this rental?")) {
+				try {
+					Transaction tr = Transaction.builder().rentalId("unknown").memberId(this.memberTextField.getText())
+							.selectedItems(this.cartListView.getItems())
+							.employeeNum(EmployeeDao.getEmployeeNumByUsername(loggedInUser)).build();
+					String rentalId = RentalDao.addRental(tr, java.sql.Date.valueOf(this.startDatePicker.getValue()),
+							java.sql.Date.valueOf(this.endDatePicker.getValue()));
+					tr.setRentalId(rentalId);
+					if (rentalId == null) {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Fail");
+						alert.setHeaderText("Failed to Add");
+						alert.setContentText("Order could not be made at this time");
+						alert.showAndWait();
+					} else {
+						this.showReceipt(tr);
+					}
+				} catch (Exception e) {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Fail");
-					alert.setHeaderText("Failed to Add");
-					alert.setContentText("Order could not be made at this time");
+					alert.setTitle("Error");
+					alert.setHeaderText("Server error");
+					alert.setContentText("Please ensure that you are signed in");
 					alert.showAndWait();
-				} else {
-					this.showReceipt(tr, rentalId);
 				}
-			} catch (Exception e) {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Error");
-				alert.setHeaderText("Server error");
-				alert.setContentText("Please ensure that you are signed in");
-				alert.showAndWait();
 			}
 		}
 	}
 
-	private void showReceipt(Transaction tr, String rentalId) {
+	private void showReceipt(Transaction tr) {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Success");
 		alert.setHeaderText("Rental Created");
-		alert.setContentText("Here is your receipt:\n" + this.generateReceipt(tr, rentalId));
+		alert.setContentText("Here is your receipt:\n" + tr.generateReceipt());
 		alert.showAndWait();
+	}
+
+	public boolean showConfirmationAlert(String title, String header, String content) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+
+		ButtonType buttonTypeYes = new ButtonType("Yes");
+		ButtonType buttonTypeNo = new ButtonType("No");
+
+		alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.isPresent() && result.get() == buttonTypeYes;
 	}
 
 	@FXML
@@ -414,26 +435,6 @@ public class TransactionController extends SystemController {
 			return frequencyMap.get(f2).compareTo(frequencyMap.get(f1));
 		});
 		this.cartListView.setItems(cartItems);
-	}
-
-	private String generateReceipt(Transaction transaction, String rentalId) {
-		StringBuilder receipt = new StringBuilder();
-		receipt.append("Rental ID: ").append(rentalId).append("\n");
-		receipt.append("Member ID: ").append(transaction.getMemberId()).append("\n");
-		receipt.append("Employee Number: ").append(transaction.getEmployeeNum()).append("\n\n");
-
-		receipt.append("Furniture Rented:\n");
-		for (Furniture furniture : transaction.getSelectedItems()) {
-			receipt.append(furniture.toString()).append("\n");
-		}
-
-		double totalCost = 0.0;
-		for (String costStr : transaction.getCosts().split(",")) {
-			totalCost += Double.parseDouble(costStr);
-		}
-		receipt.append("\nTotal Cost: $").append(String.format("%.2f", totalCost));
-
-		return receipt.toString();
 	}
 
 	private void addListenerToMakeReturnButton() {

@@ -23,7 +23,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 public class ReturnsController extends SystemController {
@@ -116,8 +115,8 @@ public class ReturnsController extends SystemController {
 	}
 
 	public void setupReturnButtonListener() {
-        returnFurnitureButton.setDisable(returnFurnitureCartListView.getItems().isEmpty());
-        returnFurnitureCartListView.getItems().addListener(new ListChangeListener<RentalItem>() {
+        this.returnFurnitureButton.setDisable(returnFurnitureCartListView.getItems().isEmpty());
+        this.returnFurnitureCartListView.getItems().addListener(new ListChangeListener<RentalItem>() {
             @Override
             public void onChanged(Change<? extends RentalItem> c) {
                 returnFurnitureButton.setDisable(returnFurnitureCartListView.getItems().isEmpty());
