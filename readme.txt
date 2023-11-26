@@ -1,6 +1,6 @@
 Sample username and password: 
-bobmiller,password4
-charliebrown,password5
+Employee: bobmiller,password4
+Admin: charliebrown,password5
 
 Project is a Java Maven project.
 To get dependency working in eclipse, run this in the terminal:
